@@ -9,12 +9,13 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import { Picker } from "@react-native-picker/picker";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 import simya from "../../assets/심야식당.jpeg";
 import star from "../../assets/star.png";
 
 import Menu from "../components/Menu";
+import TimeTable from "../components/TimeTable";
 
 const BarDetail = ({ bar }) => {
   const [date, setDate] = useState(new Date());
@@ -32,9 +33,20 @@ const BarDetail = ({ bar }) => {
     setTime(selectTime);
   };
 
+  // Datepicker
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setDate(currentDate);
+    setOpen(false);
+  };
+
   const openMode = (currentMode) => {
     setOpen(true);
     setMode(currentMode);
+  };
+
+  const openDatepicker = () => {
+    openMode("date");
   };
 
   const onChangeText = (text) => {
@@ -90,20 +102,31 @@ const BarDetail = ({ bar }) => {
           <View style={styles.reservationContainer}>
             {showForm && (
               <>
+                <View style={styles.dateContainer}>
+                  <Text style={styles.dateTitle}>날짜</Text>
+                  <TouchableOpacity
+                    onPress={openDatepicker}
+                    style={styles.datePicker}
+                  >
+                    <Text style={styles.dateText}>
+                      {date.toLocaleDateString()}
+                      &#40;{dayOfWeek(date.getDay())}&#41;
+                    </Text>
+                  </TouchableOpacity>
+                </View>
                 {open && (
                   <DateTimePicker
                     testID="dateTimePicker"
                     value={date}
                     mode={mode}
-                    is24Hour={true}
                     display="calendar"
                     onChange={onChange}
-                    on
                   />
                 )}
                 <View style={styles.timeContainer}>
-                  <Text>시간</Text>
-                  <Picker
+                  <Text style={styles.timeTitle}>시간</Text>
+                  <Text style={styles.timeText}>{time}</Text>
+                  {/* <Picker
                     style={styles.timePicker}
                     selectedValue={time}
                     onValueChange={handleTimeChange}
@@ -121,8 +144,10 @@ const BarDetail = ({ bar }) => {
                     <Picker.Item label="21:00" value="21:00" />
                     <Picker.Item label="22:00" value="22:00" />
                     <Picker.Item label="23:00" value="23:00" />
-                  </Picker>
+                  </Picker> */}
+                  
                 </View>
+                <TimeTable onTimeChange={handleTimeChange}/>
                 <View style={styles.requestContainer}>
                   <Text>요청사항</Text>
                   <TextInput
@@ -233,6 +258,14 @@ const styles = StyleSheet.create({
   timeContainer: {
     flexDirection: "row",
     alignItems: "center",
+    paddingVertical: 10,
+  },
+  timeTitle:{},
+  timeText:{
+    marginHorizontal: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    fontWeight: "bold",
   },
   reservationContainer: {},
   requestContainer: {

@@ -35,10 +35,11 @@ const TimeTable = ({onTimeChange}) => {
             style={[
               styles.timeSlot,
               {
-                backgroundColor: timeSlot.available ? "#FFD88E" : "#b3b3b3",
+                backgroundColor: timeSlot.available ? "#FFD88E" : "#D9D9D9",
               },
             ]}
             onPress={() => handleTimeChange(timeSlot.value)}
+            disabled = {!timeSlot.available}
           >
             <Text style={styles.timeSlotText}>{timeSlot.label}</Text>
           </TouchableOpacity>
@@ -55,10 +56,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 10,
     marginVertical: 10,
-    backgroundColor: "#e1e1e1",
+    backgroundColor: "#ECECEC",
   },
   timeSlotsContainer: {
-    width: "90%",
+    width: "91%",
     flexDirection: "row",
     flexWrap: "wrap",
   },
