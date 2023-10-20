@@ -3,17 +3,19 @@ import { StyleSheet, Text, View, Image } from "react-native";
 
 import simya from "../../assets/심야식당.jpeg";
 
-const Menu = ({menu}) => {
+const Menu = ({ menu }) => {
   return (
     <View style={styles.menu}>
       <View style={styles.menuText}>
-        <Text style={styles.menuName}>육전</Text>
-        <Text style={styles.menuDesc}>
-          얇게 썬 쇠고기를 달걀 반죽에 담그고 튀긴 한국식 하와이 요리입니다.
-        </Text>
-        <Text style={styles.menuPrice}>15000원</Text>
+        <Text style={styles.menuName}>{menu.menuName}</Text>
+        <Text style={styles.menuDesc}>{menu.menuDesc}</Text>
+        <Text style={styles.menuPrice}>{menu.price.toLocaleString()}원</Text>
       </View>
-      <Image style={styles.menuImg} source={simya} resizeMode="cover"></Image>
+      <Image
+        style={styles.menuImg}
+        source={menu.menuImage}
+        resizeMode="cover"
+      ></Image>
     </View>
   );
 };
