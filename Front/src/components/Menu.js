@@ -6,16 +6,16 @@ import simya from "../../assets/심야식당.jpeg";
 const Menu = ({ menu }) => {
   return (
     <View style={styles.menu}>
-      <View style={styles.menuText}>
-        <Text style={styles.menuName}>{menu.menuName}</Text>
-        <Text style={styles.menuDesc}>{menu.menuDesc}</Text>
-        <Text style={styles.menuPrice}>{menu.price.toLocaleString()}원</Text>
-      </View>
       <Image
         style={styles.menuImg}
         source={menu.menuImage}
         resizeMode="cover"
       ></Image>
+      <View style={styles.menuText}>
+        <Text style={styles.menuName}>{menu.menuName}</Text>
+        <Text style={styles.menuDesc}>{menu.menuDesc}</Text>
+        <Text style={styles.menuPrice}>{menu.price.toLocaleString()}원</Text>
+      </View>
     </View>
   );
 };
@@ -23,13 +23,12 @@ const Menu = ({ menu }) => {
 const styles = StyleSheet.create({
   menu: {
     width: "100%",
-    padding: 20,
+    paddingVertical: 20,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#dddddd",
     borderBottomWidth: 1,
-    borderColor: "grey",
+    borderColor: "#D7DBDF",
   },
   menuText: {
     maxWidth: "70%",
@@ -37,17 +36,22 @@ const styles = StyleSheet.create({
   },
   menuName: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: "500",
+    color: "#393E47",
   },
-  menuDesc: {},
+  menuDesc: {
+    color: "#7E8389",
+  },
   menuPrice: {
     fontSize: 14,
-    fontWeight: "bold",
+    fontWeight: "700",
     marginTop: 10,
   },
   menuImg: {
     width: 80,
     height: 80,
+    marginLeft: 10,
+    borderRadius: 10,
   },
 });
 export default Menu;
