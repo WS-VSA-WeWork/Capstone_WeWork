@@ -5,6 +5,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Main from "./src/pages/Main";
 import BarDetail from "./src/pages/BarDetail";
+import Order from "./src/pages/Order";
+import Confirm from "./src/pages/Confirm";
 
 const Stack = createNativeStackNavigator();
 
@@ -14,6 +16,8 @@ export default function App() {
       <Stack.Navigator>
         <Stack.Screen name="Main" component={Main} />
         <Stack.Screen name="식당 상세" component={BarDetail}/>
+        <Stack.Screen name="결제하기" component={Order}/>
+        <Stack.Screen name="예약완료" component={Confirm}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
