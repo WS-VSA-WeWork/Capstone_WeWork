@@ -10,6 +10,8 @@ const Main = () => {
   //더미데이터
   const bars = {
     simya: {
+      date: "2023.11.10(금)",
+      people: 20,
       name: "백수씨 심야식당",
       address: "중구 충무로5가 82-10",
       image: simya,
@@ -31,8 +33,8 @@ const Main = () => {
         { label: "17:00", value: "17:00", available: true },
         { label: "17:30", value: "17:30", available: true },
         { label: "18:00", value: "18:00", available: true },
-        { label: "18:30", value: "18:30", available: false },
-        { label: "19:00", value: "19:00", available: false },
+        { label: "18:30", value: "18:30", available: true },
+        { label: "19:00", value: "19:00", available: true },
         { label: "19:30", value: "19:30", available: true },
         { label: "20:00", value: "20:00", available: false },
         { label: "20:30", value: "20:30", available: false },
