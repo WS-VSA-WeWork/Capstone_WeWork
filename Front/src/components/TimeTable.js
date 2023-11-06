@@ -27,11 +27,11 @@ const TimeTable = ({ onTimeChange }) => {
   const [selectedTimes, setSelectedTimes] = useState([]);
 
   useEffect(() => {
-    if(startTime && lastTime){
+    if (startTime && lastTime) {
       const result = startTime + " - " + lastTime;
       onTimeChange(result);
     }
-  },[startTime, lastTime, onTimeChange])
+  }, [startTime, lastTime, onTimeChange]);
 
   const handleTimeChange = (selectedTime) => {
     const selectedIndex = timeSlots.findIndex(
@@ -54,7 +54,8 @@ const TimeTable = ({ onTimeChange }) => {
         // 비활성화된 시간이 있으면 마지막 시간을 설정하지 않고 시작 시간을 업데이트
         setStartTime(selectedTime);
         setSelectedTimes([selectedTime]);
-      } else {  // 마지막 시간을 설정하고 상태를 초기화
+      } else {
+        // 마지막 시간을 설정하고 상태를 초기화
         const startDateTime = new Date(`2023-10-10T${startTime}:00`);
         const selectedDateTime = new Date(`2023-10-10T${selectedTime}:00`);
 
@@ -66,8 +67,10 @@ const TimeTable = ({ onTimeChange }) => {
         } else {
           //선택된 시간 + 30분
           selectedDateTime.setMinutes(selectedDateTime.getMinutes() + 30);
-          const formattedTime = selectedDateTime.getMinutes() < 10 ? `0${selectedDateTime.getMinutes()}` : selectedDateTime.getMinutes();
-          console.log(selectedDateTime.getHours() + ":" + formattedTime);
+          const formattedTime =
+            selectedDateTime.getMinutes() < 10
+              ? `0${selectedDateTime.getMinutes()}`
+              : selectedDateTime.getMinutes();
           setLastTime(selectedDateTime.getHours() + ":" + formattedTime);
           setIsStartTimeSelected(false);
 
@@ -98,16 +101,29 @@ const TimeTable = ({ onTimeChange }) => {
               styles.timeSlot,
               {
                 backgroundColor: selectedTimes.includes(timeSlot.value)
-                  ? "#FFA07A"
+                  ? "#1AB277"
                   : timeSlot.available
-                  ? "#FFD88E"
+                  ? "#E0F7ED"
                   : "#D9D9D9",
               },
             ]}
             onPress={() => handleTimeChange(timeSlot.value)}
             disabled={!timeSlot.available}
           >
-            <Text style={styles.timeSlotText}>{timeSlot.label}</Text>
+            <Text
+              style={[
+                styles.timeSlotText,
+                {
+                  color: selectedTimes.includes(timeSlot.value)
+                    ? "#ffffff"
+                    : timeSlot.available
+                    ? "#393E47"
+                    : "#ffffff",
+                },
+              ]}
+            >
+              {timeSlot.label}
+            </Text>
           </TouchableOpacity>
         ))}
       </View>
@@ -119,13 +135,15 @@ const styles = StyleSheet.create({
   timeContainer: {
     width: "100%",
     flexDirection: "column",
-    alignItems: "center",
     paddingVertical: 10,
     marginVertical: 10,
-    backgroundColor: "#ECECEC",
+    backgroundColor: "#F9FAFC",
+    borderWidth: 1,
+    borderColor: "#E9EAEC",
+    borderRadius: 8,
   },
   timeSlotsContainer: {
-    width: "91%",
+    width: "100%",
     flexDirection: "row",
     flexWrap: "wrap",
   },
@@ -137,6 +155,7 @@ const styles = StyleSheet.create({
   },
   timeSlotText: {
     fontSize: 16,
+    fontWeight: "500",
   },
 });
 
