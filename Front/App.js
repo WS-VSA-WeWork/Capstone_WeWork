@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Main from "./src/pages/Main";
 import BarDetail from "./src/pages/BarDetail";
+import UserReservation from "./src/pages/userReservation";
 
 const Stack = createNativeStackNavigator();
 
@@ -13,7 +14,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Main" component={Main} />
-        <Stack.Screen name="식당 상세" component={BarDetail}/>
+        <Stack.Screen name="식당 상세" component={BarDetail} />
       </Stack.Navigator>
     </NavigationContainer>
   );
