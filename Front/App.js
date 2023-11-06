@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Main from "./src/pages/Main";
 import BarDetail from "./src/pages/BarDetail";
+import UserReservation from "./src/pages/userReservation";
 import Order from "./src/pages/Order";
 import Confirm from "./src/pages/Confirm";
 
