@@ -9,6 +9,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 import location from "../../assets/location.png";
@@ -21,13 +22,16 @@ import TimeTable from "../components/TimeTable";
 
 const BarDetail = ({ route }) => {
   const [date, setDate] = useState(new Date());
-  const [open, setOpen] = useState(false);
-  const [mode, setMode] = useState("date");
+  // const [open, setOpen] = useState(false);
+  // const [mode, setMode] = useState("date");
   const [time, setTime] = useState("시간을 선택해주세요");
   const [showForm, setShowForm] = useState(false);
   const [btnActive, setBtnActive] = useState(false);
+  const [reservDate, setReservDate] = useState();
 
   const bar = route.params.bar;
+
+  const navigation = useNavigation();
 
   const showReservationForm = () => {
     setShowForm(true);
@@ -41,20 +45,20 @@ const BarDetail = ({ route }) => {
     }
   };
 
-  // Datepicker
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setDate(currentDate);
-    setOpen(false);
-  };
+  // // Datepicker
+  // const onChange = (event, selectedDate) => {
+  //   const currentDate = selectedDate || date;
+  //   setDate(currentDate);
+  //   setOpen(false);
+  // };
 
-  const openMode = (currentMode) => {
-    setOpen(true);
-    setMode(currentMode);
-  };
+  // const openMode = (currentMode) => {
+  //   setOpen(true);
+  //   setMode(currentMode);
+  // };
 
   const openDatepicker = () => {
-    openMode("date");
+    // openMode("date");
   };
 
   const onChangeText = (text) => {
@@ -65,6 +69,24 @@ const BarDetail = ({ route }) => {
   const dayOfWeek = (dateIdx) => {
     const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
     return daysOfWeek[dateIdx];
+  };
+  
+  const localeDate = (date) => {
+    const result = `${date.toLocaleDateString()}(${dayOfWeek(date.getDay())})`;
+    // setReservDate(result);
+    return result;
+  }
+
+  const navigateToOrder = () => {
+    const reservationDetails = {
+      barName: bar.name,
+      barImage: bar.image,
+      reservdate: bar.date,
+      people: bar.people,
+      reservetime: time,
+    }
+    console.log(reservationDetails);
+    navigation.navigate("결제하기", reservationDetails);
   };
 
   return (
@@ -115,7 +137,7 @@ const BarDetail = ({ route }) => {
                 <Text style={styles.rating}>{bar.rating}</Text>
               </View>
               <View style={styles.deviderLine}></View>
-              <Text style={styles.entryData}>40석</Text>
+              <Text style={styles.entryData}>총 40석</Text>
             </View>
             <View style={styles.openTimeContainer}>
               {/* <Text style={styles.entryTitle}>영업시간</Text> */}
@@ -147,10 +169,16 @@ const BarDetail = ({ route }) => {
                 style={styles.datePicker}
               >
                 <Text style={styles.entryData}>
-                  {date.toLocaleDateString()}
-                  &#40;{dayOfWeek(date.getDay())}&#41;
+                  {bar.date}
+                  {/* {date.toLocaleDateString()}
+                  &#40;{dayOfWeek(date.getDay())}&#41; */}
                 </Text>
               </TouchableOpacity>
+            </View>
+
+            <View style={styles.peopleContainer}>
+              <Text style={styles.entryTitle}>인원수</Text>
+              <Text style={styles.entryData}>{bar.people}명</Text>
             </View>
 
             <View style={styles.timeContainer}>
@@ -175,32 +203,6 @@ const BarDetail = ({ route }) => {
             <View style={styles.reservationContainer}>
               {showForm && (
                 <>
-                  {/* <View style={styles.dateContainer}>
-                  <Text style={styles.dateTitle}>날짜</Text>
-                  <TouchableOpacity
-                    onPress={openDatepicker}
-                    style={styles.datePicker}
-                  >
-                    <Text style={styles.dateText}>
-                      {date.toLocaleDateString()}
-                      &#40;{dayOfWeek(date.getDay())}&#41;
-                    </Text>
-                  </TouchableOpacity>
-                </View> */}
-                  {/* {open && (
-                    <DateTimePicker
-                      testID="dateTimePicker"
-                      value={date}
-                      mode={mode}
-                      display="calendar"
-                      onChange={onChange}
-                    />
-                  )} */}
-                  {/* <View style={styles.timeContainer}>
-                  <Text style={styles.timeTitle}>시간</Text>
-                  <Text style={styles.timeText}>{time}</Text>
-                </View>
-                <TimeTable onTimeChange={handleTimeChange} /> */}
                   {/* <View style={styles.requestContainer}>
                     <Text>요청사항</Text>
                     <TextInput
@@ -224,11 +226,8 @@ const BarDetail = ({ route }) => {
               backgroundColor: btnActive ? "#1AB277" : "#D9D9D9",
             },
           ]}
-          disabled={btnActive ? false : true}
-          onPress={() => {
-            // 예약하기 API 호출
-            showReservationForm();
-          }}
+          disabled={!btnActive}
+          onPress={navigateToOrder}
         >
           <Text style={styles.buttonText}>예약하기</Text>
         </TouchableOpacity>
@@ -380,6 +379,11 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
   },
   datePicker: {},
+  peopleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingBottom: 5,
+  },
   timeContainer: {
     flexDirection: "row",
     alignItems: "center",
