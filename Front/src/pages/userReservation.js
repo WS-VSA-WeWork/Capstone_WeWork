@@ -311,7 +311,7 @@ export default function UserReservation() {
                   {igakaya && (
                     <View style={styles.store}>
                       <Image
-                        source={require("C:/Users/wandong/OneDrive/바탕 화면/capStone/capStone/assets/백수씨.png")}
+                        source={require("../../assets/백수씨.png")}
                         style={styles.picture}
                       />
                       <View style={styles.content}>
@@ -325,7 +325,7 @@ export default function UserReservation() {
                   {chicken && (
                     <View style={styles.store}>
                       <Image
-                        source={require("C:/Users/wandong/OneDrive/바탕 화면/capStone/capStone/assets/술무로.png")}
+                        source={require("../../assets/술무로.png")}
                         style={styles.picture}
                       />
                       <View style={styles.content}>
@@ -340,7 +340,7 @@ export default function UserReservation() {
                       <View style={styles.listCard}>
                         <View>
                           <Image
-                            source={require("C:/Users/wandong/OneDrive/바탕 화면/capStone/capStone/assets/백수씨.png")}
+                            source={require("../../assets/백수씨.png")}
                             style={styles.picturetmp}
                           />
                         </View>
@@ -359,7 +359,7 @@ export default function UserReservation() {
                       </View>
                       <View style={styles.store}>
                         <Image
-                          source={require("C:/Users/wandong/OneDrive/바탕 화면/capStone/capStone/assets/백수씨.png")}
+                          source={require("../../assets/백수씨.png")}
                           style={styles.picture}
                         />
                         <View style={styles.content}>
@@ -370,7 +370,7 @@ export default function UserReservation() {
                       </View>
                       <View style={styles.store}>
                         <Image
-                          source={require("C:/Users/wandong/OneDrive/바탕 화면/capStone/capStone/assets/술무로.png")}
+                          source={require("../../assets/술무로.png")}
                           style={styles.picture}
                         />
                         <View style={styles.content}>
@@ -381,7 +381,7 @@ export default function UserReservation() {
                       </View>
                       <View style={styles.store}>
                         <Image
-                          source={require("C:/Users/wandong/OneDrive/바탕 화면/capStone/capStone/assets/술무로.png")}
+                          source={require("../../assets/술무로.png")}
                           style={styles.picture}
                         />
                         <View style={styles.content}>
@@ -392,7 +392,7 @@ export default function UserReservation() {
                       </View>
                       <View style={styles.store}>
                         <Image
-                          source={require("C:/Users/wandong/OneDrive/바탕 화면/capStone/capStone/assets/술무로.png")}
+                          source={require("../../assets/술무로.png")}
                           style={styles.picture}
                         />
                         <View style={styles.content}>
@@ -403,7 +403,7 @@ export default function UserReservation() {
                       </View>
                       <View style={styles.store}>
                         <Image
-                          source={require("C:/Users/wandong/OneDrive/바탕 화면/capStone/capStone/assets/술무로.png")}
+                          source={require("../../assets/술무로.png")}
                           style={styles.picture}
                         />
                         <View style={styles.content}>
