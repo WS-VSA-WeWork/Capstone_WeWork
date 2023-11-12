@@ -54,8 +54,23 @@ const Main = () => {
       <Text>끼리끼리</Text>
       <Button
         title="식당 상세페이지"
+        style={styles.button}
         onPress={() => {
           navigation.navigate("식당 상세", { bar: bars.simya });
+        }}
+      />
+      <Button
+        title="술집 둘러보기"
+        style={styles.button}
+        onPress={() => {
+          navigation.navigate("userReservation");
+        }}
+      />
+      <Button
+        title="사장님 메인페이지"
+        style={styles.button}
+        onPress={() => {
+          navigation.navigate("사장님 전용 메인", { bar: bars.simya });
         }}
       />
       <StatusBar style="auto" />
@@ -69,6 +84,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+  },
+  button:{
+    marginVertical: 20,
   },
 });
 
