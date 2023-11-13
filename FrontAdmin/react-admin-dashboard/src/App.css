@@ -1,0 +1,9 @@
+.container {
+    display: flex;
+    flex-direction: row;
+}
+
+.others {
+    flex: 4;
+    background-color: wheat;
+}
