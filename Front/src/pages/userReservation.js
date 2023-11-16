@@ -19,8 +19,12 @@ import { AntDesign } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
+import ReservationCard from "../components/ReservationCard";
+import { MaterialIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 export default function UserReservation() {
+  const navigation = useNavigation();
   const [servicing, setServicing] = useState(true);
   const [reservation, setReservation] = useState(false);
   const [igakaya, setIgakaya] = useState(false);
@@ -172,6 +176,18 @@ export default function UserReservation() {
               내 예약 +
             </Text>
           </TouchableOpacity>
+          <Pressable
+            onPress={() => {
+              navigation.navigate("마이페이지");
+            }}
+          >
+            <MaterialIcons
+              name="tag-faces"
+              size={27}
+              color="black"
+              style={{ marginLeft: 30 }}
+            />
+          </Pressable>
         </View>
 
         <Animated.View
@@ -296,6 +312,7 @@ export default function UserReservation() {
                     </Text>
                   )}
                 </View>
+
                 <View>
                   <Text
                     style={{
@@ -309,109 +326,26 @@ export default function UserReservation() {
                 </View>
                 <View>
                   {igakaya && (
-                    <View style={styles.store}>
-                      <Image
-                        source={require("../../assets/백수씨.png")}
-                        style={styles.picture}
-                      />
-                      <View style={styles.content}>
-                        <Text>이자카야</Text>
-                        <Text>#이자카야 #분위기 좋음</Text>
-                        <Text>새벽 3시 마감</Text>
-                      </View>
+                    <View style={styles.cardContainer}>
+                      <ReservationCard />
+                      <ReservationCard />
+                      <ReservationCard />
                     </View>
                   )}
 
                   {chicken && (
-                    <View style={styles.store}>
-                      <Image
-                        source={require("../../assets/술무로.png")}
-                        style={styles.picture}
-                      />
-                      <View style={styles.content}>
-                        <Text>치킨</Text>
-                        <Text>#이자카야 #분위기 좋음</Text>
-                        <Text>새벽 3시 마감</Text>
-                      </View>
+                    <View style={styles.cardContainer}>
+                      <ReservationCard />
+                      <ReservationCard />
+                      <ReservationCard />
                     </View>
                   )}
                   {all && (
-                    <View style={styles.listContainer}>
-                      <View style={styles.listCard}>
-                        <View>
-                          <Image
-                            source={require("../../assets/백수씨.png")}
-                            style={styles.picturetmp}
-                          />
-                        </View>
-                        <View>
-                          <Text>백수씨 심야식당</Text>
-                          <Text>"별"</Text>
-                          <Text>0.5</Text>
-                        </View>
-                        <View>
-                          <Text>시간</Text>
-                          <Text>총좌석</Text>
-                        </View>
-                        <View>
-                          <Text>#이자카야 #분위기좋음</Text>
-                        </View>
-                      </View>
-                      <View style={styles.store}>
-                        <Image
-                          source={require("../../assets/백수씨.png")}
-                          style={styles.picture}
-                        />
-                        <View style={styles.content}>
-                          <Text>백수씨 심야식당</Text>
-                          <Text>#이자카야 #분위기 좋음</Text>
-                          <Text>새벽 3시 마감</Text>
-                        </View>
-                      </View>
-                      <View style={styles.store}>
-                        <Image
-                          source={require("../../assets/술무로.png")}
-                          style={styles.picture}
-                        />
-                        <View style={styles.content}>
-                          <Text>술무로</Text>
-                          <Text>#이자카야 #분위기 좋음</Text>
-                          <Text>새벽 3시 마감</Text>
-                        </View>
-                      </View>
-                      <View style={styles.store}>
-                        <Image
-                          source={require("../../assets/술무로.png")}
-                          style={styles.picture}
-                        />
-                        <View style={styles.content}>
-                          <Text>술무로</Text>
-                          <Text>#이자카야 #분위기 좋음</Text>
-                          <Text>새벽 3시 마감</Text>
-                        </View>
-                      </View>
-                      <View style={styles.store}>
-                        <Image
-                          source={require("../../assets/술무로.png")}
-                          style={styles.picture}
-                        />
-                        <View style={styles.content}>
-                          <Text>술무로</Text>
-                          <Text>#이자카야 #분위기 좋음</Text>
-                          <Text>새벽 3시 마감</Text>
-                        </View>
-                      </View>
-                      <View style={styles.store}>
-                        <Image
-                          source={require("../../assets/술무로.png")}
-                          style={styles.picture}
-                        />
-                        <View style={styles.content}>
-                          <Text>술무로</Text>
-                          <Text>#이자카야 #분위기 좋음</Text>
-                          <Text>새벽 3시 마감</Text>
-                        </View>
-                      </View>
+                    // 여기 부터 카드
+                    <View style={styles.cardContainer}>
+                      <ReservationCard />
+                      <ReservationCard />
+                      <ReservationCard />
                     </View>
                   )}
                 </View>
@@ -601,7 +535,7 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: 40,
-    paddingTop: 80,
+    paddingTop: 30,
     flexDirection: "row",
     gap: 20,
     backgroundColor: "#F1F2F6",
@@ -684,7 +618,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#1F7457",
     marginHorizontal: 30,
     marginTop: 0,
-    marginBottom: 50,
+    marginBottom: 30,
     borderRadius: 10,
     gap: 10,
   },
@@ -881,13 +815,58 @@ const styles = StyleSheet.create({
   //   left: 0,
   //   right: 0,
   // },
-  listCard: {
-    width: "90%",
-    backgroundColor: "red",
+  //카드 스타일
+  cardContainer: {
+    justifyContent: "center",
+    alignItems: "center",
   },
-  picturetmp: {
-    resizeMode: "cover",
+  card: {
+    borderRadius: 20,
+    flex: 1,
+    width: "85%",
+    marginVertical: 10,
+  },
+  cardContent: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    alignItems: "center",
+  },
+  cardContent2: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    alignItems: "center",
+    gap: 8,
+  },
+  cardContentContainer: {
+    alignItems: "flex-start",
     width: "100%",
+    backgroundColor: "#F1F2F6",
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    gap: 3,
   },
-  listContainer: { justifyContent: "center", alignItems: "center" },
+  cardPicture: {
+    width: "100%",
+    height: 200,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  cardSpace: {
+    width: "100%",
+    backgroundColor: "green",
+    height: 20,
+  },
+  cardTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginRight: 10,
+  },
+  cardRating: {
+    fontSize: 15,
+    fontWeight: "bold",
+    marginLeft: 5,
+  },
+  // 카드 스타일 끝
 });
