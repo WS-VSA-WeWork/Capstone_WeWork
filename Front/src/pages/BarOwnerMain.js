@@ -7,7 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import ReservationCard from "../components/ReservationCard";
+import ReservationCard from "../components/ReservationCardforOwner";
 
 const BarOwnerMain = ({ route }) => {
   const bar = route.params.bar;

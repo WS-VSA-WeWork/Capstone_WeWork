@@ -2,7 +2,7 @@ import React from "react";
 
 import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
 
-const ReservationCard = () => {
+const ReservationCardforOwner = () => {
   return (
     <TouchableOpacity style={styles.reservationContainer}>
       <View style={styles.info}>
@@ -60,4 +60,4 @@ const styles = StyleSheet.create({
   infoData: {},
 });
 
-export default ReservationCard;
+export default ReservationCardforOwner;
