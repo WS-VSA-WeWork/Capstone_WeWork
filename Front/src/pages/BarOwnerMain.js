@@ -1,16 +1,61 @@
-import React from "react";
+import { React, useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
   StyleSheet,
   Image,
+  Animated,
   ScrollView,
   TouchableOpacity,
 } from "react-native";
 import ReservationCard from "../components/ReservationCardforOwner";
+import ReviewCard from "../components/ReviewCard";
 
 const BarOwnerMain = ({ route }) => {
+  const [reservation, setReservation] = useState(true);
+  const [review, setReviews] = useState(false);
+
   const bar = route.params.bar;
+
+  const MovingBar = useRef(new Animated.Value(38)).current;
+  const barWidth = useRef(new Animated.Value(110)).current;
+
+  const onReservation = () => {
+    setReservation(true);
+    setReviews(false);
+  };
+
+  const onReview = () => {
+    setReservation(false);
+    setReviews(true);
+  };
+
+  useEffect(() => {
+    // 상태에 따라 바 위치를 조절
+    if (reservation) {
+      Animated.timing(MovingBar, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: false,
+      }).start();
+      Animated.timing(barWidth, {
+        toValue: 110,
+        duration: 300,
+        useNativeDriver: false,
+      }).start();
+    } else if (review) {
+      Animated.timing(MovingBar, {
+        toValue: 185, // 원하는 위치로 바 이동
+        duration: 300,
+        useNativeDriver: false,
+      }).start();
+      Animated.timing(barWidth, {
+        toValue: 55,
+        duration: 300,
+        useNativeDriver: false,
+      }).start();
+    }
+  }, [reservation, review, MovingBar]);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -35,32 +80,88 @@ const BarOwnerMain = ({ route }) => {
           </View>
         </View>
       </View>
+
       <View style={styles.bottomContainer}>
-        <Text style={styles.title}>예약 일정</Text>
+        <View style={styles.contentTitle}>
+          <View style={styles.tabContainer}>
+            <TouchableOpacity onPress={onReservation}>
+              <Text
+                style={{
+                  ...styles.title,
+                  color: reservation ? "#393E47" : "#9FA8B6",
+                  marginBottom: 5,
+                }}
+              >
+                예약 일정
+              </Text>
+            </TouchableOpacity>
+          </View>
 
-        <Text style={styles.semiTitle}>2023-11-10(금)</Text>
+          <View style={styles.tabContainer}>
+            <TouchableOpacity onPress={onReview}>
+              <Text
+                style={{
+                  ...styles.title,
+                  color: review ? "#393E47" : "#9FA8B6",
+                  marginBottom: 5,
+                }}
+              >
+                리뷰
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
 
-        <ReservationCard />
-        <TouchableOpacity style={styles.reservationContainer}>
-          <View style={styles.info}>
-            <Text style={styles.semiTitle}>20:00 ~ 21:30</Text>
-            <Text style={styles.warning}>21시간 전</Text>
+        <Animated.View
+          style={{
+            backgroundColor: "#24242F",
+            width: barWidth,
+            height: 3,
+            marginBottom: 10,
+            transform: [
+              {
+                translateX: MovingBar,
+              },
+            ],
+          }}
+        ></Animated.View>
+
+        {/* 예약 일정 탭 */}
+        {reservation && (
+          <View style={styles.contentContainer}>
+
+            <Text style={styles.semiTitle}>2023-11-10(금)</Text>
+
+            <ReservationCard />
+            <TouchableOpacity style={styles.reservationContainer}>
+              <View style={styles.info}>
+                <Text style={styles.semiTitle}>20:00 ~ 21:30</Text>
+                <Text style={styles.warning}>21시간 전</Text>
+              </View>
+              <View style={styles.info}>
+                <Text style={styles.infoLabel}>인원수</Text>
+                <Text sytle={styles.infoData}>
+                  <Text style={styles.warning}>25</Text>명
+                </Text>
+              </View>
+              <View style={styles.info}>
+                <Text style={styles.infoLabel}>예약자명</Text>
+                <Text sytle={styles.infoData}>김철수</Text>
+              </View>
+              <View style={styles.info}>
+                <Text style={styles.infoLabel}>연락처</Text>
+                <Text sytle={styles.infoData}>010-5432-9876</Text>
+              </View>
+            </TouchableOpacity>
           </View>
-          <View style={styles.info}>
-            <Text style={styles.infoLabel}>인원수</Text>
-            <Text sytle={styles.infoData}>
-              <Text style={styles.warning}>25</Text>명
-            </Text>
+        )}
+
+        {/* 리뷰 탭 */}
+        {review && (
+          <View style={styles.reviewContainer}>
+            <ReviewCard />
           </View>
-          <View style={styles.info}>
-            <Text style={styles.infoLabel}>예약자명</Text>
-            <Text sytle={styles.infoData}>김철수</Text>
-          </View>
-          <View style={styles.info}>
-            <Text style={styles.infoLabel}>연락처</Text>
-            <Text sytle={styles.infoData}>010-5432-9876</Text>
-          </View>
-        </TouchableOpacity>
+        )}
       </View>
     </ScrollView>
   );
@@ -69,6 +170,7 @@ const BarOwnerMain = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#ffffff",
+    minHeight: "100%",
   },
   topContainer: {
     backgroundColor: "#F1F2F6",
@@ -107,9 +209,16 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   tag: {},
-
   bottomContainer: {
     padding: 20,
+  },
+  contentTitle: {
+    flexDirection: "row",
+  },
+  tabContainer: {
+    width: "50%",
+    flexDirection: "row",
+    justifyContent: "flex-start",
   },
   reservationContainer: {
     backgroundColor: "#E0F7ED",
