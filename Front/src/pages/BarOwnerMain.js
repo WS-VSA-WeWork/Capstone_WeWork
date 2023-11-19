@@ -1,4 +1,4 @@
-import { React, useState, useEffect, useRef } from "react";
+import { React, useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,12 +8,22 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
+import { Calendar, Agenda } from "react-native-calendars";
+import { AntDesign } from '@expo/vector-icons';
+
 import ReservationCard from "../components/ReservationCardforOwner";
 import ReviewCard from "../components/ReviewCard";
 
 const BarOwnerMain = ({ route }) => {
   const [reservation, setReservation] = useState(true);
   const [review, setReviews] = useState(false);
+  const [selectedDate, setSelectedDate] = useState("");
+
+  const reservations = {
+    "2023-11-20": [{ name: "예약 1" }, { name: "예약 2" }],
+    "2023-11-21": [{ name: "예약 3" }],
+    // 다른 날짜의 예약들...
+  };
 
   const bar = route.params.bar;
 
@@ -57,6 +67,10 @@ const BarOwnerMain = ({ route }) => {
     }
   }, [reservation, review, MovingBar]);
 
+  const onDayPress = (day) => {
+    setSelectedDate(day.dayString);
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.topContainer}>
@@ -76,7 +90,8 @@ const BarOwnerMain = ({ route }) => {
                 </Text>
               ))}
             </View>
-            <Text>별점: {bar.rating}</Text>
+            
+            <Text><AntDesign name="star" size={20} color="#1AB277" /> {bar.rating}</Text>
           </View>
         </View>
       </View>
@@ -129,6 +144,30 @@ const BarOwnerMain = ({ route }) => {
         {/* 예약 일정 탭 */}
         {reservation && (
           <View style={styles.contentContainer}>
+            <Calendar
+              onDayPress={onDayPress}
+              markedDates={{
+                ...Object.keys(reservations).reduce((acc, curr) => {
+                  acc[curr] = { marked: true };
+                  return acc;
+                }, {}),
+                [selectedDate]: { selected: true },
+              }}
+            />
+
+            {selectedDate && (
+              <Agenda
+                items={reservations}
+                selected={selectedDate}
+                renderItem={(item) => {
+                  return (
+                    <View>
+                      <Text>{item.name}</Text>
+                    </View>
+                  );
+                }}
+              />
+            )}
 
             <Text style={styles.semiTitle}>2023-11-10(금)</Text>
 
@@ -159,7 +198,7 @@ const BarOwnerMain = ({ route }) => {
         {/* 리뷰 탭 */}
         {review && (
           <View style={styles.reviewContainer}>
-            <ReviewCard />
+            <ReviewCard/>
           </View>
         )}
       </View>
