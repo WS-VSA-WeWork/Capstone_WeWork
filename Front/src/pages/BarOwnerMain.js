@@ -49,7 +49,7 @@ const BarOwnerMain = ({ route }) => {
         useNativeDriver: false,
       }).start();
       Animated.timing(barWidth, {
-        toValue: 110,
+        toValue: 100,
         duration: 300,
         useNativeDriver: false,
       }).start();
@@ -60,7 +60,7 @@ const BarOwnerMain = ({ route }) => {
         useNativeDriver: false,
       }).start();
       Animated.timing(barWidth, {
-        toValue: 55,
+        toValue: 50,
         duration: 300,
         useNativeDriver: false,
       }).start();
