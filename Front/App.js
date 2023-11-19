@@ -13,6 +13,7 @@ import MyPage from "./src/pages/MyPage";
 import MyBan from "./src/pages/MyBan";
 import MyProfile from "./src/pages/MyProfile";
 import MyReservation from "./src/pages/MyReservation";
+import BarOwnerMain from "./src/pages/BarOwnerMain";
 
 const Stack = createNativeStackNavigator();
 
@@ -30,6 +31,7 @@ export default function App() {
         <Stack.Screen name="위약정보" component={MyBan} />
         <Stack.Screen name="프로필관리" component={MyProfile} />
         <Stack.Screen name="내예약관리" component={MyReservation} />
+        <Stack.Screen name="사장님메인" component={BarOwnerMain} />
       </Stack.Navigator>
     </NavigationContainer>
   );
