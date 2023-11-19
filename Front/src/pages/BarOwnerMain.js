@@ -208,7 +208,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
   },
-  tag: {},
+  tag: {
+    color: "#7E8389",
+  },
   bottomContainer: {
     padding: 20,
   },
