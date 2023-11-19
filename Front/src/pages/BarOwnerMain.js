@@ -8,8 +8,8 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import { Calendar, Agenda } from "react-native-calendars";
-import { AntDesign } from '@expo/vector-icons';
+import { LocaleConfig, Calendar, Agenda } from "react-native-calendars";
+import { AntDesign } from "@expo/vector-icons";
 
 import ReservationCard from "../components/ReservationCardforOwner";
 import ReviewCard from "../components/ReviewCard";
@@ -26,6 +26,50 @@ const BarOwnerMain = ({ route }) => {
   };
 
   const bar = route.params.bar;
+
+  LocaleConfig.locales["kr"] = {
+    monthNames: [
+      "1월",
+      "2월",
+      "3월",
+      "4월",
+      "5월",
+      "6월",
+      "7월",
+      "8월",
+      "9월",
+      "10월",
+      "11월",
+      "12월",
+    ],
+    monthNamesShort: [
+      "1월",
+      "2월",
+      "3월",
+      "4월",
+      "5월",
+      "6월",
+      "7월",
+      "8월",
+      "9월",
+      "10월",
+      "11월",
+      "12월",
+    ],
+    dayNames: [
+      "일요일",
+      "월요일",
+      "화요일",
+      "수요일",
+      "목요일",
+      "금요일",
+      "토요일",
+    ],
+    dayNamesShort: ["일", "월", "화", "수", "목", "금", "토"],
+    today: "오늘",
+  };
+
+  LocaleConfig.defaultLocale = "kr";
 
   const MovingBar = useRef(new Animated.Value(38)).current;
   const barWidth = useRef(new Animated.Value(110)).current;
@@ -68,7 +112,8 @@ const BarOwnerMain = ({ route }) => {
   }, [reservation, review, MovingBar]);
 
   const onDayPress = (day) => {
-    setSelectedDate(day.dayString);
+    setSelectedDate(day.dateString);
+    console.log(day);
   };
 
   return (
@@ -90,8 +135,10 @@ const BarOwnerMain = ({ route }) => {
                 </Text>
               ))}
             </View>
-            
-            <Text><AntDesign name="star" size={20} color="#1AB277" /> {bar.rating}</Text>
+
+            <Text>
+              <AntDesign name="star" size={20} color="#1AB277" /> {bar.rating}
+            </Text>
           </View>
         </View>
       </View>
@@ -155,7 +202,7 @@ const BarOwnerMain = ({ route }) => {
               }}
             />
 
-            {selectedDate && (
+            {/* {selectedDate && (
               <Agenda
                 items={reservations}
                 selected={selectedDate}
@@ -167,9 +214,9 @@ const BarOwnerMain = ({ route }) => {
                   );
                 }}
               />
-            )}
+            )} */}
 
-            <Text style={styles.semiTitle}>2023-11-10(금)</Text>
+            <Text style={styles.semiTitle}>{selectedDate}(금)</Text>
 
             <ReservationCard />
             <TouchableOpacity style={styles.reservationContainer}>
@@ -198,7 +245,7 @@ const BarOwnerMain = ({ route }) => {
         {/* 리뷰 탭 */}
         {review && (
           <View style={styles.reviewContainer}>
-            <ReviewCard/>
+            <ReviewCard />
           </View>
         )}
       </View>
