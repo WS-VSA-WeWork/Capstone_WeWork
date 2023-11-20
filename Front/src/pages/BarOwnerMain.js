@@ -116,6 +116,14 @@ const BarOwnerMain = ({ route }) => {
     console.log(day);
   };
 
+  //한글 요일 반환
+  const dayOfWeek = (day) => {
+    const date = new Date(day);
+    const dateIdx = date.getDay();
+    const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
+    return daysOfWeek[dateIdx];
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.topContainer}>
@@ -216,7 +224,7 @@ const BarOwnerMain = ({ route }) => {
               />
             )} */}
 
-            <Text style={styles.semiTitle}>{selectedDate}(금)</Text>
+            <Text style={styles.semiTitle}>{selectedDate}({dayOfWeek(selectedDate)})</Text>
 
             <ReservationCard />
             <TouchableOpacity style={styles.reservationContainer}>
