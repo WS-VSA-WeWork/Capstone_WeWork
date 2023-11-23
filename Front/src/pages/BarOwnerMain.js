@@ -18,6 +18,7 @@ const BarOwnerMain = ({ route }) => {
   const [reservation, setReservation] = useState(true);
   const [review, setReviews] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
+  const [selectedDay, setSelectedDay] = useState("");
 
   const reservations = {
     "2023-11-20": [{ name: "예약 1" }, { name: "예약 2" }],
@@ -113,7 +114,7 @@ const BarOwnerMain = ({ route }) => {
 
   const onDayPress = (day) => {
     setSelectedDate(day.dateString);
-    console.log(day);
+    // console.log(day);
   };
 
   //한글 요일 반환
@@ -121,7 +122,12 @@ const BarOwnerMain = ({ route }) => {
     const date = new Date(day);
     const dateIdx = date.getDay();
     const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
-    return daysOfWeek[dateIdx];
+    // if (day) {
+    //   return `(${daysOfWeek[dateIdx]})`;
+    // } else {
+    //   return "";
+    // }
+    return `(${daysOfWeek[dateIdx]})`;
   };
 
   return (
@@ -208,6 +214,12 @@ const BarOwnerMain = ({ route }) => {
                 }, {}),
                 [selectedDate]: { selected: true },
               }}
+              theme={{
+                selectedDayBackgroundColor: "#1AB277",
+                dotColor: "#1AB277",
+                todayTextColor: "#6E757B",
+                dayTextColor: "#393E47",
+              }}
             />
 
             {/* {selectedDate && (
@@ -224,29 +236,41 @@ const BarOwnerMain = ({ route }) => {
               />
             )} */}
 
-            <Text style={styles.semiTitle}>{selectedDate}({dayOfWeek(selectedDate)})</Text>
+            {selectedDate && (
+              <>
+                <View style={styles.infoSummary}>
+                  <Text style={styles.semiTitle}>
+                    {selectedDate}
+                    {dayOfWeek(selectedDate)}
+                  </Text>
+                  <Text style={styles.semiTitle}>
+                    2건
+                  </Text>
+                </View>
 
-            <ReservationCard />
-            <TouchableOpacity style={styles.reservationContainer}>
-              <View style={styles.info}>
-                <Text style={styles.semiTitle}>20:00 ~ 21:30</Text>
-                <Text style={styles.warning}>21시간 전</Text>
-              </View>
-              <View style={styles.info}>
-                <Text style={styles.infoLabel}>인원수</Text>
-                <Text sytle={styles.infoData}>
-                  <Text style={styles.warning}>25</Text>명
-                </Text>
-              </View>
-              <View style={styles.info}>
-                <Text style={styles.infoLabel}>예약자명</Text>
-                <Text sytle={styles.infoData}>김철수</Text>
-              </View>
-              <View style={styles.info}>
-                <Text style={styles.infoLabel}>연락처</Text>
-                <Text sytle={styles.infoData}>010-5432-9876</Text>
-              </View>
-            </TouchableOpacity>
+                <ReservationCard />
+                <TouchableOpacity style={styles.reservationContainer}>
+                  <View style={styles.info}>
+                    <Text style={styles.semiTitle}>20:00 ~ 21:30</Text>
+                    <Text style={styles.warning}>21시간 전</Text>
+                  </View>
+                  <View style={styles.info}>
+                    <Text style={styles.infoLabel}>인원수</Text>
+                    <Text sytle={styles.infoData}>
+                      <Text style={styles.warning}>25</Text>명
+                    </Text>
+                  </View>
+                  <View style={styles.info}>
+                    <Text style={styles.infoLabel}>예약자명</Text>
+                    <Text sytle={styles.infoData}>김철수</Text>
+                  </View>
+                  <View style={styles.info}>
+                    <Text style={styles.infoLabel}>연락처</Text>
+                    <Text sytle={styles.infoData}>010-5432-9876</Text>
+                  </View>
+                </TouchableOpacity>
+              </>
+            )}
           </View>
         )}
 
@@ -315,6 +339,11 @@ const styles = StyleSheet.create({
     width: "50%",
     flexDirection: "row",
     justifyContent: "flex-start",
+  },
+  infoSummary:{
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 10,
   },
   reservationContainer: {
     backgroundColor: "#E0F7ED",
