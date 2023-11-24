@@ -13,6 +13,7 @@ import { AntDesign } from "@expo/vector-icons";
 
 import ReservationCard from "../components/ReservationCardforOwner";
 import ReviewCard from "../components/ReviewCard";
+import CustomDayComponent from "../components/CustomDayComponent";
 
 const BarOwnerMain = ({ route }) => {
   const [reservation, setReservation] = useState(true);
@@ -130,6 +131,36 @@ const BarOwnerMain = ({ route }) => {
     return `(${daysOfWeek[dateIdx]})`;
   };
 
+  // const updateMarkedDates = () => {
+  //   const newMarkedDates = {};
+  //   Object.keys(reservations).forEach((date) => {
+  //     const count = reservations[date].length;
+  //     newMarkedDates[date] = {
+  //       marked: true,
+  //       dotColor: "#1AB277",
+  //       customStyles: {
+  //         container: {
+  //           backgroundColor: "white",
+  //         },
+  //         marker: {
+  //           width: 20,
+  //           height: 20,
+  //           borderRadius: 10,
+  //           backgroundColor: "#1AB277",
+  //           justifyContent: "center",
+  //           alignItems: "center",
+  //         },
+  //         markerText: {
+  //           color: "white",
+  //           fontSize: 10,
+  //           fontWeight: "bold",
+  //         },
+  //       },
+  //     };
+  //   });
+  //   return newMarkedDates;
+  // };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.topContainer}>
@@ -214,6 +245,14 @@ const BarOwnerMain = ({ route }) => {
                 }, {}),
                 [selectedDate]: { selected: true },
               }}
+              // markedDates={{
+              //   ...updateMarkedDates(),
+              //   [selectedDate]: { selected: true, selectedColor: "#1AB277" },
+              // }}
+              dayComponent={({date, state}) => (
+                <CustomDayComponent date={date} state={state} onDayPress={onDayPress}/>
+              )}
+              markingType="custom"
               theme={{
                 selectedDayBackgroundColor: "#1AB277",
                 dotColor: "#1AB277",
@@ -236,6 +275,20 @@ const BarOwnerMain = ({ route }) => {
               />
             )} */}
 
+            {/* {selectedDate && (
+              <Agenda
+                items={reservations}
+                selected={selectedDate}
+                renderItem={(item) => {
+                  return (
+                    <View>
+                      <Text>{item.name}</Text>
+                    </View>
+                  );
+                }}
+              />
+            )} */}
+
             {selectedDate && (
               <>
                 <View style={styles.infoSummary}>
@@ -243,9 +296,7 @@ const BarOwnerMain = ({ route }) => {
                     {selectedDate}
                     {dayOfWeek(selectedDate)}
                   </Text>
-                  <Text style={styles.semiTitle}>
-                    2건
-                  </Text>
+                  <Text style={styles.semiTitle}>2건</Text>
                 </View>
 
                 <ReservationCard />
@@ -340,7 +391,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
   },
-  infoSummary:{
+  infoSummary: {
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 10,
