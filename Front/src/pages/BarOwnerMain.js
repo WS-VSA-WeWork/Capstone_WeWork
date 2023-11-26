@@ -328,7 +328,7 @@ const BarOwnerMain = ({ route }) => {
         {/* 리뷰 탭 */}
         {review && (
           <View style={styles.reviewContainer}>
-            <ReviewCard />
+            <ReviewCard isOwner={true}/>
           </View>
         )}
       </View>

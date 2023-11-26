@@ -10,8 +10,9 @@ import {
 
 import simya from "../../assets/심야식당.jpeg";
 import shrimp from "../../assets/shrimp.jpg";
+import salmon from "../../assets/salmon.jpg";
 
-const ReviewCard = () => {
+const ReviewCard = ({isOwner}) => {
   const [reply, setReply] = useState("");
   const [submittedReply, setSubmittedReply] = useState("");
   const [showReplyInput, setShowReplyInput] = useState(false);
@@ -39,10 +40,13 @@ const ReviewCard = () => {
         <Text style={styles.timeStamp}>19시간 전</Text>
       </View>
 
-      <Image source={shrimp} style={styles.reviewImg} resizeMode="cover" />
+      <View style={styles.imgContent}>
+        <Image source={shrimp} style={styles.reviewImg} resizeMode="cover" />
+        <Image source={salmon} style={styles.reviewImg} resizeMode="cover" />
+      </View>
       <Text style={styles.content}>너무 맛있었어요~!</Text>
 
-      {!submittedReply && (
+      {isOwner && !submittedReply && (
         <TouchableOpacity onPress={() => setShowReplyInput(true)}>
           <Text>답글 달기</Text>
         </TouchableOpacity>
@@ -57,9 +61,9 @@ const ReviewCard = () => {
             placeholder="답글을 입력하세요"
           />
           <View style={styles.submitButton}>
-          <TouchableOpacity onPress={submitReply}>
-            <Text>확인</Text>
-          </TouchableOpacity>
+            <TouchableOpacity onPress={submitReply}>
+              <Text>확인</Text>
+            </TouchableOpacity>
           </View>
         </View>
       )}
@@ -107,10 +111,14 @@ const styles = StyleSheet.create({
     color: "#6E757B",
     fontSize: 13,
   },
+  imgContent:{
+    flexDirection: "row"
+  },
   reviewImg: {
     width: 150,
     height: 150,
     marginTop: 10,
+    marginRight: 10,
   },
   timeStamp: {
     color: "#6E757B",
@@ -128,16 +136,16 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
   },
-  submitButton:{
+  submitButton: {
     flexDirection: "row",
     justifyContent: "flex-end",
   },
-  pageLine:{
+  pageLine: {
     borderColor: "#pageLine",
     borderTopWidth: 0.5,
     margin: 5,
   },
-  replyText:{
+  replyText: {
     color: "#393E47",
   },
 });

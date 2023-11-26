@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,6 +8,7 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  Animated,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -19,6 +20,7 @@ import telephone from "../../assets/telephone.png";
 
 import Menu from "../components/Menu";
 import TimeTable from "../components/TimeTable";
+import ReviewCard from "../components/ReviewCard";
 
 const BarDetail = ({ route }) => {
   const [date, setDate] = useState(new Date());
@@ -29,9 +31,52 @@ const BarDetail = ({ route }) => {
   const [btnActive, setBtnActive] = useState(false);
   const [reservDate, setReservDate] = useState();
 
+  const [menu, setMenu] = useState(true);
+  const [review, setReviews] = useState(false);
+
+  const MovingBar = useRef(new Animated.Value(38)).current;
+  const barWidth = useRef(new Animated.Value(110)).current;
+
   const bar = route.params.bar;
 
   const navigation = useNavigation();
+
+  const onMenu = () => {
+    setMenu(true);
+    setReviews(false);
+  };
+
+  const onReview = () => {
+    setMenu(false);
+    setReviews(true);
+  };
+
+  useEffect(() => {
+    // 상태에 따라 바 위치를 조절
+    if (menu) {
+      Animated.timing(MovingBar, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: false,
+      }).start();
+      Animated.timing(barWidth, {
+        toValue: 100,
+        duration: 300,
+        useNativeDriver: false,
+      }).start();
+    } else if (review) {
+      Animated.timing(MovingBar, {
+        toValue: 185, // 원하는 위치로 바 이동
+        duration: 300,
+        useNativeDriver: false,
+      }).start();
+      Animated.timing(barWidth, {
+        toValue: 50,
+        duration: 300,
+        useNativeDriver: false,
+      }).start();
+    }
+  }, [menu, review, MovingBar]);
 
   const showReservationForm = () => {
     setShowForm(true);
@@ -70,12 +115,12 @@ const BarDetail = ({ route }) => {
     const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
     return daysOfWeek[dateIdx];
   };
-  
+
   const localeDate = (date) => {
     const result = `${date.toLocaleDateString()}(${dayOfWeek(date.getDay())})`;
     // setReservDate(result);
     return result;
-  }
+  };
 
   const navigateToOrder = () => {
     const reservationDetails = {
@@ -84,7 +129,7 @@ const BarDetail = ({ route }) => {
       reservdate: bar.date,
       people: bar.people,
       reservetime: time,
-    }
+    };
     console.log(reservationDetails);
     navigation.navigate("결제하기", reservationDetails);
   };
@@ -194,10 +239,61 @@ const BarDetail = ({ route }) => {
         <View style={styles.content}>
           <View style={styles.timetable}>
             <View style={styles.menuContainer}>
-              <Text style={styles.menuTitle}>대표메뉴</Text>
+              <View style={styles.tabmenu}>
+                <View style={styles.tabContainer}>
+                  <TouchableOpacity onPress={onMenu}>
+                    <Text
+                      style={{
+                        ...styles.menuTitle,
+                        color: menu ? "#393E47" : "#9FA8B6",
+                        marginBottom: 5,
+                      }}
+                    >
+                      대표메뉴
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.tabContainer}>
+                  <TouchableOpacity onPress={onReview}>
+                    <Text
+                      style={{
+                        ...styles.menuTitle,
+                        color: review ? "#393E47" : "#9FA8B6",
+                        marginBottom: 5,
+                      }}
+                    >
+                      리뷰
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              <Animated.View
+                style={{
+                  backgroundColor: "#24242F",
+                  width: barWidth,
+                  height: 3,
+                  marginBottom: 10,
+                  transform: [
+                    {
+                      translateX: MovingBar,
+                    },
+                  ],
+                }}
+              ></Animated.View>
+
               <View style={styles.menuTitleLine}></View>
-              <Menu menu={bar.menu[0]} />
-              <Menu menu={bar.menu[0]} />
+              {menu && (
+                <>
+                  <Menu menu={bar.menu[0]} />
+                  <Menu menu={bar.menu[0]} />
+                </>
+              )}
+              {review && (
+                <View style={styles.reviewContainer}>
+                  <ReviewCard isOwner={false}/>
+                </View>
+              )}
             </View>
 
             <View style={styles.reservationContainer}>
@@ -401,6 +497,15 @@ const styles = StyleSheet.create({
     width: "100%",
     marginVertical: 20,
   },
+  tabmenu: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  tabContainer: {
+    width: "50%",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+  },
   menuTitle: {
     fontSize: 18,
     fontWeight: "bold",
@@ -413,7 +518,9 @@ const styles = StyleSheet.create({
     borderColor: "#393E47",
     borderWidth: 1,
   },
-
+  reviewContainer:{
+    marginTop: 10,
+  },
   reservationContainer: {},
   requestContainer: {
     flexDirection: "row",
