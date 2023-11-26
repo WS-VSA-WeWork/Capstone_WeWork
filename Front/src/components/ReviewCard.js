@@ -12,7 +12,7 @@ import simya from "../../assets/심야식당.jpeg";
 import shrimp from "../../assets/shrimp.jpg";
 import salmon from "../../assets/salmon.jpg";
 
-const ReviewCard = ({isOwner}) => {
+const ReviewCard = ({ isOwner }) => {
   const [reply, setReply] = useState("");
   const [submittedReply, setSubmittedReply] = useState("");
   const [showReplyInput, setShowReplyInput] = useState(false);
@@ -48,7 +48,7 @@ const ReviewCard = ({isOwner}) => {
 
       {isOwner && !submittedReply && (
         <TouchableOpacity onPress={() => setShowReplyInput(true)}>
-          <Text>답글 달기</Text>
+          <Text style={styles.highlight}>답글 달기</Text>
         </TouchableOpacity>
       )}
 
@@ -60,9 +60,9 @@ const ReviewCard = ({isOwner}) => {
             value={reply}
             placeholder="답글을 입력하세요"
           />
-          <View style={styles.submitButton}>
-            <TouchableOpacity onPress={submitReply}>
-              <Text>확인</Text>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity onPress={submitReply} style={styles.submitButton}>
+              <Text style={styles.buttonText}>답글 등록</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -71,7 +71,7 @@ const ReviewCard = ({isOwner}) => {
       {submittedReply && (
         <>
           <View style={styles.pageLine}></View>
-          <Text style={styles.replyText}>{submittedReply}</Text>
+          <Text style={styles.highlight}>{submittedReply}</Text>
         </>
       )}
     </View>
@@ -111,8 +111,8 @@ const styles = StyleSheet.create({
     color: "#6E757B",
     fontSize: 13,
   },
-  imgContent:{
-    flexDirection: "row"
+  imgContent: {
+    flexDirection: "row",
   },
   reviewImg: {
     width: 150,
@@ -137,16 +137,29 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   submitButton: {
+    width: "100%",
+    height: 50,
+    marginVertical: 5,
+    backgroundColor: "#1AB277",
+    borderRadius: 8,
     flexDirection: "row",
-    justifyContent: "flex-end",
+    justifyContent: "center",
+    alignItems: "center",
+    color: "#ffffff",
+  },
+  buttonText: {
+    color: "#ffffff",
+    fontWeight: "bold",
+    fontSize: 15,
   },
   pageLine: {
     borderColor: "#pageLine",
     borderTopWidth: 0.5,
     margin: 5,
   },
-  replyText: {
-    color: "#393E47",
+  highlight: {
+    color: "#1AB277",
+    fontWeight: "bold",
   },
 });
 
