@@ -93,6 +93,12 @@ const Main = () => {
           navigation.navigate("내예약관리", { bar: bars.simya });
         }}
       />
+      <Button
+        title="사장님 마이페이지"
+        onPress={() => {
+          navigation.navigate("사장님 마이페이지");
+        }}
+      />
 
       <StatusBar style="auto" />
     </View>
