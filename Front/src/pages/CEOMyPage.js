@@ -6,13 +6,14 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-const MyPage = () => {
+const CEOMyPage = () => {
   const navigation = useNavigation();
+
   return (
     <View style={styles.myPageContainer}>
       <View style={styles.header}>
         <Pressable
-          onPress={() => navigation.navigate("프로필관리")}
+          onPress={() => navigation.navigate("사장님 프로필관리")}
           style={({ pressed }) => [
             {
               backgroundColor: pressed ? "#F2F2F2" : "#FFFFFF",
@@ -22,7 +23,7 @@ const MyPage = () => {
           <View style={styles.user}>
             <View style={styles.userLeft}>
               <Image
-                source={require("../../assets/dongwan.jpg")}
+                source={require("../../assets/wandong.jpg")}
                 style={styles.avatar}
               ></Image>
               <Text style={styles.userName}>동완</Text>
@@ -35,7 +36,7 @@ const MyPage = () => {
           </View>
         </Pressable>
         <View style={styles.userBook}>
-          <Text style={styles.userBookTitle}>예정된 대관 일정</Text>
+          <Text style={styles.userBookTitle}>가장 빠른 대관 일정</Text>
           <View style={styles.userBookContent}>
             <Text style={styles.userBookContentTop}>2023-11-14</Text>
             <Text>15:30 ~ 17:30 / 35명</Text>
@@ -46,7 +47,7 @@ const MyPage = () => {
       <ScrollView>
         <View style={styles.bodyContainer}>
           <Pressable
-            onPress={() => navigation.navigate("내예약관리")}
+            onPress={() => navigation.navigate("사장님 예약관리")}
             style={({ pressed }) => [
               {
                 backgroundColor: pressed ? "#F2F2F2" : "#FFFFFF",
@@ -57,7 +58,7 @@ const MyPage = () => {
               <View style={styles.reservationManageLeft}>
                 <Feather name="calendar" size={30} color="black" />
                 <Text style={styles.reservationManageTitle}>
-                  나의 예약 관리
+                  사장님 예약 관리
                 </Text>
               </View>
               <MaterialIcons
@@ -93,7 +94,7 @@ const MyPage = () => {
           </Pressable>
 
           <Pressable
-            onPress={() => navigation.navigate("위약정보")}
+            onPress={() => navigation.navigate("사장님 위약정보")}
             style={({ pressed }) => [
               {
                 backgroundColor: pressed ? "#F2F2F2" : "#FFFFFF",
@@ -108,7 +109,7 @@ const MyPage = () => {
                   color="black"
                 />
                 <Text style={styles.reservationManageTitle}>
-                  나의 위약 관리
+                  사장님 위약 관리
                 </Text>
               </View>
               <MaterialIcons
@@ -119,7 +120,6 @@ const MyPage = () => {
             </View>
           </Pressable>
           <Pressable
-            onPress={() => navigation.navigate("규정 사항")}
             style={({ pressed }) => [
               {
                 backgroundColor: pressed ? "#F2F2F2" : "#FFFFFF",
@@ -216,8 +216,6 @@ const styles = StyleSheet.create({
   reservationManageTitle: {
     fontSize: 18,
   },
-
-  //세번째 섹터
 });
 
-export default MyPage;
+export default CEOMyPage;
