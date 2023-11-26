@@ -29,6 +29,8 @@ export default function UserReservation() {
   const [reservation, setReservation] = useState(false);
   const [igakaya, setIgakaya] = useState(false);
   const [chicken, setChicken] = useState(false);
+  const [jun, setJun] = useState(false);
+  const [makgul, setMakgul] = useState(false);
   const [all, setAll] = useState(true);
   const [date, setDate] = useState(new Date());
   const [modalVisible, setModalVisible] = useState(false);
@@ -43,18 +45,38 @@ export default function UserReservation() {
   const igakayaCategory = () => {
     setIgakaya(true);
     setChicken(false);
+    setJun(false);
+    setMakgul(false);
     setAll(false);
   };
 
   const chickenCategory = () => {
     setIgakaya(false);
     setChicken(true);
+    setJun(false);
+    setMakgul(false);
+    setAll(false);
+  };
+  const JunCategory = () => {
+    setIgakaya(false);
+    setChicken(false);
+    setJun(true);
+    setMakgul(false);
+    setAll(false);
+  };
+  const MakgulCategory = () => {
+    setIgakaya(false);
+    setChicken(false);
+    setJun(false);
+    setMakgul(true);
     setAll(false);
   };
 
   const allCategory = () => {
     setIgakaya(false);
     setChicken(false);
+    setJun(false);
+    setMakgul(false);
     setAll(true);
   };
 
@@ -233,6 +255,30 @@ export default function UserReservation() {
               title="치킨집"
               color={chicken ? "white" : "#68707D"}
               onPress={chickenCategory}
+            />
+          </View>
+          <View
+            style={{
+              ...styles.categorybtn,
+              backgroundColor: jun ? "#282834" : "white",
+            }}
+          >
+            <Button
+              title="전집"
+              color={jun ? "white" : "#68707D"}
+              onPress={JunCategory}
+            />
+          </View>
+          <View
+            style={{
+              ...styles.categorybtn,
+              backgroundColor: makgul ? "#282834" : "white",
+            }}
+          >
+            <Button
+              title="막걸리"
+              color={makgul ? "white" : "#68707D"}
+              onPress={MakgulCategory}
             />
           </View>
           <View

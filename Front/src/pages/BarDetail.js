@@ -19,6 +19,7 @@ import telephone from "../../assets/telephone.png";
 
 import Menu from "../components/Menu";
 import TimeTable from "../components/TimeTable";
+import GptDetail from "../components/GptDetail";
 
 const BarDetail = ({ route }) => {
   const [date, setDate] = useState(new Date());
@@ -70,12 +71,12 @@ const BarDetail = ({ route }) => {
     const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
     return daysOfWeek[dateIdx];
   };
-  
+
   const localeDate = (date) => {
     const result = `${date.toLocaleDateString()}(${dayOfWeek(date.getDay())})`;
     // setReservDate(result);
     return result;
-  }
+  };
 
   const navigateToOrder = () => {
     const reservationDetails = {
@@ -84,7 +85,7 @@ const BarDetail = ({ route }) => {
       reservdate: bar.date,
       people: bar.people,
       reservetime: time,
-    }
+    };
     console.log(reservationDetails);
     navigation.navigate("결제하기", reservationDetails);
   };
@@ -124,6 +125,8 @@ const BarDetail = ({ route }) => {
               {bar.introduction}
             </Text>
           </View>
+
+          <GptDetail></GptDetail>
 
           {/* 상세정보 */}
           <View style={styles.detailsContainer}>
@@ -300,7 +303,7 @@ const styles = StyleSheet.create({
   },
   introContainer: {
     height: 80,
-    marginBottom: 40,
+    marginBottom: 0,
   },
   introduction: {
     color: "#7E8389",

@@ -28,9 +28,9 @@ const ReservationCard = () => {
           <FontAwesome name="star" size={20} color="green" />
           <Text style={styles.cardRating}>5.0</Text>
         </View>
-        <View style={styles.cardContent}>
+        {/* <View style={styles.cardContent}>
           <Text>최소주문 14,500원</Text>
-        </View>
+        </View> */}
         <View style={styles.cardContent2}>
           <Feather name="clock" size={15} color="black" />
           <Text>오후 4:00 ~ 오전 4:00</Text>
