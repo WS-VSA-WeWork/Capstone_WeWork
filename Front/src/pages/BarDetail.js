@@ -21,6 +21,7 @@ import telephone from "../../assets/telephone.png";
 import Menu from "../components/Menu";
 import TimeTable from "../components/TimeTable";
 import ReviewCard from "../components/ReviewCard";
+import GptDetail from "../components/GptDetail";
 
 const BarDetail = ({ route }) => {
   const [date, setDate] = useState(new Date());
@@ -169,6 +170,8 @@ const BarDetail = ({ route }) => {
               {bar.introduction}
             </Text>
           </View>
+
+          <GptDetail></GptDetail>
 
           {/* 상세정보 */}
           <View style={styles.detailsContainer}>
@@ -396,7 +399,7 @@ const styles = StyleSheet.create({
   },
   introContainer: {
     height: 80,
-    marginBottom: 40,
+    marginBottom: 0,
   },
   introduction: {
     color: "#7E8389",
