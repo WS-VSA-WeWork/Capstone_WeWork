@@ -12,6 +12,8 @@ import Login from "./src/pages/Login";
 import MyBan from "./src/pages/MyBan";
 import MyProfile from "./src/pages/MyProfile";
 import MyReservation from "./src/pages/MyReservation";
+import BarOwnerMain from "./src/pages/BarOwnerMain";
+import ReviewForm from "./src/pages/ReviewForm";
 import MyPage from "./src/pages/MyPage";
 import CEOMyPage from "./src/pages/CEOMyPage";
 import CEOMyReservation from "./src/pages/CEOMyReservation";
@@ -35,6 +37,8 @@ export default function App() {
         <Stack.Screen name="위약정보" component={MyBan} />
         <Stack.Screen name="프로필관리" component={MyProfile} />
         <Stack.Screen name="내예약관리" component={MyReservation} />
+        <Stack.Screen name="사장님메인" component={BarOwnerMain} />
+        <Stack.Screen name="리뷰작성" component={ReviewForm} />
         <Stack.Screen name="사장님 마이페이지" component={CEOMyPage} />
         <Stack.Screen name="사장님 예약관리" component={CEOMyReservation} />
         <Stack.Screen name="사장님 위약정보" component={CEOMyBan} />
