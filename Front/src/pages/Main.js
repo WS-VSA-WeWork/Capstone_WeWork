@@ -99,6 +99,12 @@ const Main = () => {
           navigation.navigate("사장님메인", {bar: bars.simya});
         }}
       />
+      <Button
+        title="리뷰작성"
+        onPress={() => {
+          navigation.navigate("리뷰작성", { bar: bars.simya });
+        }}
+      />
 
       <StatusBar style="auto" />
     </View>

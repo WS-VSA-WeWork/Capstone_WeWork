@@ -14,6 +14,7 @@ import MyBan from "./src/pages/MyBan";
 import MyProfile from "./src/pages/MyProfile";
 import MyReservation from "./src/pages/MyReservation";
 import BarOwnerMain from "./src/pages/BarOwnerMain";
+import ReviewForm from "./src/pages/ReviewForm";
 
 const Stack = createNativeStackNavigator();
 
@@ -32,6 +33,7 @@ export default function App() {
         <Stack.Screen name="프로필관리" component={MyProfile} />
         <Stack.Screen name="내예약관리" component={MyReservation} />
         <Stack.Screen name="사장님메인" component={BarOwnerMain} />
+        <Stack.Screen name="리뷰작성" component={ReviewForm} />
       </Stack.Navigator>
     </NavigationContainer>
   );
