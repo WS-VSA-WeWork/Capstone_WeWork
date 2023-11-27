@@ -22,8 +22,191 @@ import { Feather } from "@expo/vector-icons";
 import ReservationCard from "../components/ReservationCard";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { FlatList } from "react-native";
 
 export default function UserReservation() {
+  const IgakayaData = [
+    {
+      name: "백수씨 심야식당",
+      rating: 4.9,
+      image: require("../../assets/백수씨.png"),
+      start: "17:00",
+      end: "02:00",
+      phone: "010-1234-5678",
+    },
+    {
+      name: "술무로",
+      rating: 4.5,
+      image: require("../../assets/술무로.png"),
+      start: "17:00",
+      end: "02:00",
+      phone: "010-1234-5678",
+    },
+    {
+      name: "집시 포차",
+      rating: 4.1,
+      image: require("../../assets/집시포차.jpg"),
+      start: "17:00",
+      end: "02:00",
+      phone: "010-1234-5678",
+    },
+    {
+      name: "하얀집 3호점",
+      rating: 3.8,
+      image: require("../../assets/하얀집3호점.jpg"),
+      start: "17:00",
+      end: "02:00",
+      phone: "010-1234-5678",
+    },
+
+    // 다른 식당 정보도 추가할 수 있습니다.
+  ];
+  const ChickenData = [
+    {
+      name: "우리안 치킨",
+      rating: 4.9,
+      image: require("../../assets/우리안치킨.jpg"),
+      start: "17:00",
+      end: "02:00",
+      phone: "010-1234-5678",
+    },
+    {
+      name: "둘둘 치킨",
+      rating: 4.5,
+      image: require("../../assets/둘둘치킨.jpg"),
+      start: "17:00",
+      end: "02:00",
+      phone: "010-1234-5678",
+    },
+  ];
+  const JunData = [
+    { name: "전사랑", rating: 4.9, image: require("../../assets/전사랑.jpg") },
+    {
+      name: "충무로 구룡포",
+      rating: 4.5,
+      image: require("../../assets/충무로구룡포.jpg"),
+      start: "17:00",
+      end: "02:00",
+      phone: "010-1234-5678",
+    },
+    {
+      name: "필동육전",
+      rating: 4.5,
+      image: require("../../assets/필동육전.jpg"),
+      start: "17:00",
+      end: "02:00",
+      phone: "010-1234-5678",
+    },
+  ];
+  const MakgulData = [
+    {
+      name: "남산도담",
+      rating: 4.9,
+      image: require("../../assets/남산도담.jpg"),
+      start: "17:00",
+      end: "02:00",
+      phone: "010-1234-5678",
+    },
+    {
+      name: "오매가매",
+      rating: 4.9,
+      image: require("../../assets/오매가매.jpg"),
+      start: "17:00",
+      end: "02:00",
+      phone: "010-1234-5678",
+    },
+  ];
+  const AllData = [
+    {
+      name: "백수씨 심야식당",
+      rating: 4.9,
+      image: require("../../assets/백수씨.png"),
+      start: "17:00",
+      end: "02:00",
+      phone: "010-1234-5678",
+    },
+    {
+      name: "술무로",
+      rating: 4.5,
+      image: require("../../assets/술무로.png"),
+      start: "17:00",
+      end: "02:00",
+      phone: "010-1234-5678",
+    },
+    {
+      name: "집시 포차",
+      rating: 4.1,
+      image: require("../../assets/집시포차.jpg"),
+      start: "17:00",
+      end: "02:00",
+      phone: "010-1234-5678",
+    },
+    {
+      name: "하얀집 3호점",
+      rating: 3.8,
+      image: require("../../assets/하얀집3호점.jpg"),
+      start: "17:00",
+      end: "02:00",
+      phone: "010-1234-5678",
+    },
+    {
+      name: "남산도담",
+      rating: 4.9,
+      image: require("../../assets/남산도담.jpg"),
+      start: "17:00",
+      end: "02:00",
+      phone: "010-1234-5678",
+    },
+    {
+      name: "오매가매",
+      rating: 4.9,
+      image: require("../../assets/오매가매.jpg"),
+      start: "17:00",
+      end: "02:00",
+      phone: "010-1234-5678",
+    },
+    {
+      name: "전사랑",
+      rating: 4.9,
+      image: require("../../assets/전사랑.jpg"),
+      start: "17:00",
+      end: "02:00",
+      phone: "010-1234-5678",
+    },
+    {
+      name: "충무로 구룡포",
+      rating: 4.5,
+      image: require("../../assets/충무로구룡포.jpg"),
+      start: "17:00",
+      end: "02:00",
+      phone: "010-1234-5678",
+    },
+    {
+      name: "필동육전",
+      rating: 4.5,
+      image: require("../../assets/필동육전.jpg"),
+      start: "17:00",
+      end: "02:00",
+      phone: "010-1234-5678",
+    },
+    {
+      name: "우리안 치킨",
+      rating: 4.9,
+      image: require("../../assets/우리안치킨.jpg"),
+      start: "17:00",
+      end: "02:00",
+      phone: "010-1234-5678",
+    },
+    {
+      name: "둘둘 치킨",
+      rating: 4.5,
+      image: require("../../assets/둘둘치킨.jpg"),
+      start: "17:00",
+      end: "02:00",
+      phone: "010-1234-5678",
+    },
+  ];
+
   const navigation = useNavigation();
   const [servicing, setServicing] = useState(true);
   const [reservation, setReservation] = useState(false);
@@ -328,38 +511,143 @@ export default function UserReservation() {
         </View>
       </View>
       {/* 대관서비스 및 내예약 서비스 페이지 */}
+
       <ScrollView>
         <View style={styles.storeContainer}>
-          <ScrollView>
-            {servicing ? (
-              <View>
-                <View style={styles.location}>
-                  <SimpleLineIcons
-                    name="location-pin"
-                    size={24}
-                    color="black"
-                  />
-                  <Text style={{ fontSize: 18, fontWeight: 700 }}>동국대</Text>
-                </View>
+          {servicing ? (
+            <View>
+              <View style={styles.location}>
+                <SimpleLineIcons name="location-pin" size={24} color="black" />
+                <Text style={{ fontSize: 18, fontWeight: 700 }}>동국대</Text>
+              </View>
 
-                <View style={styles.timePeople}>
-                  {handleDatePicked && numberOfPeople > 4 ? (
-                    <View style={{ gap: 5 }}>
-                      <Text style={styles.timePeopleTitle}>
-                        함께 할 시간과 인원수
-                      </Text>
-                      <Text style={styles.timePeopleContent}>
-                        {stringDate + " " + " / " + numberOfPeople + " 명"}
-                      </Text>
-                    </View>
-                  ) : (
+              <View style={styles.timePeople}>
+                {handleDatePicked && numberOfPeople > 4 ? (
+                  <View style={{ gap: 5 }}>
                     <Text style={styles.timePeopleTitle}>
-                      시간과 인원수를 선택해주세요 !
+                      함께 할 시간과 인원수
                     </Text>
-                  )}
-                </View>
+                    <Text style={styles.timePeopleContent}>
+                      {stringDate + " " + " / " + numberOfPeople + " 명"}
+                    </Text>
+                  </View>
+                ) : (
+                  <Text style={styles.timePeopleTitle}>
+                    시간과 인원수를 선택해주세요 !
+                  </Text>
+                )}
+              </View>
 
-                <View>
+              <View>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontWeight: "bold",
+                    paddingHorizontal: 30,
+                  }}
+                >
+                  현재 예약 가능한 술집
+                </Text>
+              </View>
+              <View>
+                {igakaya && (
+                  <View style={styles.cardContainer}>
+                    <FlatList
+                      data={IgakayaData}
+                      keyExtractor={(item, index) => index.toString()}
+                      renderItem={({ item }) => (
+                        <ReservationCard
+                          name={item.name}
+                          rating={item.rating}
+                          image={item.image}
+                          start={item.start}
+                          end={item.end}
+                          phone={item.phone}
+                        />
+                      )}
+                    />
+                  </View>
+                )}
+
+                {chicken && (
+                  <View style={styles.cardContainer}>
+                    <FlatList
+                      data={ChickenData}
+                      keyExtractor={(item, index) => index.toString()}
+                      renderItem={({ item }) => (
+                        <ReservationCard
+                          name={item.name}
+                          rating={item.rating}
+                          image={item.image}
+                          start={item.start}
+                          end={item.end}
+                          phone={item.phone}
+                        />
+                      )}
+                    />
+                  </View>
+                )}
+                {jun && (
+                  <View style={styles.cardContainer}>
+                    <FlatList
+                      data={JunData}
+                      keyExtractor={(item, index) => index.toString()}
+                      renderItem={({ item }) => (
+                        <ReservationCard
+                          name={item.name}
+                          rating={item.rating}
+                          image={item.image}
+                          start={item.start}
+                          end={item.end}
+                          phone={item.phone}
+                        />
+                      )}
+                    />
+                  </View>
+                )}
+                {makgul && (
+                  <View style={styles.cardContainer}>
+                    <FlatList
+                      data={MakgulData}
+                      keyExtractor={(item, index) => index.toString()}
+                      renderItem={({ item }) => (
+                        <ReservationCard
+                          name={item.name}
+                          rating={item.rating}
+                          image={item.image}
+                          start={item.start}
+                          end={item.end}
+                          phone={item.phone}
+                        />
+                      )}
+                    />
+                  </View>
+                )}
+                {all && (
+                  // 여기 부터 카드
+                  <View style={styles.cardContainer}>
+                    <FlatList
+                      data={AllData}
+                      keyExtractor={(item, index) => index.toString()}
+                      renderItem={({ item }) => (
+                        <ReservationCard
+                          name={item.name}
+                          rating={item.rating}
+                          image={item.image}
+                          start={item.start}
+                          end={item.end}
+                          phone={item.phone}
+                        />
+                      )}
+                    />
+                  </View>
+                )}
+              </View>
+            </View>
+          ) : (
+            <ScrollView>
+              {haveReservation ? (
+                <View style={styles.myreservationContainer}>
                   <Text
                     style={{
                       fontSize: 20,
@@ -367,83 +655,9 @@ export default function UserReservation() {
                       paddingHorizontal: 30,
                     }}
                   >
-                    현재 예약 가능한 술집
+                    나의 예약일정
                   </Text>
-                </View>
-                <View>
-                  {igakaya && (
-                    <View style={styles.cardContainer}>
-                      <ReservationCard />
-                      <ReservationCard />
-                      <ReservationCard />
-                    </View>
-                  )}
-
-                  {chicken && (
-                    <View style={styles.cardContainer}>
-                      <ReservationCard />
-                      <ReservationCard />
-                      <ReservationCard />
-                    </View>
-                  )}
-                  {all && (
-                    // 여기 부터 카드
-                    <View style={styles.cardContainer}>
-                      <ReservationCard />
-                      <ReservationCard />
-                      <ReservationCard />
-                    </View>
-                  )}
-                </View>
-              </View>
-            ) : (
-              <ScrollView>
-                {haveReservation ? (
-                  <View style={styles.myreservationContainer}>
-                    <Text
-                      style={{
-                        fontSize: 20,
-                        fontWeight: "bold",
-                        paddingHorizontal: 30,
-                      }}
-                    >
-                      나의 예약일정
-                    </Text>
-                    <Pressable onPress={() => setModalVisible(true)}>
-                      <View style={styles.reservationListContainer}>
-                        <View style={styles.reservationList1}>
-                          <Text style={styles.reservationListTitle}>
-                            백수씨 심야식당
-                          </Text>
-                          <Text style={styles.reservationListLastTime}>
-                            19시간 전
-                          </Text>
-                        </View>
-                        <View style={styles.reservationList2}>
-                          <Text>2023-09-20</Text>
-                          <Text>19:00</Text>
-                        </View>
-                        <View style={styles.reservationList3}>
-                          <Text>예약금</Text>
-                          <Text>56000원</Text>
-                        </View>
-                      </View>
-                    </Pressable>
-
-                    <View style={styles.reservationPast}>
-                      <Text
-                        style={{
-                          fontSize: 20,
-                          fontWeight: "bold",
-                          marginLeft: 30,
-                          paddingRight: 10,
-                          textAlign: "center",
-                        }}
-                      >
-                        나의 대관 내역
-                      </Text>
-                      <Text style={styles.reservationPastNum}>5</Text>
-                    </View>
+                  <Pressable onPress={() => setModalVisible(true)}>
                     <View style={styles.reservationListContainer}>
                       <View style={styles.reservationList1}>
                         <Text style={styles.reservationListTitle}>
@@ -462,51 +676,84 @@ export default function UserReservation() {
                         <Text>56000원</Text>
                       </View>
                     </View>
+                  </Pressable>
 
-                    <Button
-                      title="지금 예약하러가기"
-                      color={"black"}
-                      onPress={() => setHaveReservation(false)}
-                    />
-                  </View>
-                ) : (
-                  <View style={styles.myreservationContainer}>
+                  <View style={styles.reservationPast}>
                     <Text
                       style={{
                         fontSize: 20,
                         fontWeight: "bold",
-                        marginHorizontal: 30,
+                        marginLeft: 30,
+                        paddingRight: 10,
+                        textAlign: "center",
                       }}
                     >
-                      나의 예약일정
+                      나의 대관 내역
                     </Text>
-                    <View style={styles.myreservation}>
-                      <FontAwesome
-                        name="calendar-plus-o"
-                        size={50}
-                        color="white"
-                      />
-                      <View style={styles.myreservationTextContainer}>
-                        <Text style={styles.myreservationText}>
-                          예약된 대관일정이 없어요.
-                        </Text>
-                        <Text style={styles.myreservationText}>
-                          예약을 진행해주세요 !
-                        </Text>
-                      </View>
-                      <View style={styles.myreservationButton}>
-                        <Button
-                          title="지금 예약하러가기"
-                          color={"black"}
-                          onPress={() => setHaveReservation(true)}
-                        />
-                      </View>
+                    <Text style={styles.reservationPastNum}>5</Text>
+                  </View>
+                  <View style={styles.reservationListContainer}>
+                    <View style={styles.reservationList1}>
+                      <Text style={styles.reservationListTitle}>
+                        백수씨 심야식당
+                      </Text>
+                      <Text style={styles.reservationListLastTime}>
+                        19시간 전
+                      </Text>
+                    </View>
+                    <View style={styles.reservationList2}>
+                      <Text>2023-09-20</Text>
+                      <Text>19:00</Text>
+                    </View>
+                    <View style={styles.reservationList3}>
+                      <Text>예약금</Text>
+                      <Text>56000원</Text>
                     </View>
                   </View>
-                )}
-              </ScrollView>
-            )}
-          </ScrollView>
+
+                  <Button
+                    title="지금 예약하러가기"
+                    color={"black"}
+                    onPress={() => setHaveReservation(false)}
+                  />
+                </View>
+              ) : (
+                <View style={styles.myreservationContainer}>
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      fontWeight: "bold",
+                      marginHorizontal: 30,
+                    }}
+                  >
+                    나의 예약일정
+                  </Text>
+                  <View style={styles.myreservation}>
+                    <FontAwesome
+                      name="calendar-plus-o"
+                      size={50}
+                      color="white"
+                    />
+                    <View style={styles.myreservationTextContainer}>
+                      <Text style={styles.myreservationText}>
+                        예약된 대관일정이 없어요.
+                      </Text>
+                      <Text style={styles.myreservationText}>
+                        예약을 진행해주세요 !
+                      </Text>
+                    </View>
+                    <View style={styles.myreservationButton}>
+                      <Button
+                        title="지금 예약하러가기"
+                        color={"black"}
+                        onPress={() => setHaveReservation(true)}
+                      />
+                    </View>
+                  </View>
+                </View>
+              )}
+            </ScrollView>
+          )}
         </View>
       </ScrollView>
 
@@ -519,9 +766,9 @@ export default function UserReservation() {
         }}
       >
         {/* <TouchableWithoutFeedback
-          onPress={() => setModalVisible(false)}
-          style={styles.backdrop}
-        /> */}
+            onPress={() => setModalVisible(false)}
+            style={styles.backdrop}
+          /> */}
 
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>

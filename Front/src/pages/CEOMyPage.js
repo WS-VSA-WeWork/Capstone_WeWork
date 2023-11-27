@@ -120,6 +120,7 @@ const CEOMyPage = () => {
             </View>
           </Pressable>
           <Pressable
+            onPress={() => navigation.navigate("규정 사항")}
             style={({ pressed }) => [
               {
                 backgroundColor: pressed ? "#F2F2F2" : "#FFFFFF",

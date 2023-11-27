@@ -310,7 +310,6 @@ const styles = StyleSheet.create({
   },
   content: {
     fontSize: 10,
-    fontweight: "normal",
   },
 });
 

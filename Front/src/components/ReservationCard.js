@@ -5,7 +5,7 @@ import { Pressable, StyleSheet } from "react-native";
 import { Text, View, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-const ReservationCard = () => {
+const ReservationCard = ({ name, rating, image, phone, start, end }) => {
   const navigation = useNavigation();
   return (
     // <View style={styles.cardContainer}>
@@ -16,26 +16,25 @@ const ReservationCard = () => {
     // >
     <View style={styles.card}>
       <View>
-        <Image
-          source={require("../../assets/백수씨.png")}
-          style={styles.cardPicture}
-        />
+        <Image source={image} style={styles.cardPicture} />
       </View>
       <View style={styles.cardSpace}></View>
       <View style={styles.cardContentContainer}>
         <View style={styles.cardContent}>
-          <Text style={styles.cardTitle}>백수씨 심야식당</Text>
+          <Text style={styles.cardTitle}>{name}</Text>
           <FontAwesome name="star" size={20} color="green" />
-          <Text style={styles.cardRating}>5.0</Text>
+          <Text style={styles.cardRating}>{rating}</Text>
         </View>
         {/* <View style={styles.cardContent}>
           <Text>최소주문 14,500원</Text>
         </View> */}
         <View style={styles.cardContent2}>
           <Feather name="clock" size={15} color="black" />
-          <Text>오후 4:00 ~ 오전 4:00</Text>
+          <Text>
+            오후 {start} ~ 오전 {end}
+          </Text>
           <AntDesign name="phone" size={15} color="black" />
-          <Text>02-0000-0000</Text>
+          <Text>{phone}</Text>
         </View>
       </View>
     </View>
@@ -54,7 +53,7 @@ const styles = StyleSheet.create({
   card: {
     borderRadius: 20,
     flex: 1,
-    width: "85%",
+    width: "100%",
     marginVertical: 10,
   },
   cardContent: {
