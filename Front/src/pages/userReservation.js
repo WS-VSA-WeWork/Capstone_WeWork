@@ -23,8 +23,15 @@ import ReservationCard from "../components/ReservationCard";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { FlatList } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPubData } from "../reducers/pubReducer";
 
 export default function UserReservation() {
+  const dispatch = useDispatch();
+  const pubData = useSelector((state) => state.pub.data);
+  const status = useSelector((state) => state.pub.status);
+  const error = useSelector((state) => state.pub.error);
+
   const IgakayaData = [
     {
       name: "백수씨 심야식당",
@@ -336,6 +343,7 @@ export default function UserReservation() {
   const [keyboardHeight, setKeyboardHeight] = useState(0);
 
   useEffect(() => {
+    dispatch(fetchPubData());
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
       (event) => {
@@ -355,6 +363,14 @@ export default function UserReservation() {
       keyboardDidHideListener.remove();
     };
   }, []);
+
+  if (status === "loading") {
+    return <Text>Loading...</Text>; // You can replace this with a loading indicator
+  }
+
+  if (status === "failed") {
+    return <Text>Error loading data: {error}</Text>;
+  }
 
   // 화면 상태창//
   return (
@@ -799,7 +815,7 @@ export default function UserReservation() {
                 multiline
                 numberOfLines={5}
                 maxLength={40}
-                onPressin={() => setTyping(true)}
+                onPressIn={() => setTyping(true)}
               ></TextInput>
             </View>
             <View style={styles.wantButton}>
