@@ -6052,6 +6052,11 @@
     "lodash" "^4.17.21"
     "prop-types" "^15.7.2"
 
+"react-native-image-picker@^7.0.3":
+  "integrity" "sha512-mFbu8AzZ8tysO7xHsQ+TmxYYJYaBCL66s4AujjgCBEAyTufm2nhjhVOw2uq1zvMDVtGoyekzCJfH3JqVmXK/3w=="
+  "resolved" "https://registry.npmjs.org/react-native-image-picker/-/react-native-image-picker-7.0.3.tgz"
+  "version" "7.0.3"
+
 "react-native-linear-gradient@^2.8.3":
   "integrity" "sha512-KflAXZcEg54PXkLyflaSZQ3PJp4uC4whM7nT/Uot9m0e/qxFV3p6uor1983D1YOBJbJN7rrWdqIjq0T42jOJyA=="
   "resolved" "https://registry.npmjs.org/react-native-linear-gradient/-/react-native-linear-gradient-2.8.3.tgz"
