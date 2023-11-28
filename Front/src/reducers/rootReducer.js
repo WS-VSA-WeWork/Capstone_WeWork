@@ -1,11 +1,10 @@
-// rootReducer.js
 import { combineReducers } from "@reduxjs/toolkit";
 import pubReducer from "./pubReducer";
-// Import other reducers as needed
+import userReservationReducer from "./userReservationReducer";
 
 const rootReducer = combineReducers({
   pub: pubReducer,
-  // Add other reducers here
+  userreservation: userReservationReducer,
 });
 
 export default rootReducer;
