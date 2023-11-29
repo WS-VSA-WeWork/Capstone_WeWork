@@ -29,6 +29,7 @@ import { fetchPubData } from "../reducers/pubReducer";
 export default function UserReservation() {
   const dispatch = useDispatch();
   const pubData = useSelector((state) => state.pub.data);
+  const [filteredData, setFilteredData] = useState([]);
   const status = useSelector((state) => state.pub.status);
   const error = useSelector((state) => state.pub.error);
 
@@ -233,6 +234,8 @@ export default function UserReservation() {
   const [isDateTimePickerVisible, setDateTimePickerVisible] = useState(false);
   const [value, onChangeText] = useState("환불 사유를 입력해주세요");
   const igakayaCategory = () => {
+    const filtered = pubData.filter((pub) => pub.type === "이자카야");
+    setFilteredData(filtered);
     setIgakaya(true);
     setChicken(false);
     setJun(false);
@@ -241,6 +244,8 @@ export default function UserReservation() {
   };
 
   const chickenCategory = () => {
+    const filtered = pubData.filter((pub) => pub.type === "치킨집");
+    setFilteredData(filtered);
     setIgakaya(false);
     setChicken(true);
     setJun(false);
@@ -248,6 +253,8 @@ export default function UserReservation() {
     setAll(false);
   };
   const JunCategory = () => {
+    const filtered = pubData.filter((pub) => pub.type === "전집");
+    setFilteredData(filtered);
     setIgakaya(false);
     setChicken(false);
     setJun(true);
@@ -255,6 +262,8 @@ export default function UserReservation() {
     setAll(false);
   };
   const MakgulCategory = () => {
+    const filtered = pubData.filter((pub) => pub.type === "막걸리");
+    setFilteredData(filtered);
     setIgakaya(false);
     setChicken(false);
     setJun(false);
@@ -569,16 +578,16 @@ export default function UserReservation() {
                 {igakaya && (
                   <View style={styles.cardContainer}>
                     <FlatList
-                      data={IgakayaData}
+                      data={filteredData}
                       keyExtractor={(item, index) => index.toString()}
                       renderItem={({ item }) => (
                         <ReservationCard
-                          name={item.name}
+                          name={item.pubName}
                           rating={item.rating}
-                          image={item.image}
-                          start={item.start}
-                          end={item.end}
-                          phone={item.phone}
+                          image={item.pubImages[1]}
+                          start={item.startTime}
+                          end={item.endTime}
+                          phone={item.pubPhonenum}
                         />
                       )}
                     />
@@ -588,16 +597,16 @@ export default function UserReservation() {
                 {chicken && (
                   <View style={styles.cardContainer}>
                     <FlatList
-                      data={ChickenData}
+                      data={filteredData}
                       keyExtractor={(item, index) => index.toString()}
                       renderItem={({ item }) => (
                         <ReservationCard
-                          name={item.name}
+                          name={item.pubName}
                           rating={item.rating}
-                          image={item.image}
-                          start={item.start}
-                          end={item.end}
-                          phone={item.phone}
+                          image={item.pubImages[1]}
+                          start={item.startTime}
+                          end={item.endTime}
+                          phone={item.pubPhonenum}
                         />
                       )}
                     />
@@ -606,16 +615,16 @@ export default function UserReservation() {
                 {jun && (
                   <View style={styles.cardContainer}>
                     <FlatList
-                      data={JunData}
+                      data={filteredData}
                       keyExtractor={(item, index) => index.toString()}
                       renderItem={({ item }) => (
                         <ReservationCard
-                          name={item.name}
+                          name={item.pubName}
                           rating={item.rating}
-                          image={item.image}
-                          start={item.start}
-                          end={item.end}
-                          phone={item.phone}
+                          image={item.pubImages[1]}
+                          start={item.startTime}
+                          end={item.endTime}
+                          phone={item.pubPhonenum}
                         />
                       )}
                     />
@@ -624,16 +633,16 @@ export default function UserReservation() {
                 {makgul && (
                   <View style={styles.cardContainer}>
                     <FlatList
-                      data={MakgulData}
+                      data={filteredData}
                       keyExtractor={(item, index) => index.toString()}
                       renderItem={({ item }) => (
                         <ReservationCard
-                          name={item.name}
+                          name={item.pubName}
                           rating={item.rating}
-                          image={item.image}
-                          start={item.start}
-                          end={item.end}
-                          phone={item.phone}
+                          image={item.pubImages[1]}
+                          start={item.startTime}
+                          end={item.endTime}
+                          phone={item.pubPhonenum}
                         />
                       )}
                     />
@@ -643,16 +652,16 @@ export default function UserReservation() {
                   // 여기 부터 카드
                   <View style={styles.cardContainer}>
                     <FlatList
-                      data={AllData}
+                      data={pubData}
                       keyExtractor={(item, index) => index.toString()}
                       renderItem={({ item }) => (
                         <ReservationCard
-                          name={item.name}
+                          name={item.pubName}
                           rating={item.rating}
-                          image={item.image}
-                          start={item.start}
-                          end={item.end}
-                          phone={item.phone}
+                          image={item.pubImages[1]}
+                          start={item.startTime}
+                          end={item.endTime}
+                          phone={item.pubPhonenum}
                         />
                       )}
                     />
