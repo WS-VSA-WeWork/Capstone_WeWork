@@ -18,6 +18,28 @@ const ReviewCard = ({ item, isOwner }) => {
   const [submittedReply, setSubmittedReply] = useState("");
   const [showReplyInput, setShowReplyInput] = useState(false);
 
+  /** 리뷰 작성 시간과 현재 시간의 차이를 계산하는 함수 */
+  const getTimeDifference = (uploadDate) => {
+    const now = new Date();
+    const reviewDate = new Date(uploadDate);
+    const difference = now - reviewDate; // 밀리초 단위 차이
+
+    const minutes = Math.floor(difference / 60000);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const months = Math.floor(days / 30);
+
+    if (minutes < 60) {
+      return `${minutes}분 전`;
+    } else if (hours < 24) {
+      return `${hours}시간 전`;
+    } else if (days < 30){
+      return `${days}일 전`;
+    } else {
+      return `${months}달 전`
+    }
+  };
+
   const handleReplyChange = (text) => {
     setReply(text);
   };
@@ -38,7 +60,7 @@ const ReviewCard = ({ item, isOwner }) => {
             <Text style={styles.rating}><AntDesign name="star" size={18} color="#1AB277" />{item.reviewRating}</Text>
           </View>
         </View>
-        <Text style={styles.timeStamp}>{item.uploadDate}* 19시간 전</Text>
+        <Text style={styles.timeStamp}>{getTimeDifference(item.uploadDate)}</Text>
       </View>
 
       <View style={styles.imgContent}>
