@@ -7,15 +7,38 @@ import {
   StyleSheet,
   TextInput,
 } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
 
 import simya from "../../assets/심야식당.jpeg";
 import shrimp from "../../assets/shrimp.jpg";
 import salmon from "../../assets/salmon.jpg";
 
-const ReviewCard = ({ isOwner }) => {
+const ReviewCard = ({ item, isOwner }) => {
   const [reply, setReply] = useState("");
   const [submittedReply, setSubmittedReply] = useState("");
   const [showReplyInput, setShowReplyInput] = useState(false);
+
+  /** 리뷰 작성 시간과 현재 시간의 차이를 계산하는 함수 */
+  const getTimeDifference = (uploadDate) => {
+    const now = new Date();
+    const reviewDate = new Date(uploadDate);
+    const difference = now - reviewDate; // 밀리초 단위 차이
+
+    const minutes = Math.floor(difference / 60000);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const months = Math.floor(days / 30);
+
+    if (minutes < 60) {
+      return `${minutes}분 전`;
+    } else if (hours < 24) {
+      return `${hours}시간 전`;
+    } else if (days < 30){
+      return `${days}일 전`;
+    } else {
+      return `${months}달 전`
+    }
+  };
 
   const handleReplyChange = (text) => {
     setReply(text);
@@ -33,18 +56,18 @@ const ReviewCard = ({ isOwner }) => {
         <View style={styles.userInfo}>
           <Image source={simya} style={styles.img} resizeMode="contain" />
           <View style={styles.textContent}>
-            <Text style={styles.name}>김영희</Text>
-            <Text style={styles.rating}>5.0</Text>
+            <Text style={styles.name}>{item.customerNickname}</Text>
+            <Text style={styles.rating}><AntDesign name="star" size={18} color="#1AB277" />{item.reviewRating}</Text>
           </View>
         </View>
-        <Text style={styles.timeStamp}>19시간 전</Text>
+        <Text style={styles.timeStamp}>{getTimeDifference(item.uploadDate)}</Text>
       </View>
 
       <View style={styles.imgContent}>
-        <Image source={shrimp} style={styles.reviewImg} resizeMode="cover" />
-        <Image source={salmon} style={styles.reviewImg} resizeMode="cover" />
+        <Image source={item.reviewImg} style={styles.reviewImg} resizeMode="cover" />
+        {/* <Image source={salmon} style={styles.reviewImg} resizeMode="cover" /> */}
       </View>
-      <Text style={styles.content}>너무 맛있었어요~!</Text>
+      <Text style={styles.content}>{item.reviewContent}</Text>
 
       {isOwner && !submittedReply && (
         <TouchableOpacity onPress={() => setShowReplyInput(true)}>
@@ -84,6 +107,7 @@ const styles = StyleSheet.create({
     borderColor: "#6E757B",
     borderRadius: 10,
     padding: 13,
+    marginBottom: 10,
   },
   header: {
     flexDirection: "row",
