@@ -22,8 +22,15 @@ import Menu from "../components/Menu";
 import TimeTable from "../components/TimeTable";
 import ReviewCard from "../components/ReviewCard";
 import GptDetail from "../components/GptDetail";
+import { fetchPubDataByName } from "../reducers/pubReducer";
+import { useDispatch, useSelector } from "react-redux";
 
 const BarDetail = ({ route }) => {
+  const dispatch = useDispatch();
+  const selectedPub = useSelector((state) => state.pub.selectedPub);
+  const status = useSelector((state) => state.pub.status);
+  const error = useSelector((state) => state.pub.error);
+
   const [date, setDate] = useState(new Date());
   // const [open, setOpen] = useState(false);
   // const [mode, setMode] = useState("date");
@@ -51,6 +58,11 @@ const BarDetail = ({ route }) => {
     setMenu(false);
     setReviews(true);
   };
+
+  useEffect(() => {
+    const pubName = "백수씨심야식당"; // 임시코드
+    dispatch(fetchPubDataByName(pubName));
+  }, []);
 
   useEffect(() => {
     // 상태에 따라 바 위치를 조절
@@ -125,11 +137,11 @@ const BarDetail = ({ route }) => {
 
   const navigateToOrder = () => {
     const reservationDetails = {
-      barName: bar.name,
-      barImage: bar.image,
-      reservdate: bar.date,
-      people: bar.people,
-      reservetime: time,
+      barName: bar.pubName,
+      barImage: bar.pubImages[1],
+      reservdate: bar.pubAddress, //tmp
+      people: bar.maxSeats, //tmp
+      reservetime: bar.startTime, //tmp
     };
     console.log(reservationDetails);
     navigation.navigate("결제하기", reservationDetails);
@@ -139,7 +151,11 @@ const BarDetail = ({ route }) => {
     <>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.imageContainer}>
-          <Image source={bar.image} style={styles.image} resizeMode="cover" />
+          <Image
+            source={{ uri: bar.pubImages[1] }}
+            style={styles.image}
+            resizeMode="cover"
+          />
         </View>
 
         {/* 타이틀 */}
@@ -151,23 +167,23 @@ const BarDetail = ({ route }) => {
                 style={styles.iconImg}
                 resizeMode="contain"
               />
-              <Text style={styles.address}>{bar.address}</Text>
+              <Text style={styles.address}>{bar.pubAddress}</Text>
             </View>
             <View style={styles.tagContainer}>
-              {bar.tags.map((tag, index) => (
+              {bar.hashTags.map((tag, index) => (
                 <Text key={index} style={styles.tag}>
                   {tag}{" "}
                 </Text>
               ))}
             </View>
             <View style={styles.titleContainer}>
-              <Text style={styles.title}>{bar.name}</Text>
+              <Text style={styles.title}>{bar.pubName}</Text>
             </View>
           </View>
 
           <View style={styles.introContainer}>
             <Text style={styles.introduction} aria-expanded={true}>
-              {bar.introduction}
+              {bar.pubDescription}
             </Text>
           </View>
 
@@ -217,7 +233,7 @@ const BarDetail = ({ route }) => {
                 style={styles.datePicker}
               >
                 <Text style={styles.entryData}>
-                  {bar.date}
+                  {bar.startTime} {/*tmp*/}
                   {/* {date.toLocaleDateString()}
                   &#40;{dayOfWeek(date.getDay())}&#41; */}
                 </Text>
@@ -226,7 +242,7 @@ const BarDetail = ({ route }) => {
 
             <View style={styles.peopleContainer}>
               <Text style={styles.entryTitle}>인원수</Text>
-              <Text style={styles.entryData}>{bar.people}명</Text>
+              <Text style={styles.entryData}>{bar.maxSeats}명</Text>
             </View>
 
             <View style={styles.timeContainer}>
@@ -288,8 +304,8 @@ const BarDetail = ({ route }) => {
               <View style={styles.menuTitleLine}></View>
               {menu && (
                 <>
-                  <Menu menu={bar.menu[0]} />
-                  <Menu menu={bar.menu[0]} />
+                  <Menu menu={bar.pubMenus[0]} />
+                  <Menu menu={bar.pubMenus[1]} />
                 </>
               )}
               {review && (

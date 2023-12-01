@@ -24,7 +24,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { FlatList } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPubData } from "../reducers/pubReducer";
+import { fetchPubsData } from "../reducers/pubReducer";
 
 export default function UserReservation() {
   const dispatch = useDispatch();
@@ -354,7 +354,7 @@ export default function UserReservation() {
   const [keyboardHeight, setKeyboardHeight] = useState(0);
 
   useEffect(() => {
-    dispatch(fetchPubData());
+    dispatch(fetchPubsData());
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
       (event) => {
