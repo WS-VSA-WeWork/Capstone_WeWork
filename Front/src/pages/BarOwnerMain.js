@@ -12,8 +12,8 @@ import { LocaleConfig, Calendar, Agenda } from "react-native-calendars";
 import { AntDesign } from "@expo/vector-icons";
 
 import ReservationCard from "../components/ReservationCardforOwner";
-import ReviewCard from "../components/ReviewCard";
 import CustomDayComponent from "../components/CustomDayComponent";
+import Reviews from "../components/Reviews";
 
 const BarOwnerMain = ({ route }) => {
   const [reservation, setReservation] = useState(true);
@@ -26,6 +26,37 @@ const BarOwnerMain = ({ route }) => {
     "2023-11-21": [{ name: "예약 3" }],
     // 다른 날짜의 예약들...
   };
+
+  const reviewData = [
+    {
+      pubName: "백수씨 심야식당",
+      customerNickname: "김영희",
+      reviewRating: 4.5,
+      uploadDate: "2023-03-01T12:00:00",
+      reviewContent:
+        "음식이 정말 맛있었어요. 분위기도 좋고, 서비스도 훌륭합니다!",
+      reviewImg: "https://example.com/review-photo1.jpg",
+    },
+    {
+      pubName: "백수씨 심야식당",
+      customerNickname: "이철수",
+      reviewRating: 5.0,
+      uploadDate: "2023-03-02T15:30:00",
+      reviewContent:
+        "재료가 신선하고, 요리가 일품이었습니다. 다음에 꼭 다시 방문할게요!",
+      reviewImg:
+        "https://firebasestorage.googleapis.com/v0/b/wework-back.appspot.com/o/%EB%B0%B1%EC%88%98%EC%94%A8%EC%8B%AC%EC%95%BC%EC%8B%9D%EB%8B%B9%2F%EC%8B%AC%EC%95%BC%EC%8B%9D%EB%8B%B9-%EA%B0%84%ED%8C%9001.jpeg?alt=media&token=7cd18370-abdf-4463-b0bf-467410ef7bd1",
+    },
+    {
+      pubName: "백수씨 심야식당",
+      customerNickname: "박지영",
+      reviewRating: 4.0,
+      uploadDate: "2023-03-03T19:00:00",
+      reviewContent:
+        "쾌적한 환경에서 맛있는 식사를 할 수 있어서 좋았어요. 다만, 대기 시간이 조금 길었네요.",
+      reviewImg: "https://example.com/review-photo3.jpg",
+    },
+  ];
 
   const bar = route.params.bar;
 
@@ -265,7 +296,7 @@ const BarOwnerMain = ({ route }) => {
         {/* 리뷰 탭 */}
         {review && (
           <View style={styles.reviewContainer}>
-            <ReviewCard isOwner={true}/>
+            <Reviews reviews={reviewData} isOwner={true}/>
           </View>
         )}
       </View>
