@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "494469542541",
+    "firebase_url": "https://wework-back-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "wework-back",
+    "storage_bucket": "wework-back.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:494469542541:android:3f2db53730b21855ef68c4",
+        "android_client_info": {
+          "package_name": "wework.android.test"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlJZeek-JIyhydtSNBtuF26ArRXNMGGPA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,10 +1,21 @@
-import { View, Text, StyleSheet, Modal, Button, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Modal,
+  Button,
+  Pressable,
+  TouchableOpacity,
+} from "react-native";
 import { useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 const MyReservation = () => {
   const [haveReservation, setHaveReservation] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+
+  const navigation = useNavigation();
 
   return (
     <View>
@@ -50,7 +61,12 @@ const MyReservation = () => {
             </Text>
             <Text style={styles.reservationPastNum}>5</Text>
           </View>
-          <View style={styles.reservationListContainer}>
+          <TouchableOpacity
+            style={styles.reservationListContainer}
+            onPress={() => {
+              navigation.navigate("리뷰작성", {  });
+            }}
+          >
             <View style={styles.reservationList1}>
               <Text style={styles.reservationListTitle}>백수씨 심야식당</Text>
               <Text style={styles.reservationListLastTime}>19시간 전</Text>
@@ -63,7 +79,7 @@ const MyReservation = () => {
               <Text>예약금</Text>
               <Text>56000원</Text>
             </View>
-          </View>
+          </TouchableOpacity>
 
           <Button
             title="지금 예약하러가기"
