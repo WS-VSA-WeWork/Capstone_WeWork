@@ -123,43 +123,8 @@ const BarOwnerMain = ({ route }) => {
     const date = new Date(day);
     const dateIdx = date.getDay();
     const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
-    // if (day) {
-    //   return `(${daysOfWeek[dateIdx]})`;
-    // } else {
-    //   return "";
-    // }
     return `(${daysOfWeek[dateIdx]})`;
   };
-
-  // const updateMarkedDates = () => {
-  //   const newMarkedDates = {};
-  //   Object.keys(reservations).forEach((date) => {
-  //     const count = reservations[date].length;
-  //     newMarkedDates[date] = {
-  //       marked: true,
-  //       dotColor: "#1AB277",
-  //       customStyles: {
-  //         container: {
-  //           backgroundColor: "white",
-  //         },
-  //         marker: {
-  //           width: 20,
-  //           height: 20,
-  //           borderRadius: 10,
-  //           backgroundColor: "#1AB277",
-  //           justifyContent: "center",
-  //           alignItems: "center",
-  //         },
-  //         markerText: {
-  //           color: "white",
-  //           fontSize: 10,
-  //           fontWeight: "bold",
-  //         },
-  //       },
-  //     };
-  //   });
-  //   return newMarkedDates;
-  // };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -260,34 +225,6 @@ const BarOwnerMain = ({ route }) => {
                 dayTextColor: "#393E47",
               }}
             />
-
-            {/* {selectedDate && (
-              <Agenda
-                items={reservations}
-                selected={selectedDate}
-                renderItem={(item) => {
-                  return (
-                    <View>
-                      <Text>{item.name}</Text>
-                    </View>
-                  );
-                }}
-              />
-            )} */}
-
-            {/* {selectedDate && (
-              <Agenda
-                items={reservations}
-                selected={selectedDate}
-                renderItem={(item) => {
-                  return (
-                    <View>
-                      <Text>{item.name}</Text>
-                    </View>
-                  );
-                }}
-              />
-            )} */}
 
             {selectedDate && (
               <>
