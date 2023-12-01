@@ -313,6 +313,8 @@ export default function UserReservation() {
     // console.log(stringDate);
     hideDateTimePicker();
     setDate(date);
+  const handleItemPress = (bar) => {
+    navigation.navigate("식당 상세", { bar });
   };
 
   const [numberOfPeople, setNumberOfPeople] = useState(0);
@@ -581,14 +583,16 @@ export default function UserReservation() {
                       data={filteredData}
                       keyExtractor={(item, index) => index.toString()}
                       renderItem={({ item }) => (
-                        <ReservationCard
-                          name={item.pubName}
-                          rating={item.rating}
-                          image={item.pubImages[1]}
-                          start={item.startTime}
-                          end={item.endTime}
-                          phone={item.pubPhonenum}
-                        />
+                        <TouchableOpacity onPress={() => handleItemPress(item)}>
+                          <ReservationCard
+                            name={item.pubName}
+                            rating={item.rating}
+                            image={item.pubImages[1]}
+                            start={item.startTime}
+                            end={item.endTime}
+                            phone={item.pubPhonenum}
+                          />
+                        </TouchableOpacity>
                       )}
                     />
                   </View>
@@ -600,14 +604,16 @@ export default function UserReservation() {
                       data={filteredData}
                       keyExtractor={(item, index) => index.toString()}
                       renderItem={({ item }) => (
-                        <ReservationCard
-                          name={item.pubName}
-                          rating={item.rating}
-                          image={item.pubImages[1]}
-                          start={item.startTime}
-                          end={item.endTime}
-                          phone={item.pubPhonenum}
-                        />
+                        <TouchableOpacity onPress={() => handleItemPress(item)}>
+                          <ReservationCard
+                            name={item.pubName}
+                            rating={item.rating}
+                            image={item.pubImages[1]}
+                            start={item.startTime}
+                            end={item.endTime}
+                            phone={item.pubPhonenum}
+                          />
+                        </TouchableOpacity>
                       )}
                     />
                   </View>
@@ -618,14 +624,16 @@ export default function UserReservation() {
                       data={filteredData}
                       keyExtractor={(item, index) => index.toString()}
                       renderItem={({ item }) => (
-                        <ReservationCard
-                          name={item.pubName}
-                          rating={item.rating}
-                          image={item.pubImages[1]}
-                          start={item.startTime}
-                          end={item.endTime}
-                          phone={item.pubPhonenum}
-                        />
+                        <TouchableOpacity onPress={() => handleItemPress(item)}>
+                          <ReservationCard
+                            name={item.pubName}
+                            rating={item.rating}
+                            image={item.pubImages[1]}
+                            start={item.startTime}
+                            end={item.endTime}
+                            phone={item.pubPhonenum}
+                          />
+                        </TouchableOpacity>
                       )}
                     />
                   </View>
@@ -636,14 +644,16 @@ export default function UserReservation() {
                       data={filteredData}
                       keyExtractor={(item, index) => index.toString()}
                       renderItem={({ item }) => (
-                        <ReservationCard
-                          name={item.pubName}
-                          rating={item.rating}
-                          image={item.pubImages[1]}
-                          start={item.startTime}
-                          end={item.endTime}
-                          phone={item.pubPhonenum}
-                        />
+                        <TouchableOpacity onPress={() => handleItemPress(item)}>
+                          <ReservationCard
+                            name={item.pubName}
+                            rating={item.rating}
+                            image={item.pubImages[1]}
+                            start={item.startTime}
+                            end={item.endTime}
+                            phone={item.pubPhonenum}
+                          />
+                        </TouchableOpacity>
                       )}
                     />
                   </View>
@@ -655,14 +665,16 @@ export default function UserReservation() {
                       data={pubData}
                       keyExtractor={(item, index) => index.toString()}
                       renderItem={({ item }) => (
-                        <ReservationCard
-                          name={item.pubName}
-                          rating={item.rating}
-                          image={item.pubImages[1]}
-                          start={item.startTime}
-                          end={item.endTime}
-                          phone={item.pubPhonenum}
-                        />
+                        <TouchableOpacity onPress={() => handleItemPress(item)}>
+                          <ReservationCard
+                            name={item.pubName}
+                            rating={item.rating}
+                            image={item.pubImages[1]}
+                            start={item.startTime}
+                            end={item.endTime}
+                            phone={item.pubPhonenum}
+                          />
+                        </TouchableOpacity>
                       )}
                     />
                   </View>
