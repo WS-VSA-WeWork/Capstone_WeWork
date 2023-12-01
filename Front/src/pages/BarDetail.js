@@ -20,17 +20,21 @@ import telephone from "../../assets/telephone.png";
 
 import Menu from "../components/Menu";
 import TimeTable from "../components/TimeTable";
-import ReviewCard from "../components/ReviewCard";
 import GptDetail from "../components/GptDetail";
-import { fetchPubDataByName } from "../reducers/pubReducer";
-import { useDispatch, useSelector } from "react-redux";
 import Reviews from "../components/Reviews";
+
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPubDataByName } from "../reducers/pubReducer";
+import { fetchReviewsByPub } from "../reducers/reviewReducer";
 
 const BarDetail = ({ route }) => {
   const dispatch = useDispatch();
+
   const selectedPub = useSelector((state) => state.pub.selectedPub);
-  const status = useSelector((state) => state.pub.status);
-  const error = useSelector((state) => state.pub.error);
+  const pubStatus = useSelector((state) => state.pub.status);
+  const pubError = useSelector((state) => state.pub.error);
+
+  const reviews = useSelector((state) => state.review.data);
 
   const [date, setDate] = useState(new Date());
   // const [open, setOpen] = useState(false);
@@ -94,6 +98,7 @@ const BarDetail = ({ route }) => {
   useEffect(() => {
     const pubName = "백수씨심야식당"; // 임시코드
     dispatch(fetchPubDataByName(pubName));
+    dispatch(fetchReviewsByPub(pubName));
   }, []);
 
   useEffect(() => {
@@ -233,7 +238,7 @@ const BarDetail = ({ route }) => {
                 <Text style={styles.rating}>{bar.rating}</Text>
               </View>
               <View style={styles.deviderLine}></View>
-              <Text style={styles.entryData}>총 40석</Text>
+              <Text style={styles.entryData}>총 {bar.maxSeats}석</Text>
             </View>
             <View style={styles.openTimeContainer}>
               {/* <Text style={styles.entryTitle}>영업시간</Text> */}
@@ -242,16 +247,18 @@ const BarDetail = ({ route }) => {
                 style={styles.iconImg}
                 resizeMode="contain"
               />
-              <Text style={styles.entryData}>오후 4:00 ~ 오전 4:00</Text>
+              <Text style={styles.entryData}>
+                {bar.startTime} ~ {bar.endTime}
+              </Text>
             </View>
             <View style={styles.phoneContainer}>
-              {/* <Text style={styles.entryTitle}>전화번호</Text> */}
+              <Text style={styles.entryTitle}>전화번호</Text>
               <Image
                 source={telephone}
                 style={styles.iconImg}
                 resizeMode="contain"
               />
-              <Text style={styles.entryData}>02-0000-0000</Text>
+              <Text style={styles.entryData}>{bar.pubPhonenum}</Text>
             </View>
           </View>
 
@@ -265,7 +272,7 @@ const BarDetail = ({ route }) => {
                 style={styles.datePicker}
               >
                 <Text style={styles.entryData}>
-                  {bar.startTime} {/*tmp*/}
+                  {bar.startTime} {/*parameter로 변경할 것*/}
                   {/* {date.toLocaleDateString()}
                   &#40;{dayOfWeek(date.getDay())}&#41; */}
                 </Text>
@@ -274,7 +281,8 @@ const BarDetail = ({ route }) => {
 
             <View style={styles.peopleContainer}>
               <Text style={styles.entryTitle}>인원수</Text>
-              <Text style={styles.entryData}>{bar.maxSeats}명</Text>
+              <Text style={styles.entryData}>x명</Text>
+              {/*parameter로 변경할 것*/}
             </View>
 
             <View style={styles.timeContainer}>
@@ -342,10 +350,11 @@ const BarDetail = ({ route }) => {
                 </>
               )}
               {/* 리뷰 */}
-              {review && reviewData && (
+              {/* {review && reviewData && ( */}
+              {review && (
                 <View style={styles.reviewContainer}>
                   {/* <ReviewCard isOwner={false} /> */}
-                  <Reviews reviews={reviewData} isOwner={false} />
+                  <Reviews reviews={reviews} isOwner={false} />
                 </View>
               )}
             </View>

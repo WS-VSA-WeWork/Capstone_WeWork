@@ -3,8 +3,6 @@ import { View, FlatList, Text } from "react-native";
 import ReviewCard from "./ReviewCard";
 
 const Reviews = ({ reviews, isOwner }) => {
-  console.log(reviews);
-
   return (
     <FlatList
       data={reviews}
