@@ -23,6 +23,7 @@ import MyRule from "./src/pages/MyRule";
 import { Provider } from "react-redux";
 import store from "./src/store";
 import CEODashBoard from "./src/pages/CEODashBoard";
+import MainScreen from "./src/pages/RestaurantPost";
 
 const Stack = createNativeStackNavigator();
 
@@ -43,12 +44,12 @@ export default function App() {
           <Stack.Screen name="내예약관리" component={MyReservation} />
           <Stack.Screen name="사장님메인" component={BarOwnerMain} />
           <Stack.Screen name="리뷰작성" component={ReviewForm} />
-          <Stack.Screen name="대시보드" component={CEODashBoard} />
           <Stack.Screen name="사장님 마이페이지" component={CEOMyPage} />
           <Stack.Screen name="사장님 예약관리" component={CEOMyReservation} />
           <Stack.Screen name="사장님 위약정보" component={CEOMyBan} />
           <Stack.Screen name="사장님 프로필관리" component={CEOMyProfile} />
           <Stack.Screen name="규정 사항" component={MyRule} />
+          <Stack.Screen name="가게 등록" component={MainScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
