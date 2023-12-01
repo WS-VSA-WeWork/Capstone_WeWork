@@ -20,6 +20,7 @@ import CEOMyReservation from "./src/pages/CEOMyReservation";
 import CEOMyBan from "./src/pages/CEOMyBan";
 import CEOMyProfile from "./src/pages/CEOMyProfile";
 import MyRule from "./src/pages/MyRule";
+import CEODashBoard from "./src/pages/CEODashBoard";
 
 const Stack = createNativeStackNavigator();
 
@@ -39,6 +40,7 @@ export default function App() {
         <Stack.Screen name="내예약관리" component={MyReservation} />
         <Stack.Screen name="사장님메인" component={BarOwnerMain} />
         <Stack.Screen name="리뷰작성" component={ReviewForm} />
+        <Stack.Screen name="대시보드" component={CEODashBoard}/>
         <Stack.Screen name="사장님 마이페이지" component={CEOMyPage} />
         <Stack.Screen name="사장님 예약관리" component={CEOMyReservation} />
         <Stack.Screen name="사장님 위약정보" component={CEOMyBan} />

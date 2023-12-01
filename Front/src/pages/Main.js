@@ -111,6 +111,12 @@ const Main = () => {
           navigation.navigate("사장님 마이페이지");
         }}
       />
+      <Button
+        title="사장님 대시보드"
+        onPress={() => {
+          navigation.navigate("대시보드", { bar: bars.simya });
+        }}
+      />
 
       <StatusBar style="auto" />
     </View>
