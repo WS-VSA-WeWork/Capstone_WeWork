@@ -37,9 +37,6 @@ const pubSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchPubsData.pending, (state) => {
-        state.status = "loading";
-      })
       .addCase(fetchPubsData.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.data = action.payload;
@@ -47,9 +44,6 @@ const pubSlice = createSlice({
       .addCase(fetchPubsData.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
-      })
-      .addCase(fetchPubDataByName.pending, (state) => {
-        state.status = "loading";
       })
       .addCase(fetchPubDataByName.fulfilled, (state, action) => {
         state.status = "succeeded";

@@ -375,10 +375,6 @@ export default function UserReservation() {
     };
   }, []);
 
-  if (status === "loading") {
-    return <Text>Loading...</Text>; // You can replace this with a loading indicator
-  }
-
   if (status === "failed") {
     return <Text>Error loading data: {error}</Text>;
   }
