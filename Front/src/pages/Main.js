@@ -111,6 +111,12 @@ const Main = () => {
           navigation.navigate("사장님 마이페이지");
         }}
       />
+      <Button
+        title="가게 등록"
+        onPress={() => {
+          navigation.navigate("가게 등록");
+        }}
+      />
 
       <StatusBar style="auto" />
     </View>

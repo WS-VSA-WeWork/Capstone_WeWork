@@ -20,6 +20,7 @@ import CEOMyReservation from "./src/pages/CEOMyReservation";
 import CEOMyBan from "./src/pages/CEOMyBan";
 import CEOMyProfile from "./src/pages/CEOMyProfile";
 import MyRule from "./src/pages/MyRule";
+import MainScreen from "./src/pages/RestaurantPost";
 
 const Stack = createNativeStackNavigator();
 
@@ -44,6 +45,7 @@ export default function App() {
         <Stack.Screen name="사장님 위약정보" component={CEOMyBan} />
         <Stack.Screen name="사장님 프로필관리" component={CEOMyProfile} />
         <Stack.Screen name="규정 사항" component={MyRule} />
+        <Stack.Screen name="가게 등록" component={MainScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
