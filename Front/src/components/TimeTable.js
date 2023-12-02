@@ -1,25 +1,43 @@
 import { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
-const TimeTable = ({ onTimeChange }) => {
+const TimeTable = ({ onTimeChange, timeSlots }) => {
   //임시 시간 목록
-  const timeSlots = [
-    { label: "17:00", value: "17:00", available: true },
-    { label: "17:30", value: "17:30", available: true },
-    { label: "18:00", value: "18:00", available: true },
-    { label: "18:30", value: "18:30", available: true },
-    { label: "19:00", value: "19:00", available: true },
-    { label: "19:30", value: "19:30", available: true },
-    { label: "20:00", value: "20:00", available: false },
-    { label: "20:30", value: "20:30", available: false },
-    { label: "21:00", value: "21:00", available: true },
-    { label: "21:30", value: "21:30", available: false },
-    { label: "22:00", value: "22:00", available: false },
-    { label: "22:30", value: "22:30", available: false },
-    { label: "23:00", value: "23:00", available: false },
-    { label: "23:30", value: "23:30", available: false },
-    { label: "24:00", value: "24:00", available: false },
-  ];
+  // const timeSlots = [
+  //   { label: "17:00", value: "17:00", available: true },
+  //   { label: "17:30", value: "17:30", available: true },
+  //   { label: "18:00", value: "18:00", available: true },
+  //   { label: "18:30", value: "18:30", available: true },
+  //   { label: "19:00", value: "19:00", available: true },
+  //   { label: "19:30", value: "19:30", available: true },
+  //   { label: "20:00", value: "20:00", available: false },
+  //   { label: "20:30", value: "20:30", available: false },
+  //   { label: "21:00", value: "21:00", available: true },
+  //   { label: "21:30", value: "21:30", available: false },
+  //   { label: "22:00", value: "22:00", available: false },
+  //   { label: "22:30", value: "22:30", available: false },
+  //   { label: "23:00", value: "23:00", available: false },
+  //   { label: "23:30", value: "23:30", available: false },
+  //   { label: "24:00", value: "24:00", available: false },
+  // ];
+
+  // const timeSlots = [
+  //   { label: "17:00", available: true },
+  //   { label: "17:30", available: true },
+  //   { label: "18:00", available: true },
+  //   { label: "18:30", available: true },
+  //   { label: "19:00", available: true },
+  //   { label: "19:30", available: true },
+  //   { label: "20:00", available: false },
+  //   { label: "20:30", available: false },
+  //   { label: "21:00", available: true },
+  //   { label: "21:30", available: false },
+  //   { label: "22:00", available: false },
+  //   { label: "22:30", available: false },
+  //   { label: "23:00", available: false },
+  //   { label: "23:30", available: false },
+  //   { label: "24:00", available: false },
+  // ];
 
   const [isStartTimeSelected, setIsStartTimeSelected] = useState(false);
   const [startTime, setStartTime] = useState();
@@ -35,17 +53,19 @@ const TimeTable = ({ onTimeChange }) => {
 
   const handleTimeChange = (selectedTime) => {
     const selectedIndex = timeSlots.findIndex(
-      (slot) => slot.value === selectedTime
+      (slot) => slot.label === selectedTime
     );
+
     if (!isStartTimeSelected) {
       setStartTime(selectedTime);
+      setLastTime("00:00");
       setIsStartTimeSelected(true);
       setSelectedTimes([selectedTime]);
     } else {
       // 마지막 시간을 설정하기 전에 비활성화된 시간이 있는지 확인
       const isUnavailableTimeInBetween = timeSlots
         .slice(
-          timeSlots.findIndex((slot) => slot.value === startTime) + 1,
+          timeSlots.findIndex((slot) => slot.label === startTime) + 1,
           selectedIndex
         )
         .some((slot) => !slot.available);
@@ -62,7 +82,7 @@ const TimeTable = ({ onTimeChange }) => {
         if (selectedDateTime < startDateTime) {
           // 선택된 시간이 시작 시간보다 빠르면 시작 시간으로 설정
           setStartTime(selectedTime);
-          setLastTime("");
+          setLastTime("00:00");
           setSelectedTimes([selectedTime]);
         } else {
           //선택된 시간 + 30분
@@ -76,16 +96,17 @@ const TimeTable = ({ onTimeChange }) => {
 
           //선택된 시간구간 색깔 바꿔주기 위해 리스트에 추가
           const selectedIndices = [
-            timeSlots.findIndex((slot) => slot.value === startTime),
-            timeSlots.findIndex((slot) => slot.value === selectedTime),
+            timeSlots.findIndex((slot) => slot.label === startTime),
+            timeSlots.findIndex((slot) => slot.label === selectedTime),
           ];
           const newSelectedTimes = timeSlots
             .slice(
               Math.min(...selectedIndices),
               Math.max(...selectedIndices) + 1
             )
-            .map((slot) => slot.value);
+            .map((slot) => slot.label);
           setSelectedTimes(newSelectedTimes);
+          setIsStartTimeSelected(false);
         }
       }
     }
@@ -100,21 +121,21 @@ const TimeTable = ({ onTimeChange }) => {
             style={[
               styles.timeSlot,
               {
-                backgroundColor: selectedTimes.includes(timeSlot.value)
+                backgroundColor: selectedTimes.includes(timeSlot.label)
                   ? "#1AB277"
                   : timeSlot.available
                   ? "#E0F7ED"
                   : "#D9D9D9",
               },
             ]}
-            onPress={() => handleTimeChange(timeSlot.value)}
+            onPress={() => handleTimeChange(timeSlot.label)}
             disabled={!timeSlot.available}
           >
             <Text
               style={[
                 styles.timeSlotText,
                 {
-                  color: selectedTimes.includes(timeSlot.value)
+                  color: selectedTimes.includes(timeSlot.label)
                     ? "#ffffff"
                     : timeSlot.available
                     ? "#393E47"

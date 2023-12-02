@@ -25,16 +25,18 @@ import Reviews from "../components/Reviews";
 
 import { useDispatch, useSelector } from "react-redux";
 import { fetchReviewsByPub } from "../reducers/reviewReducer";
+import { fetchTimetable } from "../reducers/timetableReducer";
 
 const BarDetail = ({ route }) => {
   const dispatch = useDispatch();
 
   const reviews = useSelector((state) => state.review.data);
+  const timetable = useSelector((state) => state.timetable.data);
 
   const [date, setDate] = useState(new Date());
   // const [open, setOpen] = useState(false);
   // const [mode, setMode] = useState("date");
-  const [time, setTime] = useState("시간을 선택해주세요");
+  const [time, setTime] = useState("시작시간과 종료시간을 선택해주세요");
   const [showForm, setShowForm] = useState(false);
   const [btnActive, setBtnActive] = useState(false);
   const [reservDate, setReservDate] = useState();
@@ -92,8 +94,9 @@ const BarDetail = ({ route }) => {
 
   useEffect(() => {
     const pubName = "백수씨심야식당"; // 임시코드
-    dispatch(fetchPubDataByName(pubName));
+    const date = "2023-12-02"; // 임시코드
     dispatch(fetchReviewsByPub(pubName));
+    dispatch(fetchTimetable({ pubName: pubName, date: date }));
   }, []);
 
   useEffect(() => {
@@ -284,7 +287,7 @@ const BarDetail = ({ route }) => {
               <Text style={styles.entryTitle}>예약시간</Text>
               <Text style={styles.timeData}>{time}</Text>
             </View>
-            <TimeTable onTimeChange={handleTimeChange} />
+            <TimeTable onTimeChange={handleTimeChange} timeSlots={timetable} />
           </View>
         </View>
 
