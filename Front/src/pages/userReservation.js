@@ -313,6 +313,8 @@ export default function UserReservation() {
     // console.log(stringDate);
     hideDateTimePicker();
     setDate(date);
+  };
+
   const handleItemPress = (bar) => {
     navigation.navigate("식당 상세", { bar });
   };
