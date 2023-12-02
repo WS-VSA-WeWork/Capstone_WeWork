@@ -20,14 +20,26 @@ import telephone from "../../assets/telephone.png";
 
 import Menu from "../components/Menu";
 import TimeTable from "../components/TimeTable";
-import ReviewCard from "../components/ReviewCard";
 import GptDetail from "../components/GptDetail";
+import Reviews from "../components/Reviews";
+
+import { useDispatch, useSelector } from "react-redux";
+import { fetchReviewsByPub } from "../reducers/reviewReducer";
+import { fetchTimetable } from "../reducers/timetableReducer";
 
 const BarDetail = ({ route }) => {
+  const dispatch = useDispatch();
+
+  const bar = route.params.bar;
+  const selectedDate = route.params.selectedDate;
+  const numberOfPeople = route.params.numberOfPeople;
+  const reviews = useSelector((state) => state.review.data);
+  const timetable = useSelector((state) => state.timetable.data);
+
   const [date, setDate] = useState(new Date());
   // const [open, setOpen] = useState(false);
   // const [mode, setMode] = useState("date");
-  const [time, setTime] = useState("시간을 선택해주세요");
+  const [time, setTime] = useState("시작시간과 종료시간을 선택해주세요");
   const [showForm, setShowForm] = useState(false);
   const [btnActive, setBtnActive] = useState(false);
   const [reservDate, setReservDate] = useState();
@@ -35,10 +47,39 @@ const BarDetail = ({ route }) => {
   const [menu, setMenu] = useState(true);
   const [review, setReviews] = useState(false);
 
+  const reviewData = [
+    {
+      pubName: "백수씨 심야식당",
+      customerNickname: "김영희",
+      reviewRating: 4.5,
+      uploadDate: "2023-03-01T12:00:00",
+      reviewContent:
+        "음식이 정말 맛있었어요. 분위기도 좋고, 서비스도 훌륭합니다!",
+      reviewImg: "https://example.com/review-photo1.jpg",
+    },
+    {
+      pubName: "백수씨 심야식당",
+      customerNickname: "이철수",
+      reviewRating: 5.0,
+      uploadDate: "2023-03-02T15:30:00",
+      reviewContent:
+        "재료가 신선하고, 요리가 일품이었습니다. 다음에 꼭 다시 방문할게요!",
+      reviewImg:
+        "https://firebasestorage.googleapis.com/v0/b/wework-back.appspot.com/o/%EB%B0%B1%EC%88%98%EC%94%A8%EC%8B%AC%EC%95%BC%EC%8B%9D%EB%8B%B9%2F%EC%8B%AC%EC%95%BC%EC%8B%9D%EB%8B%B9-%EA%B0%84%ED%8C%9001.jpeg?alt=media&token=7cd18370-abdf-4463-b0bf-467410ef7bd1",
+    },
+    {
+      pubName: "백수씨 심야식당",
+      customerNickname: "박지영",
+      reviewRating: 4.0,
+      uploadDate: "2023-03-03T19:00:00",
+      reviewContent:
+        "쾌적한 환경에서 맛있는 식사를 할 수 있어서 좋았어요. 다만, 대기 시간이 조금 길었네요.",
+      reviewImg: "https://example.com/review-photo3.jpg",
+    },
+  ];
+
   const MovingBar = useRef(new Animated.Value(38)).current;
   const barWidth = useRef(new Animated.Value(110)).current;
-
-  const bar = route.params.bar;
 
   const navigation = useNavigation();
 
@@ -51,6 +92,12 @@ const BarDetail = ({ route }) => {
     setMenu(false);
     setReviews(true);
   };
+
+  useEffect(() => {
+    const date = "2023-12-02"; // 임시코드
+    dispatch(fetchReviewsByPub(bar.pubName));
+    dispatch(fetchTimetable({ pubName: bar.pubName, date: date }));
+  }, []);
 
   useEffect(() => {
     // 상태에 따라 바 위치를 조절
@@ -125,11 +172,11 @@ const BarDetail = ({ route }) => {
 
   const navigateToOrder = () => {
     const reservationDetails = {
-      barName: bar.name,
-      barImage: bar.image,
-      reservdate: bar.date,
-      people: bar.people,
-      reservetime: time,
+      pubName: bar.pubName,
+      pubImage: bar.pubImages[1],
+      reservDate: selectedDate,
+      people: numberOfPeople,
+      reserveTime: time,
     };
     console.log(reservationDetails);
     navigation.navigate("결제하기", reservationDetails);
@@ -139,7 +186,11 @@ const BarDetail = ({ route }) => {
     <>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.imageContainer}>
-          <Image source={bar.image} style={styles.image} resizeMode="cover" />
+          <Image
+            source={{ uri: bar.pubImages[1] }}
+            style={styles.image}
+            resizeMode="cover"
+          />
         </View>
 
         {/* 타이틀 */}
@@ -151,23 +202,23 @@ const BarDetail = ({ route }) => {
                 style={styles.iconImg}
                 resizeMode="contain"
               />
-              <Text style={styles.address}>{bar.address}</Text>
+              <Text style={styles.address}>{bar.pubAddress}</Text>
             </View>
             <View style={styles.tagContainer}>
-              {bar.tags.map((tag, index) => (
+              {bar.hashTags.map((tag, index) => (
                 <Text key={index} style={styles.tag}>
                   {tag}{" "}
                 </Text>
               ))}
             </View>
             <View style={styles.titleContainer}>
-              <Text style={styles.title}>{bar.name}</Text>
+              <Text style={styles.title}>{bar.pubName}</Text>
             </View>
           </View>
 
           <View style={styles.introContainer}>
             <Text style={styles.introduction} aria-expanded={true}>
-              {bar.introduction}
+              {bar.pubDescription}
             </Text>
           </View>
 
@@ -185,7 +236,7 @@ const BarDetail = ({ route }) => {
                 <Text style={styles.rating}>{bar.rating}</Text>
               </View>
               <View style={styles.deviderLine}></View>
-              <Text style={styles.entryData}>총 40석</Text>
+              <Text style={styles.entryData}>총 {bar.maxSeats}석</Text>
             </View>
             <View style={styles.openTimeContainer}>
               {/* <Text style={styles.entryTitle}>영업시간</Text> */}
@@ -194,16 +245,18 @@ const BarDetail = ({ route }) => {
                 style={styles.iconImg}
                 resizeMode="contain"
               />
-              <Text style={styles.entryData}>오후 4:00 ~ 오전 4:00</Text>
+              <Text style={styles.entryData}>
+                {bar.startTime} ~ {bar.endTime}
+              </Text>
             </View>
             <View style={styles.phoneContainer}>
-              {/* <Text style={styles.entryTitle}>전화번호</Text> */}
+              <Text style={styles.entryTitle}>전화번호</Text>
               <Image
                 source={telephone}
                 style={styles.iconImg}
                 resizeMode="contain"
               />
-              <Text style={styles.entryData}>02-0000-0000</Text>
+              <Text style={styles.entryData}>{bar.pubPhonenum}</Text>
             </View>
           </View>
 
@@ -217,7 +270,7 @@ const BarDetail = ({ route }) => {
                 style={styles.datePicker}
               >
                 <Text style={styles.entryData}>
-                  {bar.date}
+                  {selectedDate}
                   {/* {date.toLocaleDateString()}
                   &#40;{dayOfWeek(date.getDay())}&#41; */}
                 </Text>
@@ -226,14 +279,14 @@ const BarDetail = ({ route }) => {
 
             <View style={styles.peopleContainer}>
               <Text style={styles.entryTitle}>인원수</Text>
-              <Text style={styles.entryData}>{bar.people}명</Text>
+              <Text style={styles.entryData}>{numberOfPeople}명</Text>
             </View>
 
             <View style={styles.timeContainer}>
               <Text style={styles.entryTitle}>예약시간</Text>
               <Text style={styles.timeData}>{time}</Text>
             </View>
-            <TimeTable onTimeChange={handleTimeChange} />
+            <TimeTable onTimeChange={handleTimeChange} timeSlots={timetable} />
           </View>
         </View>
 
@@ -286,15 +339,19 @@ const BarDetail = ({ route }) => {
               ></Animated.View>
 
               <View style={styles.menuTitleLine}></View>
+              {/* 대표메뉴 */}
               {menu && (
                 <>
-                  <Menu menu={bar.menu[0]} />
-                  <Menu menu={bar.menu[0]} />
+                  <Menu menu={bar.pubMenus[0]} />
+                  <Menu menu={bar.pubMenus[1]} />
                 </>
               )}
+              {/* 리뷰 */}
+              {/* {review && reviewData && ( */}
               {review && (
                 <View style={styles.reviewContainer}>
-                  <ReviewCard isOwner={false}/>
+                  {/* <ReviewCard isOwner={false} /> */}
+                  <Reviews reviews={reviews} isOwner={false} />
                 </View>
               )}
             </View>
@@ -521,7 +578,7 @@ const styles = StyleSheet.create({
     borderColor: "#393E47",
     borderWidth: 1,
   },
-  reviewContainer:{
+  reviewContainer: {
     marginTop: 10,
   },
   reservationContainer: {},

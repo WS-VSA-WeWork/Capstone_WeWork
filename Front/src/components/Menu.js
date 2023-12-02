@@ -8,13 +8,15 @@ const Menu = ({ menu }) => {
     <View style={styles.menu}>
       <Image
         style={styles.menuImg}
-        source={menu.menuImage}
+        source={{ uri: menu.menuImg }}
         resizeMode="cover"
       ></Image>
       <View style={styles.menuText}>
         <Text style={styles.menuName}>{menu.menuName}</Text>
-        <Text style={styles.menuDesc}>{menu.menuDesc}</Text>
-        <Text style={styles.menuPrice}>{menu.price.toLocaleString()}원</Text>
+        <Text style={styles.menuDesc}>{menu.menuDescription}</Text>
+        <Text style={styles.menuPrice}>
+          {menu.menuPrice.toLocaleString()}원
+        </Text>
       </View>
     </View>
   );
