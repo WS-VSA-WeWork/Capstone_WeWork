@@ -28,8 +28,8 @@ import { fetchPubsData } from "../reducers/pubReducer";
 
 export default function UserReservation() {
   const dispatch = useDispatch();
+
   const pubData = useSelector((state) => state.pub.data);
-  const [filteredData, setFilteredData] = useState([]);
   const status = useSelector((state) => state.pub.status);
   const error = useSelector((state) => state.pub.error);
 
@@ -216,6 +216,7 @@ export default function UserReservation() {
   ];
 
   const navigation = useNavigation();
+  const [filteredData, setFilteredData] = useState([]);
   const [servicing, setServicing] = useState(true);
   const [reservation, setReservation] = useState(false);
   const [igakaya, setIgakaya] = useState(false);
@@ -316,7 +317,8 @@ export default function UserReservation() {
   };
 
   const handleItemPress = (bar) => {
-    navigation.navigate("식당 상세", { bar });
+    const selectedDate = stringDate.toString();
+    navigation.navigate("식당 상세", { bar, selectedDate, numberOfPeople });
   };
 
   const [numberOfPeople, setNumberOfPeople] = useState(0);

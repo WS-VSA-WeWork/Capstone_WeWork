@@ -30,6 +30,9 @@ import { fetchTimetable } from "../reducers/timetableReducer";
 const BarDetail = ({ route }) => {
   const dispatch = useDispatch();
 
+  const bar = route.params.bar;
+  const selectedDate = route.params.selectedDate;
+  const numberOfPeople = route.params.numberOfPeople;
   const reviews = useSelector((state) => state.review.data);
   const timetable = useSelector((state) => state.timetable.data);
 
@@ -78,8 +81,6 @@ const BarDetail = ({ route }) => {
   const MovingBar = useRef(new Animated.Value(38)).current;
   const barWidth = useRef(new Animated.Value(110)).current;
 
-  const bar = route.params.bar;
-
   const navigation = useNavigation();
 
   const onMenu = () => {
@@ -93,10 +94,9 @@ const BarDetail = ({ route }) => {
   };
 
   useEffect(() => {
-    const pubName = "백수씨심야식당"; // 임시코드
     const date = "2023-12-02"; // 임시코드
-    dispatch(fetchReviewsByPub(pubName));
-    dispatch(fetchTimetable({ pubName: pubName, date: date }));
+    dispatch(fetchReviewsByPub(bar.pubName));
+    dispatch(fetchTimetable({ pubName: bar.pubName, date: date }));
   }, []);
 
   useEffect(() => {
@@ -172,11 +172,11 @@ const BarDetail = ({ route }) => {
 
   const navigateToOrder = () => {
     const reservationDetails = {
-      barName: bar.pubName,
-      barImage: bar.pubImages[1],
-      reservdate: bar.pubAddress, //tmp
-      people: bar.maxSeats, //tmp
-      reservetime: bar.startTime, //tmp
+      pubName: bar.pubName,
+      pubImage: bar.pubImages[1],
+      reservDate: selectedDate,
+      people: numberOfPeople,
+      reserveTime: time,
     };
     console.log(reservationDetails);
     navigation.navigate("결제하기", reservationDetails);
@@ -270,7 +270,7 @@ const BarDetail = ({ route }) => {
                 style={styles.datePicker}
               >
                 <Text style={styles.entryData}>
-                  {bar.startTime} {/*parameter로 변경할 것*/}
+                  {selectedDate}
                   {/* {date.toLocaleDateString()}
                   &#40;{dayOfWeek(date.getDay())}&#41; */}
                 </Text>
@@ -279,8 +279,7 @@ const BarDetail = ({ route }) => {
 
             <View style={styles.peopleContainer}>
               <Text style={styles.entryTitle}>인원수</Text>
-              <Text style={styles.entryData}>x명</Text>
-              {/*parameter로 변경할 것*/}
+              <Text style={styles.entryData}>{numberOfPeople}명</Text>
             </View>
 
             <View style={styles.timeContainer}>
