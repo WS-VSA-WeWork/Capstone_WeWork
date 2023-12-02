@@ -23,8 +23,16 @@ import ReservationCard from "../components/ReservationCard";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { FlatList } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPubsData } from "../reducers/pubReducer";
 
 export default function UserReservation() {
+  const dispatch = useDispatch();
+
+  const pubData = useSelector((state) => state.pub.data);
+  const status = useSelector((state) => state.pub.status);
+  const error = useSelector((state) => state.pub.error);
+
   const IgakayaData = [
     {
       name: "백수씨 심야식당",
@@ -208,6 +216,7 @@ export default function UserReservation() {
   ];
 
   const navigation = useNavigation();
+  const [filteredData, setFilteredData] = useState([]);
   const [servicing, setServicing] = useState(true);
   const [reservation, setReservation] = useState(false);
   const [igakaya, setIgakaya] = useState(false);
@@ -226,6 +235,8 @@ export default function UserReservation() {
   const [isDateTimePickerVisible, setDateTimePickerVisible] = useState(false);
   const [value, onChangeText] = useState("환불 사유를 입력해주세요");
   const igakayaCategory = () => {
+    const filtered = pubData.filter((pub) => pub.type === "이자카야");
+    setFilteredData(filtered);
     setIgakaya(true);
     setChicken(false);
     setJun(false);
@@ -234,6 +245,8 @@ export default function UserReservation() {
   };
 
   const chickenCategory = () => {
+    const filtered = pubData.filter((pub) => pub.type === "치킨집");
+    setFilteredData(filtered);
     setIgakaya(false);
     setChicken(true);
     setJun(false);
@@ -241,6 +254,8 @@ export default function UserReservation() {
     setAll(false);
   };
   const JunCategory = () => {
+    const filtered = pubData.filter((pub) => pub.type === "전집");
+    setFilteredData(filtered);
     setIgakaya(false);
     setChicken(false);
     setJun(true);
@@ -248,6 +263,8 @@ export default function UserReservation() {
     setAll(false);
   };
   const MakgulCategory = () => {
+    const filtered = pubData.filter((pub) => pub.type === "막걸리");
+    setFilteredData(filtered);
     setIgakaya(false);
     setChicken(false);
     setJun(false);
@@ -299,6 +316,11 @@ export default function UserReservation() {
     setDate(date);
   };
 
+  const handleItemPress = (bar) => {
+    const selectedDate = stringDate.toString();
+    navigation.navigate("식당 상세", { bar, selectedDate, numberOfPeople });
+  };
+
   const [numberOfPeople, setNumberOfPeople] = useState(0);
   useEffect(() => console.log(numberOfPeople), [numberOfPeople]);
 
@@ -336,6 +358,7 @@ export default function UserReservation() {
   const [keyboardHeight, setKeyboardHeight] = useState(0);
 
   useEffect(() => {
+    dispatch(fetchPubsData());
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
       (event) => {
@@ -355,6 +378,10 @@ export default function UserReservation() {
       keyboardDidHideListener.remove();
     };
   }, []);
+
+  if (status === "failed") {
+    return <Text>Error loading data: {error}</Text>;
+  }
 
   // 화면 상태창//
   return (
@@ -553,17 +580,19 @@ export default function UserReservation() {
                 {igakaya && (
                   <View style={styles.cardContainer}>
                     <FlatList
-                      data={IgakayaData}
+                      data={filteredData}
                       keyExtractor={(item, index) => index.toString()}
                       renderItem={({ item }) => (
-                        <ReservationCard
-                          name={item.name}
-                          rating={item.rating}
-                          image={item.image}
-                          start={item.start}
-                          end={item.end}
-                          phone={item.phone}
-                        />
+                        <TouchableOpacity onPress={() => handleItemPress(item)}>
+                          <ReservationCard
+                            name={item.pubName}
+                            rating={item.rating}
+                            image={item.pubImages[1]}
+                            start={item.startTime}
+                            end={item.endTime}
+                            phone={item.pubPhonenum}
+                          />
+                        </TouchableOpacity>
                       )}
                     />
                   </View>
@@ -572,17 +601,19 @@ export default function UserReservation() {
                 {chicken && (
                   <View style={styles.cardContainer}>
                     <FlatList
-                      data={ChickenData}
+                      data={filteredData}
                       keyExtractor={(item, index) => index.toString()}
                       renderItem={({ item }) => (
-                        <ReservationCard
-                          name={item.name}
-                          rating={item.rating}
-                          image={item.image}
-                          start={item.start}
-                          end={item.end}
-                          phone={item.phone}
-                        />
+                        <TouchableOpacity onPress={() => handleItemPress(item)}>
+                          <ReservationCard
+                            name={item.pubName}
+                            rating={item.rating}
+                            image={item.pubImages[1]}
+                            start={item.startTime}
+                            end={item.endTime}
+                            phone={item.pubPhonenum}
+                          />
+                        </TouchableOpacity>
                       )}
                     />
                   </View>
@@ -590,17 +621,19 @@ export default function UserReservation() {
                 {jun && (
                   <View style={styles.cardContainer}>
                     <FlatList
-                      data={JunData}
+                      data={filteredData}
                       keyExtractor={(item, index) => index.toString()}
                       renderItem={({ item }) => (
-                        <ReservationCard
-                          name={item.name}
-                          rating={item.rating}
-                          image={item.image}
-                          start={item.start}
-                          end={item.end}
-                          phone={item.phone}
-                        />
+                        <TouchableOpacity onPress={() => handleItemPress(item)}>
+                          <ReservationCard
+                            name={item.pubName}
+                            rating={item.rating}
+                            image={item.pubImages[1]}
+                            start={item.startTime}
+                            end={item.endTime}
+                            phone={item.pubPhonenum}
+                          />
+                        </TouchableOpacity>
                       )}
                     />
                   </View>
@@ -608,17 +641,19 @@ export default function UserReservation() {
                 {makgul && (
                   <View style={styles.cardContainer}>
                     <FlatList
-                      data={MakgulData}
+                      data={filteredData}
                       keyExtractor={(item, index) => index.toString()}
                       renderItem={({ item }) => (
-                        <ReservationCard
-                          name={item.name}
-                          rating={item.rating}
-                          image={item.image}
-                          start={item.start}
-                          end={item.end}
-                          phone={item.phone}
-                        />
+                        <TouchableOpacity onPress={() => handleItemPress(item)}>
+                          <ReservationCard
+                            name={item.pubName}
+                            rating={item.rating}
+                            image={item.pubImages[1]}
+                            start={item.startTime}
+                            end={item.endTime}
+                            phone={item.pubPhonenum}
+                          />
+                        </TouchableOpacity>
                       )}
                     />
                   </View>
@@ -627,17 +662,19 @@ export default function UserReservation() {
                   // 여기 부터 카드
                   <View style={styles.cardContainer}>
                     <FlatList
-                      data={AllData}
+                      data={pubData}
                       keyExtractor={(item, index) => index.toString()}
                       renderItem={({ item }) => (
-                        <ReservationCard
-                          name={item.name}
-                          rating={item.rating}
-                          image={item.image}
-                          start={item.start}
-                          end={item.end}
-                          phone={item.phone}
-                        />
+                        <TouchableOpacity onPress={() => handleItemPress(item)}>
+                          <ReservationCard
+                            name={item.pubName}
+                            rating={item.rating}
+                            image={item.pubImages[1]}
+                            start={item.startTime}
+                            end={item.endTime}
+                            phone={item.pubPhonenum}
+                          />
+                        </TouchableOpacity>
                       )}
                     />
                   </View>
@@ -799,7 +836,7 @@ export default function UserReservation() {
                 multiline
                 numberOfLines={5}
                 maxLength={40}
-                onPressin={() => setTyping(true)}
+                onPressIn={() => setTyping(true)}
               ></TextInput>
             </View>
             <View style={styles.wantButton}>

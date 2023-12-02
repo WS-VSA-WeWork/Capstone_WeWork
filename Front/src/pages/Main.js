@@ -12,7 +12,7 @@ const Main = () => {
     simya: {
       date: "2023.11.10(금)",
       people: 20,
-      name: "백수씨 심야식당",
+      name: "백수씨심야식당",
       address: "중구 충무로5가 82-10",
       image: simya,
       rating: 4.3,
@@ -57,6 +57,9 @@ const Main = () => {
           navigation.navigate("식당 상세", { bar: bars.simya });
         }}
       />
+      <Text>
+        식당 상세페이지는 예약메인 통해서 들어가주세요(인자가 안넘어가서 에러뜸)
+      </Text>
       <Button
         title="예약메인"
         onPress={() => {
@@ -96,7 +99,7 @@ const Main = () => {
       <Button
         title="사장님메인"
         onPress={() => {
-          navigation.navigate("사장님메인", {bar: bars.simya});
+          navigation.navigate("사장님메인", { bar: bars.simya });
         }}
       />
       <Button
@@ -112,9 +115,9 @@ const Main = () => {
         }}
       />
       <Button
-        title="사장님 대시보드"
+        title="가게 등록"
         onPress={() => {
-          navigation.navigate("대시보드", { bar: bars.simya });
+          navigation.navigate("가게 등록");
         }}
       />
 

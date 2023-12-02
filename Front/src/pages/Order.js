@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -9,10 +9,17 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
+import { useDispatch } from "react-redux";
+import { pushReservData } from "../reducers/reserveReducer";
 
 const Order = ({ route }) => {
   const [userReq, setUserReq] = useState("");
+  const [cutOffDate, setCutOffDate] = useState("2021.12.08(금)"); //tmp
+  const [userId, setUserId] = useState("1234567890"); //tmp
+  const [userName, setUserName] = useState("홍길동"); //tmp
+  const [userPhonenum, setUserPhonenum] = useState("010-1234-5678"); //tmp
 
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const resv = route.params;
 
@@ -22,12 +29,25 @@ const Order = ({ route }) => {
 
   const navigateToConfirm = () => {
     const reservationInfo = {
-        barName: resv.barName,
-        reservdate: resv.reservdate,
-        people: resv.people,
-        reservetime: resv.reservetime,
-        userReq: userReq,
-    }
+      pubName: resv.pubName,
+      reservDate: resv.reservDate,
+      numberOfPeople: resv.people,
+      reserveTime: resv.reserveTime,
+      userRequest: userReq,
+      cutOffDate: cutOffDate,
+      userId: userId,
+      userName: userName,
+      userPhonenum: userPhonenum,
+      deposit: 10000 * resv.people, //tmp
+      status: "예약완료", //tmp
+    };
+    dispatch(
+      pushReservData({
+        pubName: resv.pubName,
+        userId: userId,
+        data: reservationInfo,
+      })
+    );
     navigation.navigate("예약완료", reservationInfo);
   };
 
@@ -38,21 +58,21 @@ const Order = ({ route }) => {
           <Text style={styles.title}>예약정보</Text>
           <View style={styles.reservContainer}>
             <Image
-              source={resv.barImage}
+              source={{ uri: resv.pubImage }}
               style={styles.image}
               resizeMode="cover"
             ></Image>
             <View style={styles.infoContainer}>
               <View style={styles.info}>
-                <Text style={styles.barTitle}>{resv.barName}</Text>
+                <Text style={styles.barTitle}>{resv.pubName}</Text>
               </View>
               <View style={styles.info}>
                 <Text style={styles.infoLabel}>예약 일시</Text>
-                <Text style={styles.infoValue}>{resv.reservdate}</Text>
+                <Text style={styles.infoValue}>{resv.reservDate}</Text>
               </View>
               <View style={styles.info}>
                 <Text style={styles.infoLabel}>예약 시간</Text>
-                <Text style={styles.infoValue}>{resv.reservetime}</Text>
+                <Text style={styles.infoValue}>{resv.reserveTime}</Text>
               </View>
               <View style={styles.info}>
                 <Text style={styles.infoLabel}>인원수</Text>
@@ -73,7 +93,8 @@ const Order = ({ route }) => {
           <View style={styles.datePriceInfoContainer}>
             <View style={styles.info}>
               <Text style={styles.infoLabel}>취소 기한</Text>
-              <Text style={styles.infoValue}>2023.11.05(월)</Text>
+              <Text style={styles.infoValue}>2023.12.08(금)</Text>
+              {/*tmp*/}
             </View>
             <Text style={styles.warning}>
               (취소 기한 이후 취소 시 취소 수수료가 부과됩니다.)
@@ -81,7 +102,11 @@ const Order = ({ route }) => {
             <View style={styles.priceContainer}>
               <Text style={styles.priceLabel}>예약금</Text>
               <Text style={styles.infoValue}>
-                10,000 x 20 = <Text style={styles.barTitle}>200,000원</Text>
+                {`10,000 x ${resv.people} = `}
+                <Text style={styles.barTitle}>
+                  {`${1000 * resv.people}원
+                `}
+                </Text>
               </Text>
             </View>
           </View>
@@ -94,11 +119,11 @@ const Order = ({ route }) => {
           <View style={styles.userInfoContainer}>
             <View style={styles.info}>
               <Text style={styles.infoLabel}>이름</Text>
-              <Text style={styles.infoValue}>홍길동</Text>
+              <Text style={styles.infoValue}>{userName}</Text>
             </View>
             <View style={styles.info}>
               <Text style={styles.infoLabel}>전화번호</Text>
-              <Text style={styles.infoValue}>010-1234-2345</Text>
+              <Text style={styles.infoValue}>{userPhonenum}</Text>
             </View>
           </View>
         </View>
@@ -107,12 +132,18 @@ const Order = ({ route }) => {
         <View style={styles.titleContainer}>
           <View style={styles.priceContainer}>
             <Text style={styles.title}>최종 결제금액</Text>
-            <Text style={styles.barTitle}>200,000원</Text>
+            <Text style={styles.barTitle}>
+              {`${1000 * resv.people}원
+                `}
+            </Text>
           </View>
           <Text style={styles.details}>
             본인은 식당 취소 규정 내용을 확인하였으며, 결제 진행에 동의합니다.
           </Text>
-          <TouchableOpacity style={styles.reserveButton} onPress={navigateToConfirm}>
+          <TouchableOpacity
+            style={styles.reserveButton}
+            onPress={navigateToConfirm}
+          >
             <Text style={styles.buttonText}>동의하고 결제하기</Text>
           </TouchableOpacity>
         </View>

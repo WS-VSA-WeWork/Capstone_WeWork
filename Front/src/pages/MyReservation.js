@@ -7,15 +7,37 @@ import {
   Pressable,
   TouchableOpacity,
 } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { fetchUserReservationData } from "../reducers/userReservationReducer";
+import { useDispatch, useSelector } from "react-redux";
 
 const MyReservation = () => {
   const [haveReservation, setHaveReservation] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const reservationData = useSelector((state) => state.userreservation.data);
+  const status = useSelector((state) => state.userreservation.status);
+  const error = useSelector((state) => state.userreservation.error);
+
+  useEffect(() => {
+    const uid = "dGIYidylZq0wfmi6WkKB"; // 임시로 넣어놓은 uid
+    dispatch(fetchUserReservationData(uid));
+  }, []);
+
+  useEffect(() => {
+    if (reservationData["haveReservation"] === true) {
+      setHaveReservation(true);
+    }
+  }, [reservationData]);
+
+  //데이터 로딩 실패 시
+  if (status === "failed") {
+    return <Text>Error loading data: {error}</Text>;
+  }
 
   return (
     <View>
@@ -33,7 +55,10 @@ const MyReservation = () => {
           <Pressable onPress={() => setModalVisible(true)}>
             <View style={styles.reservationListContainer}>
               <View style={styles.reservationList1}>
-                <Text style={styles.reservationListTitle}>백수씨 심야식당</Text>
+                <Text style={styles.reservationListTitle}>
+                  {reservationData["2311131200tnfus9"]["pubName"]}{" "}
+                  {/* 예약 DB에서 가져온 술집이름(임시) */}
+                </Text>
                 <Text style={styles.reservationListLastTime}>19시간 전</Text>
               </View>
               <View style={styles.reservationList2}>

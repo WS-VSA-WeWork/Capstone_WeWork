@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import { React, useState } from "react";
 import {
   StyleSheet,
@@ -11,6 +12,11 @@ import {
 
 const Confirm = ({ route }) => {
   const resv = route.params;
+  const navigation = useNavigation();
+
+  const handleonPress = () => {
+    navigation.navigate("내예약관리");
+  };
 
   return (
     <>
@@ -23,27 +29,27 @@ const Confirm = ({ route }) => {
           <View style={styles.reservContainer}>
             <View style={styles.infoContainer}>
               <View style={styles.info}>
-                <Text style={styles.barTitle}>{resv.barName}</Text>
+                <Text style={styles.barTitle}>{resv.pubName}</Text>
               </View>
               <View style={styles.info}>
                 <Text style={styles.infoLabel}>예약 일시</Text>
-                <Text style={styles.infoValue}>{resv.reservdate}</Text>
+                <Text style={styles.infoValue}>{resv.reservDate}</Text>
               </View>
               <View style={styles.info}>
                 <Text style={styles.infoLabel}>예약 시간</Text>
-                <Text style={styles.infoValue}>{resv.reservetime}</Text>
+                <Text style={styles.infoValue}>{resv.reserveTime}</Text>
               </View>
               <View style={styles.info}>
                 <Text style={styles.infoLabel}>인원수</Text>
-                <Text style={styles.infoValue}>{resv.people}명</Text>
+                <Text style={styles.infoValue}>{resv.numberOfPeople}명</Text>
               </View>
               <View>
                 <Text style={styles.infoLabel}>요청사항</Text>
-                <Text style={styles.input}>{resv.userReq}</Text>
+                <Text style={styles.input}>{resv.userRequest}</Text>
               </View>
               <View style={styles.info}>
                 <Text style={styles.infoLabel}>예약금</Text>
-                <Text style={styles.barTitle}>200,000원</Text>
+                <Text style={styles.barTitle}>{resv.deposit}</Text>
               </View>
             </View>
           </View>
@@ -53,15 +59,18 @@ const Confirm = ({ route }) => {
               <Text style={styles.title}>예약자 정보</Text>
               <View style={styles.info}>
                 <Text style={styles.infoLabel}>이름</Text>
-                <Text style={styles.infoValue}>홍길동</Text>
+                <Text style={styles.infoValue}>{resv.userName}</Text>
               </View>
               <View style={styles.info}>
                 <Text style={styles.infoLabel}>전화번호</Text>
-                <Text style={styles.infoValue}>010-1234-2345</Text>
+                <Text style={styles.infoValue}>{resv.userPhonenum}</Text>
               </View>
             </View>
 
-            <TouchableOpacity style={styles.reserveButton}>
+            <TouchableOpacity
+              style={styles.reserveButton}
+              onPress={handleonPress}
+            >
               <Text style={styles.buttonText}>내 예약목록 확인하기</Text>
             </TouchableOpacity>
           </View>
@@ -69,7 +78,8 @@ const Confirm = ({ route }) => {
 
         <View style={styles.cancleInfo}>
           <Text style={styles.infoLabel}>취소 기한</Text>
-          <Text style={styles.infoValue}>2023.11.05(월)</Text>
+          <Text style={styles.infoValue}>2023.12.08(금)</Text>
+          {/* tmp */}
         </View>
         <Text style={styles.warning}>
           (취소 기한 이후 취소 시 취소 수수료가 부과됩니다.)

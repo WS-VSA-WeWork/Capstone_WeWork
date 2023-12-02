@@ -21,7 +21,7 @@ const ReviewCard = ({ item, isOwner }) => {
   /** 리뷰 작성 시간과 현재 시간의 차이를 계산하는 함수 */
   const getTimeDifference = (uploadDate) => {
     const now = new Date();
-    const reviewDate = new Date(uploadDate);
+    const reviewDate = uploadDate.toDate();
     const difference = now - reviewDate; // 밀리초 단위 차이
 
     const minutes = Math.floor(difference / 60000);
@@ -64,7 +64,11 @@ const ReviewCard = ({ item, isOwner }) => {
       </View>
 
       <View style={styles.imgContent}>
-        <Image source={item.reviewImg} style={styles.reviewImg} resizeMode="cover" />
+        <Image
+          source={{ uri: item.reviewImg[0] }}
+          style={styles.reviewImg}
+          resizeMode="cover"
+        />
         {/* <Image source={salmon} style={styles.reviewImg} resizeMode="cover" /> */}
       </View>
       <Text style={styles.content}>{item.reviewContent}</Text>

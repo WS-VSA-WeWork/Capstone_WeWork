@@ -16,7 +16,7 @@ const ReservationCard = ({ name, rating, image, phone, start, end }) => {
     // >
     <View style={styles.card}>
       <View>
-        <Image source={image} style={styles.cardPicture} />
+        <Image source={{ uri: image }} style={styles.cardPicture} />
       </View>
       <View style={styles.cardSpace}></View>
       <View style={styles.cardContentContainer}>
