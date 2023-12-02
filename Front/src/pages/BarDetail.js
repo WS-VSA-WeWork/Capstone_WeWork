@@ -24,15 +24,10 @@ import GptDetail from "../components/GptDetail";
 import Reviews from "../components/Reviews";
 
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPubDataByName } from "../reducers/pubReducer";
 import { fetchReviewsByPub } from "../reducers/reviewReducer";
 
 const BarDetail = ({ route }) => {
   const dispatch = useDispatch();
-
-  const selectedPub = useSelector((state) => state.pub.selectedPub);
-  const pubStatus = useSelector((state) => state.pub.status);
-  const pubError = useSelector((state) => state.pub.error);
 
   const reviews = useSelector((state) => state.review.data);
 

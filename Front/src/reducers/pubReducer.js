@@ -17,20 +17,6 @@ export const fetchPubsData = createAsyncThunk("pub/fetchData", async () => {
   return pubs;
 });
 
-export const fetchPubDataByName = createAsyncThunk(
-  "pub/fetchPubDataByName",
-  async (pubName) => {
-    const pubDocRef = doc(db, "pubs", pubName);
-    const pubSnapshot = await getDoc(pubDocRef);
-
-    if (pubSnapshot.exists()) {
-      return pubSnapshot.data();
-    } else {
-      return null;
-    }
-  }
-);
-
 const pubSlice = createSlice({
   name: "pub",
   initialState: { data: [], selectedPub: [], status: "idle", error: null },
@@ -42,14 +28,6 @@ const pubSlice = createSlice({
         state.data = action.payload;
       })
       .addCase(fetchPubsData.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message;
-      })
-      .addCase(fetchPubDataByName.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.selectedPub = action.payload;
-      })
-      .addCase(fetchPubDataByName.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
