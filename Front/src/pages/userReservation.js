@@ -25,6 +25,8 @@ import { useNavigation } from "@react-navigation/native";
 import { FlatList } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPubsData } from "../reducers/pubReducer";
+import { Octicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function UserReservation() {
   const dispatch = useDispatch();
@@ -311,7 +313,7 @@ export default function UserReservation() {
       date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
     );
 
-    // console.log(stringDate);
+    console.log(stringDate);
     hideDateTimePicker();
     setDate(date);
   };
@@ -382,6 +384,21 @@ export default function UserReservation() {
   if (status === "failed") {
     return <Text>Error loading data: {error}</Text>;
   }
+
+  // 저장 버튼이 클릭되었을 때 실행되는 함수
+  //  newDate에 시간과 인원수를 json형태로 저장
+  const onSave = () => {
+    // 저장 버튼이 클릭되었을 때 실행되는 로직
+    if (date && numberOfPeople) {
+      const newData = {
+        date: date,
+        numberOfPeople: parseInt(numberOfPeople),
+      };
+
+      // 여기서 newData를 어딘가에 저장하거나 활용할 수 있습니다.
+      console.log(newData);
+    }
+  };
 
   // 화면 상태창//
   return (
@@ -530,11 +547,24 @@ export default function UserReservation() {
             onChangeText={(number) => setNumberOfPeople(number)}
             style={{ padding: 10 }}
             placeholder={
-              numberOfPeople > 4 ? `{numberOfPeople} 명` : "인원을 선택해주세요"
+              numberOfPeople > 4 ? `${numberOfPeople} 명` : "인원수 입력"
             }
             inputMode="numeric"
             keyboardType="numeric"
           ></TextInput>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 3,
+          }}
+        >
+          {/* <Text>찾기</Text> */}
+          <Pressable onPress={onSave} style={{}}>
+            <AntDesign name="right" size={24} color="black" />
+          </Pressable>
         </View>
       </View>
       {/* 대관서비스 및 내예약 서비스 페이지 */}
