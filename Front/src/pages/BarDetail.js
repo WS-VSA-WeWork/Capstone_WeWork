@@ -94,7 +94,7 @@ const BarDetail = ({ route }) => {
   };
 
   useEffect(() => {
-    const date = "2023-12-02"; // 임시코드
+    const date = "2023-12-02"; // 임시코드 selectedDate로 바꿔야함
     dispatch(fetchReviewsByPub(bar.pubName));
     dispatch(fetchTimetable({ pubName: bar.pubName, date: date }));
   }, []);
