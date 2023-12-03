@@ -54,11 +54,11 @@ const pubSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       })
-      .addCase(fetchAvailablePubData.fulfilled, (state, action) => {
+      .addCase(fetchAvailablePubsData.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.data = action.payload;
       })
-      .addCase(fetchAvailablePubData.rejected, (state, action) => {
+      .addCase(fetchAvailablePubsData.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
