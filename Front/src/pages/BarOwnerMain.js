@@ -14,12 +14,15 @@ import { AntDesign } from "@expo/vector-icons";
 import ReservationCard from "../components/ReservationCardforOwner";
 import CustomDayComponent from "../components/CustomDayComponent";
 import Reviews from "../components/Reviews";
+import { useNavigation } from "@react-navigation/native";
 
 const BarOwnerMain = ({ route }) => {
   const [reservation, setReservation] = useState(true);
   const [review, setReviews] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedDay, setSelectedDay] = useState("");
+
+  const navigation = useNavigation();
 
   const reservations = {
     "2023-11-20": [{ name: "예약 1" }, { name: "예약 2" }],
@@ -160,7 +163,16 @@ const BarOwnerMain = ({ route }) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.topContainer}>
-        <Text style={styles.title}>내 술집</Text>
+        <View style={styles.TopMenu}>
+          <Text style={styles.title}>내 술집</Text>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("사장님 마이페이지");
+            }}
+          >
+            <Text style={styles.tag}>술집 정보 수정하기{` >`}</Text>
+          </TouchableOpacity>
+        </View>
         <View style={styles.myBarContainer}>
           <Image
             source={bar.image}
@@ -245,8 +257,12 @@ const BarOwnerMain = ({ route }) => {
               //   ...updateMarkedDates(),
               //   [selectedDate]: { selected: true, selectedColor: "#1AB277" },
               // }}
-              dayComponent={({date, state}) => (
-                <CustomDayComponent date={date} state={state} onDayPress={onDayPress}/>
+              dayComponent={({ date, state }) => (
+                <CustomDayComponent
+                  date={date}
+                  state={state}
+                  onDayPress={onDayPress}
+                />
               )}
               markingType="custom"
               theme={{
@@ -296,7 +312,7 @@ const BarOwnerMain = ({ route }) => {
         {/* 리뷰 탭 */}
         {review && (
           <View style={styles.reviewContainer}>
-            <Reviews reviews={reviewData} isOwner={true}/>
+            <Reviews reviews={reviewData} isOwner={true} />
           </View>
         )}
       </View>
@@ -312,6 +328,10 @@ const styles = StyleSheet.create({
   topContainer: {
     backgroundColor: "#F1F2F6",
     padding: 20,
+  },
+  TopMenu:{
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   title: {
     fontSize: 24,
