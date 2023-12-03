@@ -1,11 +1,115 @@
-import { Text, View, Button, StyleSheet, StatusBar } from "react-native";
+import { Text, View, Button, StyleSheet, StatusBar, Image } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
 
 import simya from "../../assets/심야식당.jpeg";
 
+//firebase import 파트
+import App from "../../firebaseConfig.js";
+import { getStorage, ref, getDownloadURL, listAll } from "firebase/storage";
+// url 업로드 파트
+import { getFirestore, getDocs, doc, updateDoc, arrayUnion, collection, query, where } from "firebase/firestore";
+
+import React, { useState, useEffect } from "react";
+
 const Main = () => {
   const navigation = useNavigation();
+
+  const storage = getStorage(App);
+  const [imageUrls, setImageUrls] = useState([]);
+  var pubName = "백수씨심야식당";
+  const directoryRef = ref(storage, pubName); // 'your_directory_name'에 실제 디렉토리명을 넣으세요
+
+  useEffect(() => {
+    // List all items in the directory
+    listAll(directoryRef)
+      .then((result) => {
+        // result.items is an array of references to images
+        const promises = result.items.map((itemRef) => getDownloadURL(itemRef));
+        
+        // Fetch download URLs for all items in parallel
+        Promise.all(promises)
+          .then((urls) => {
+            setImageUrls(urls);
+          })
+          .catch((error) => {
+            // Handle error if any of the URLs fails to fetch
+            console.error("Error fetching download URLs:", error);
+          });
+      })
+      .catch((error) => {
+        // Handle error when listing items in the directory
+        console.error("Error listing items in directory:", error);
+      });
+  }, [directoryRef]);
+
+  // //firebase storage 파트
+  // const storage = getStorage(App);
+  
+  // const [imageUrl, setImageUrl] = useState([]);
+  // const imageRef = ref(storage, '술무로');
+
+  // useEffect(() => {
+  //   getDownloadURL(imageRef)
+  //     .then((url) => {
+  //       // `url` is the download URL for the image
+  //         setImageUrl(url);
+  //         for (let i = 0; i < 4; i++) {
+  //           setImageUrl((prev) => [...prev, url]);
+  //           console.log(imageUrl);
+  //         }
+  //       // Fetch the image as a blob using the fetch API
+  //       fetch(url)
+  //         .then((response) => response.blob())
+  //         .then((blob) => {
+  //           // Use the blob as needed, for example, display it in an Image component
+  //           setImageUrl(URL.createObjectURL(blob));
+  //         })
+  //         .catch((error) => {
+  //           // Handle fetch error
+  //         });
+  //     })
+  //     .catch((error) => {
+  //       // Handle Firebase Storage error
+  //     });
+  // }, []);
+  // // storage 이미지 다운로드 체크
+
+  // url 업로드 파트
+  // const db = getFirestore(App);
+  // const collectionPath = "pubs";
+  // const documentId = pubName;
+
+  // useEffect(() => {
+  //   const updateImageUrl = async () => {  
+  //     try {
+  //       const pubsCollectionRef = collection(db, collectionPath);
+  //       const q = query(pubsCollectionRef, where("pubName", "==", documentId));
+  //       const querySnapshot = await getDocs(q);
+
+  //       const updatePromises = [];
+        
+  //       querySnapshot.forEach((docs) => {
+  //         const pubDocRef = doc(db, collectionPath, docs.id);  
+  //         const currentPubImages = docs.data().pubImages || [];
+
+  //         const updatedImages = Array.from(new Set([...currentPubImages, ...imageUrls]));
+
+  //         const updateData = {
+  //           pubImages: updatedImages,
+  //         };
+  //         updatePromises.push(updateDoc(pubDocRef, updateData));
+  //     });
+  //     await Promise.all(updatePromises);
+  //     console.log("업데이트 완료");
+  //     } catch (error) {
+  //       console.log('업데이트 실패', error);
+  //     }
+  //   };
+  //   updateImageUrl();
+  // }, [db, imageUrls]);
+  // // url 업로드 파트 끝
+
 
   //더미데이터
   const bars = {
@@ -93,9 +197,14 @@ const Main = () => {
           navigation.navigate("내예약관리", { bar: bars.simya });
         }}
       />
-
+      <View>
+        {imageUrls.map((url, index) => (
+          <Image key={index} source={{uri: url}} style={{ width: 200, height: 100 }} />
+        ))}
+      </View>
       <StatusBar style="auto" />
     </View>
+    
   );
 };
 

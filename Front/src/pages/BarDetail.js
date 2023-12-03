@@ -93,7 +93,7 @@ const BarDetail = ({ route }) => {
     <>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.imageContainer}>
-          <Image source={bar.image} style={styles.image} resizeMode="cover" />
+          <Image source={{uri: bar.image}} style={styles.image} resizeMode="cover" />
         </View>
 
         {/* 타이틀 */}

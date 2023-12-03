@@ -7,7 +7,8 @@ import {
   TextInput,
   Button,
 } from "react-native";
-import { useState } from "react";
+import { useState, map } from "react";
+import ImagePick from "../components/ImagePick";
 
 const MyProfile = () => {
   const [phone, onChangePhone] = useState("01033600449");
@@ -77,6 +78,7 @@ const MyProfile = () => {
           </Pressable>
         </View>
       </View>
+      <ImagePick />
     </View>
   );
 };
