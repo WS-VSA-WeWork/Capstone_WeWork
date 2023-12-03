@@ -562,8 +562,8 @@ export default function UserReservation() {
           }}
         >
           {/* <Text>찾기</Text> */}
-          <Pressable onPress={onSave} style={{}}>
-            <AntDesign name="right" size={24} color="black" />
+          <Pressable onPress={onSave}>
+            <Ionicons name="ios-search-sharp" size={24} color="black" />
           </Pressable>
         </View>
       </View>

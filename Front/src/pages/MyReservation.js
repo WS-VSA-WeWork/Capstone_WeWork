@@ -12,7 +12,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { fetchUserReservationData } from "../reducers/userReservationReducer";
 import { useDispatch, useSelector } from "react-redux";
-
+import { AntDesign } from "@expo/vector-icons";
 const MyReservation = () => {
   const [haveReservation, setHaveReservation] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -89,7 +89,7 @@ const MyReservation = () => {
           <TouchableOpacity
             style={styles.reservationListContainer}
             onPress={() => {
-              navigation.navigate("리뷰작성", {  });
+              navigation.navigate("리뷰작성", {});
             }}
           >
             <View style={styles.reservationList1}>
@@ -111,6 +111,18 @@ const MyReservation = () => {
             color={"black"}
             onPress={() => setHaveReservation(false)}
           />
+          <Pressable
+            onPress={() => navigation.navigate("예약메인")}
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 30,
+              gap: 10,
+            }}
+          >
+            <AntDesign name="home" size={24} color="black" />
+            <Text>예약 홈으로 돌아가기</Text>
+          </Pressable>
         </View>
       ) : (
         <View style={styles.myreservationContainer}>
