@@ -12,6 +12,8 @@ import { LineChart } from "react-native-chart-kit";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchReviewsByPub } from "../reducers/reviewReducer";
 import { fetchReservData } from "../reducers/reserveReducer";
+import { AntDesign } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 
 import Reviews from "../components/Reviews";
 import ReservationCardforOwner from "../components/ReservationCardforOwner";
@@ -108,6 +110,46 @@ const CEODashBoard = ({ route }) => {
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.tab}>
         <Text style={styles.title}>백수씨 심야식당</Text>
+        <View style={styles.menuContainer}>
+          <View style={styles.buttonContianer}>
+            <TouchableOpacity
+              style={styles.menuButton}
+              onPress={() => {
+                navigation.navigate("사장님메인", {bar: bar});
+              }}
+            >
+              <FontAwesome name="calendar-check-o" size={35} color="#393E47" />
+            </TouchableOpacity>
+
+            <Text style={styles.menuText}>술집 관리</Text>
+          </View>
+
+          <View style={styles.buttonContianer}>
+            <TouchableOpacity
+              style={styles.menuButton}
+              onPress={() => {
+                navigation.navigate("가게 등록");
+              }}
+            >
+              <AntDesign name="pluscircleo" size={35} color="#393E47" />
+            </TouchableOpacity>
+
+            <Text style={styles.menuText}>가게 등록하기</Text>
+          </View>
+
+          <View style={styles.buttonContianer}>
+            <TouchableOpacity
+              style={styles.menuButton}
+              onPress={() => {
+                navigation.navigate("사장님 마이페이지");
+              }}
+            >
+              <AntDesign name="user" size={35} color="#393E47" />
+            </TouchableOpacity>
+
+            <Text style={styles.menuText}>마이페이지</Text>
+          </View>
+        </View>
       </View>
       <View style={styles.contentContainer}>
         <View style={styles.center}>
@@ -170,18 +212,41 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
   },
   tab: {
-    flexDirection: "row",
-    justifyContent: "center",
+    flexDirection: "column",
+    alignItems: "center",
     paddingVertical: 20,
     borderBottomWidth: 0.5,
     borderBottomColor: "#D7DBDF",
+    backgroundColor: "#1FB077",
   },
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#1FB077",
+    color: "#ffffff",
+  },
+  menuContainer: {
+    flexDirection: "row",
+    marginTop: 15,
   },
   contentsContainer: {},
+  buttonContianer:{
+    marginHorizontal: 10,
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  menuButton: {
+    height: 60,
+    width: 60,
+    borderRadius: 50,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#ffffff",
+    marginBottom: 3,
+  },
+  menuText:{
+    color: "#ffffff",
+  },
   center: {
     flexDirection: "row",
     justifyContent: "center",
