@@ -1,15 +1,17 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import {
   ScrollView,
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
+  Dimensions,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { LineChart } from "react-native-chart-kit";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchReviewsByPub } from "../reducers/reviewReducer";
+import { fetchReservData } from "../reducers/reserveReducer";
 
 import Reviews from "../components/Reviews";
 import ReservationCardforOwner from "../components/ReservationCardforOwner";
@@ -24,12 +26,41 @@ const CEODashBoard = ({ route }) => {
   const bar = route.params.bar;
   const reviews = useSelector((state) => state.review.data);
 
-  // 예시를 위한 데이터, 실제 데이터로 교체 필요
+  // 예약 데이터를 가져오기 위한 Redux 상태 선택
+  const reservations = useSelector((state) => state.reservation.data);
+
+  useEffect(() => {
+    // 컴포넌트가 마운트 될 때 예약 데이터를 불러옴
+    dispatch(fetchReservData({ pubName: bar.name })); // bar.name은 현재 선택된 펍의 이름
+  }, [dispatch, bar.name]);
+
+  useEffect(() => {
+    // 예약 데이터가 업데이트되면 콘솔에 출력
+    console.log("예약 데이터:", reservations);
+  }, [reservations]);
+
+  // 요일을 계산하는 함수
+  const getDayOfWeek = (dateString) => {
+    const date = new Date(dateString);
+    return date.getDay(); // 0: 일요일, 1: 월요일, ..., 6: 토요일
+  };
+
+  // 요일별 예약 건수를 저장할 배열 초기화 (일요일부터 토요일까지)
+  const weeklyReservations = Array(7).fill(0);
+
+  // 각 예약에 대해 요일별 예약 건수 집계
+  reservations.forEach((reservation) => {
+    const dayOfWeek = getDayOfWeek(reservation.reservDate);
+    weeklyReservations[dayOfWeek]++;
+    console.log(weeklyReservations);
+  });
+
+  // 차트 데이터
   const data = {
     labels: ["월", "화", "수", "목", "금", "토", "일"],
     datasets: [
       {
-        data: [20, 45, 28, 80, 99, 43, 50], // 주간 예약 수 데이터
+        data: weeklyReservations, // 주간 예약 수 데이터
       },
     ],
   };
@@ -103,21 +134,22 @@ const CEODashBoard = ({ route }) => {
 
       <View style={styles.contentContainer}>
         <Text style={styles.semiTitle}>주간 예약수</Text>
-        <LineChart
-          data={data}
-          width={400} // 차트의 너비
-          height={220}
-          chartConfig={{
-            backgroundColor: "#ffffff",
-            backgroundGradientFrom: "#eff3ff",
-            backgroundGradientTo: "#efefef",
-            decimalPlaces: 2, // 소수점 자리수
-            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-          }}
-          bezier
-          style={styles.chartStyle}
-        />
+        <View style={styles.squareContainer}>
+          <LineChart
+            data={data}
+            width={Dimensions.get("window").width - 30} // 차트의 너비
+            height={220}
+            chartConfig={{
+              backgroundColor: "#ffffff", // 배경색
+              backgroundGradientFrom: "#ffffff", // 그라데이션 시작 색상을 하얀색으로
+              backgroundGradientTo: "#ffffff", // 그라데이션 끝 색상을 하얀색으로
+              decimalPlaces: 0, // 소수점 자리수
+              color: (opacity = 1) => `rgba(31, 176, 119, ${opacity})`,
+              labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+            }}
+            style={styles.chartStyle}
+          />
+        </View>
       </View>
 
       <View style={styles.incontentBorderLine} />
@@ -160,15 +192,21 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#393E47",
   },
+  squareContainer: {
+    borderRadius: 10,
+    borderWidth: 0.5,
+    borderColor: "#D7DBDF",
+    marginVertical: 10,
+  },
   contentText: {
     fontSize: 15,
     fontWeight: "500",
     color: "#393E47",
   },
   chartStyle: {
-    width: "100%",
     marginVertical: 8,
     borderRadius: 16,
+    paddingTop: 15,
   },
   incontentBorderLine: {
     width: "1",
