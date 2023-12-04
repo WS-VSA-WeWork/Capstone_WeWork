@@ -21,7 +21,7 @@ const ReviewCard = ({ item, isOwner }) => {
   /** 리뷰 작성 시간과 현재 시간의 차이를 계산하는 함수 */
   const getTimeDifference = (uploadDate) => {
     const now = new Date();
-    const reviewDate = uploadDate.toDate();
+    const reviewDate = new Date(uploadDate.seconds * 1000 + uploadDate.nanoseconds / 1000000);
     const difference = now - reviewDate; // 밀리초 단위 차이
 
     const minutes = Math.floor(difference / 60000);
