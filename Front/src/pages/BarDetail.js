@@ -25,7 +25,7 @@ import Reviews from "../components/Reviews";
 
 import { useDispatch, useSelector } from "react-redux";
 import { fetchReviewsByPub } from "../reducers/reviewReducer";
-import { fetchTimetable } from "../reducers/timetableReducer";
+import { fetchTimetable, updateTimetable } from "../reducers/timetableReducer";
 
 const BarDetail = ({ route }) => {
   const dispatch = useDispatch();
@@ -40,6 +40,7 @@ const BarDetail = ({ route }) => {
   // const [open, setOpen] = useState(false);
   // const [mode, setMode] = useState("date");
   const [time, setTime] = useState("시작시간과 종료시간을 선택해주세요");
+  const [timeIdx, setTimeIdx] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [btnActive, setBtnActive] = useState(false);
   const [reservDate, setReservDate] = useState();
@@ -94,7 +95,7 @@ const BarDetail = ({ route }) => {
   };
 
   useEffect(() => {
-    const date = "2023-12-02"; // 임시코드 selectedDate로 바꿔야함
+    const date = "2023-12-04"; // 임시코드 selectedDate로 바꿔야함
     dispatch(fetchReviewsByPub(bar.pubName));
     dispatch(fetchTimetable({ pubName: bar.pubName, date: date }));
   }, []);
@@ -132,12 +133,11 @@ const BarDetail = ({ route }) => {
 
   const handleTimeChange = (selectTime) => {
     setTime(selectTime);
-
+    console.log(time);
     if (selectTime.charAt(selectTime.length - 3) === ":") {
       setBtnActive(true);
     }
   };
-
   // // Datepicker
   // const onChange = (event, selectedDate) => {
   //   const currentDate = selectedDate || date;
@@ -171,14 +171,20 @@ const BarDetail = ({ route }) => {
   };
 
   const navigateToOrder = () => {
+    const splitTimes = time.split(" - ");
+
     const reservationDetails = {
       pubName: bar.pubName,
       pubImage: bar.pubImages[1],
       reservDate: selectedDate,
       people: numberOfPeople,
       reserveTime: time,
+      timeIdx: [
+        timetable.findIndex((time) => time.label === splitTimes[0]),
+        timetable.findIndex((time) => time.label === splitTimes[1]),
+      ],
     };
-    console.log(reservationDetails);
+    console.log("bardetailnavigate", reservationDetails);
     navigation.navigate("결제하기", reservationDetails);
   };
 
