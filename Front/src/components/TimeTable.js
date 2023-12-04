@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 const TimeTable = ({ onTimeChange, timeSlots }) => {
@@ -39,6 +39,8 @@ const TimeTable = ({ onTimeChange, timeSlots }) => {
   //   { label: "24:00", available: false },
   // ];
 
+  const memoizedOnTimeChange = useCallback(onTimeChange, []);
+
   const [isStartTimeSelected, setIsStartTimeSelected] = useState(false);
   const [startTime, setStartTime] = useState();
   const [lastTime, setLastTime] = useState();
@@ -47,9 +49,9 @@ const TimeTable = ({ onTimeChange, timeSlots }) => {
   useEffect(() => {
     if (startTime && lastTime) {
       const result = startTime + " - " + lastTime;
-      onTimeChange(result);
+      memoizedOnTimeChange(result);
     }
-  }, [startTime, lastTime, onTimeChange]);
+  }, [startTime, lastTime, memoizedOnTimeChange]);
 
   const handleTimeChange = (selectedTime) => {
     const selectedIndex = timeSlots.findIndex(

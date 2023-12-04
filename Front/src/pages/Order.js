@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { pushReservData } from "../reducers/reserveReducer";
+import { updateTimetable } from "../reducers/timetableReducer";
 
 const Order = ({ route }) => {
   const [userReq, setUserReq] = useState("");
@@ -38,14 +39,27 @@ const Order = ({ route }) => {
       userId: userId,
       userName: userName,
       userPhonenum: userPhonenum,
-      deposit: 10000 * resv.people, //tmp
+      deposit: 1000 * resv.people, //tmp
       status: "예약완료", //tmp
     };
+
+    // 예약정보 이용자, 사장님 예약 DB에 저장
     dispatch(
       pushReservData({
         pubName: resv.pubName,
         userId: userId,
         data: reservationInfo,
+        date: resv.reservDate,
+      })
+    );
+
+    // timetable 예약완료 된 시간에 대한 update
+    const date = "2023-12-04"; // 임시코드 selectedDate로 바꿔야함
+    dispatch(
+      updateTimetable({
+        pubName: resv.pubName,
+        date: date,
+        idx: resv.timeIdx,
       })
     );
     navigation.navigate("예약완료", reservationInfo);
@@ -102,7 +116,7 @@ const Order = ({ route }) => {
             <View style={styles.priceContainer}>
               <Text style={styles.priceLabel}>예약금</Text>
               <Text style={styles.infoValue}>
-                {`10,000 x ${resv.people} = `}
+                {`1,000 x ${resv.people} = `}
                 <Text style={styles.barTitle}>
                   {`${1000 * resv.people}원
                 `}
