@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { LogBox } from 'react-native';
 
 import Main from "./src/pages/Main";
 import BarDetail from "./src/pages/BarDetail";
@@ -26,6 +27,8 @@ import CEODashBoard from "./src/pages/CEODashBoard";
 import MainScreen from "./src/pages/RestaurantPost";
 
 const Stack = createNativeStackNavigator();
+
+LogBox.ignoreLogs(['VirtualizedLists', 'Key', 'Failed']);
 
 export default function App() {
   return (

@@ -10,7 +10,7 @@ import { useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 
 const CEOMyReservation = () => {
-  const [haveReservation, setHaveReservation] = useState(false);
+  const [haveReservation, setHaveReservation] = useState(true);
 
   return (
     <View>
@@ -38,7 +38,7 @@ const CEOMyReservation = () => {
 
           <ScrollView style={styles.ScrollViewContainer}>
             <View style={styles.seperateDate}>
-              <Text style={styles.seperateDateContent}>2023-09-20</Text>
+              <Text style={styles.seperateDateContent}>2023-12-5</Text>
             </View>
             <View style={styles.reservationListContainer}>
               <View style={styles.reservationList1}>
@@ -48,8 +48,8 @@ const CEOMyReservation = () => {
                 <Text style={styles.reservationListLastTime}>19시간 전</Text>
               </View>
               <View style={styles.reservationList2}>
-                <Text>2023-09-20</Text>
-                <Text>19:00 - 21:00</Text>
+                <Text>2023-12-5</Text>
+                <Text>17:00 - 19:00</Text>
               </View>
               <View style={styles.reservationList3}>
                 <Text>예약금</Text>
@@ -64,7 +64,7 @@ const CEOMyReservation = () => {
                 <Text style={styles.reservationListLastTime}>20시간 전</Text>
               </View>
               <View style={styles.reservationList2}>
-                <Text>2023-09-20</Text>
+                <Text>2023-12-5</Text>
                 <Text>19:00 - 21:00</Text>
               </View>
               <View style={styles.reservationList3}>
@@ -80,8 +80,8 @@ const CEOMyReservation = () => {
                 <Text style={styles.reservationListLastTime}>22시간 전</Text>
               </View>
               <View style={styles.reservationList2}>
-                <Text>2023-09-20</Text>
-                <Text>19:00 - 21:00</Text>
+                <Text>2023-12-5</Text>
+                <Text>22:00 - 23:00</Text>
               </View>
               <View style={styles.reservationList3}>
                 <Text>예약금</Text>
@@ -90,7 +90,7 @@ const CEOMyReservation = () => {
             </View>
 
             <View style={styles.seperateDate}>
-              <Text style={styles.seperateDateContent}>2023-09-20</Text>
+              <Text style={styles.seperateDateContent}>2023-12-6</Text>
             </View>
             <View style={styles.reservationListContainer}>
               <View style={styles.reservationList1}>
@@ -100,7 +100,7 @@ const CEOMyReservation = () => {
                 <Text style={styles.reservationListLastTime}>19시간 전</Text>
               </View>
               <View style={styles.reservationList2}>
-                <Text>2023-09-20</Text>
+                <Text>2023-12-6</Text>
                 <Text>19:00 - 21:00</Text>
               </View>
               <View style={styles.reservationList3}>
@@ -117,8 +117,8 @@ const CEOMyReservation = () => {
                 <Text style={styles.reservationListLastTime}>19시간 전</Text>
               </View>
               <View style={styles.reservationList2}>
-                <Text>2023-09-20</Text>
-                <Text>19:00 - 21:00</Text>
+                <Text>2023-12-6</Text>
+                <Text>22:30 - 23:30</Text>
               </View>
               <View style={styles.reservationList3}>
                 <Text>예약금</Text>

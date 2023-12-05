@@ -106,6 +106,11 @@ const CEODashBoard = ({ route }) => {
     return `(${daysOfWeek[dateIdx]})`;
   };
 
+  useEffect(() => {
+    const date = "2023-12-02"; // 임시코드
+    dispatch(fetchReviewsByPub(bar.pubName));
+  }, []);
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.tab}>

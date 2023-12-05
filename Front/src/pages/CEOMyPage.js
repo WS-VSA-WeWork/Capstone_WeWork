@@ -38,8 +38,8 @@ const CEOMyPage = () => {
         <View style={styles.userBook}>
           <Text style={styles.userBookTitle}>가장 빠른 대관 일정</Text>
           <View style={styles.userBookContent}>
-            <Text style={styles.userBookContentTop}>2023-11-14</Text>
-            <Text>15:30 ~ 17:30 / 35명</Text>
+            <Text style={styles.userBookContentTop}>2023-12-5</Text>
+            <Text>17:00 ~ 19:00 / 23명</Text>
           </View>
         </View>
       </View>

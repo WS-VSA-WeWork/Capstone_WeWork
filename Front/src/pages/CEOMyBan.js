@@ -2,7 +2,11 @@ import { View, Text, StyleSheet, Button } from "react-native";
 import React, { useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
 const CEOMyBan = () => {
-  const [banList, setBanList] = useState([]);
+  const [banList, setBanList] = useState([{
+    id: 1,
+    restaurantName: "김동완(#12384)",
+    banDetail: "7일",
+  }]);
   return (
     <View style={styles.container}>
       <View style={styles.title}>
@@ -25,18 +29,6 @@ const CEOMyBan = () => {
           위약 기간에는 예약이 불가하며, 자세한 내용은 고객센터에 문의 바랍니다.
         </Text>
       </View>
-      <Button
-        title="위약 내역 생성"
-        onPress={() =>
-          setBanList([
-            {
-              id: 1,
-              restaurantName: "김동완(#12384)",
-              banDetail: "7일",
-            },
-          ])
-        }
-      ></Button>
     </View>
   );
 };

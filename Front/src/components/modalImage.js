@@ -23,7 +23,7 @@ const ModalImage = ({ url, onChangePhoto }) => {
         <Image
           key={url}
           source={{ uri: url }}
-          style={{ width: "85%", height: "85%" }}
+          style={{ width: "85%", height: 300, }}
         />
       ) : (
         // If the URL is empty, you can customize the placeholder or display a message
