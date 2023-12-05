@@ -52,7 +52,10 @@ export const fetchReservData = createAsyncThunk(
   "reservation/fetchReservData",
   async (queryParam) => {
     // queryParam은 검색 조건을 나타냅니다 (예: userId, pubName)
-    const querySnapshot = await getDocs(collection(db, "pubReservations"), where(...queryParam.pubName));
+    const querySnapshot = await getDocs(
+      collection(db, "pubReservations"),
+      where(...queryParam)
+    );
     let reservData = [];
     querySnapshot.forEach((doc) => {
       reservData.push(doc.data());
@@ -60,8 +63,5 @@ export const fetchReservData = createAsyncThunk(
     return reservData;
   }
 );
-
-
-
 
 export default reservationSlice.reducer;
