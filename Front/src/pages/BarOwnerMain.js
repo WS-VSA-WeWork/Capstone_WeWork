@@ -38,7 +38,7 @@ const BarOwnerMain = ({ route }) => {
   const reservationStatus = useSelector((state) => state.reservation.status);
   const reservationError = useSelector((state) => state.reservation.error);
   const [todaysReservations, setTodaysReservations] = useState([]);
-  const [reservationCount, setReservationCount] = useState(0);
+  const [reservationCount, setReservationCount] = useState({});
 
   // const reviewData = [
   //   {
@@ -172,6 +172,7 @@ const BarOwnerMain = ({ route }) => {
     return `(${daysOfWeek[dateIdx]})`;
   };
 
+  // 날짜별 예약건수 계산
   const countReservations = (reservations) => {
     const count = reservations.reduce((acc, cur) => {
       // 해당 날짜의 예약 건수가 undefined면 0으로 초기화 후 1을 더함
@@ -185,12 +186,14 @@ const BarOwnerMain = ({ route }) => {
   useEffect(() => {
     const pubName = "백수씨심야식당"; //tmp
     dispatch(fetchPubDataByName(pubName));
-    dispatch(fetchReservationDataByPubName(pubName));
-    countReservations(reservations); // 날짜별 예약건수 계산
+    dispatch(fetchReservationDataByPubName(pubName)).then((action) => {
+      const resrv = action.payload;
+      countReservations(resrv);
+    });
   }, []);
 
   useEffect(() => {
-    console.log(reservationCount);
+    console.log("reservationCount", reservationCount);
   }, [reservationCount]); // 페이지에 접속 시 날짜별로 계산된 예약건수 반영
 
   // 데이터가 없으면 에러 발생하여 데이터 로드 후 렌더링되도록 설정
