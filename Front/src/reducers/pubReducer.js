@@ -1,4 +1,10 @@
-import { collection, getDocs, getFirestore } from "@firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  getFirestore,
+} from "@firebase/firestore";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import app from "../../firebaseConfig";
 
@@ -11,6 +17,20 @@ export const fetchPubsData = createAsyncThunk("pub/fetchPubsData", async () => {
   const pubs = pubsSnapshot.docs.map((doc) => doc.data());
   return pubs;
 });
+
+// 특정 술집 데이터 가져오기
+export const fetchPubDataByName = createAsyncThunk(
+  "pub/fetchPubDataByName",
+  async (pubName) => {
+    const pubDocRef = doc(db, "pubs", pubName);
+    const pubSnapshot = await getDoc(pubDocRef);
+    if (pubSnapshot.exists()) {
+      return pubSnapshot.data();
+    } else {
+      return null;
+    }
+  }
+);
 
 // 날짜와 인원에 따른 예약 가능한 술집 데이터 가져오기
 export const fetchAvailablePubsData = createAsyncThunk(
@@ -42,7 +62,7 @@ export const fetchAvailablePubsData = createAsyncThunk(
 
 const pubSlice = createSlice({
   name: "pub",
-  initialState: { data: [], status: "idle", error: null },
+  initialState: { data: [], myPub: [], status: "idle", error: null },
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -59,6 +79,14 @@ const pubSlice = createSlice({
         state.data = action.payload;
       })
       .addCase(fetchAvailablePubsData.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(fetchPubDataByName.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.myPub = action.payload;
+      })
+      .addCase(fetchPubDataByName.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

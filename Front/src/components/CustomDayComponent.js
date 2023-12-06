@@ -1,14 +1,14 @@
 import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
 
-const CustomDayComponent = ({ date, state, onDayPress }) => {
-  const reservations = {
-    "2023-12-5": [{ name: "예약 1" }, { name: "예약 2" }],
-    "2023-12-6": [{ name: "예약 3" }],
-    // 다른 날짜의 예약들...
-  };
+const CustomDayComponent = ({ data, date, state, onDayPress }) => {
+  // const reservations = {
+  //   "2023-12-5": [{ name: "예약 1" }, { name: "예약 2" }],
+  //   "2023-12-6": [{ name: "예약 3" }],
+  //   // 다른 날짜의 예약들...
+  // };
 
-  const dateStr = `${date.year}-${date.month}-${date.day}`;
-  const numOfEvents = reservations[dateStr] ? reservations[dateStr].length : 0;
+  const dateStr = date.dateString;
+  const numOfEvents = data[dateStr] ? data[dateStr] : 0;
 
   return (
     <TouchableOpacity 

@@ -1,8 +1,10 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 
 import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
 
 const ReservationCardforUser = ({ item }) => {
+  const navigation = useNavigation();
   console.log(item);
   const startTime = item.reserveTime
     ? item.reserveTime.split(" - ")[0]
@@ -33,7 +35,12 @@ const ReservationCardforUser = ({ item }) => {
   };
 
   return (
-    <TouchableOpacity style={styles.reservationContainer}>
+    <TouchableOpacity
+      style={styles.reservationContainer}
+      onPress={() => {
+        navigation.navigate("리뷰작성", {});
+      }}
+    >
       <View style={styles.info}>
         <Text style={styles.semiTitle}>
           {item.pubName} /{" "}
