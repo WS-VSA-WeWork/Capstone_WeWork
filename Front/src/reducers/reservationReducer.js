@@ -70,7 +70,7 @@ export const fetchReservationDataByUserId = createAsyncThunk(
 // 사장님 페이지에서 예약 내역 불러오기
 export const fetchReservationDataByPubName = createAsyncThunk(
   "reservation/fetchReservationDataByPubName",
-  async ({ pubName }) => {
+  async (pubName) => {
     const colref = collection(db, "pubReservations", pubName, "reservations");
     const docref = await getDocs(colref);
     const snap = docref.docs.map((doc) => doc.data());
