@@ -5,15 +5,19 @@ import {
   Pressable,
   ScrollView,
   TextInput,
+  TouchableOpacity,
 } from "react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { SimpleLineIcons } from "@expo/vector-icons";
-import SetImage from "./Image";
-import * as ImagePicker from "expo-image-picker";
+import ImagePick from "./ImagePick";
+//firebase import 파트
+import App from "../../firebaseConfig.js";
+import { getFirestore, getDoc, doc, updateDoc} from "firebase/firestore";
+import  { getStorage, ref, getDownloadURL, listAll } from "firebase/storage";
+
 const RestaurantBasic = () => {
   const navigation = useNavigation();
 
@@ -27,21 +31,70 @@ const RestaurantBasic = () => {
     onChangeRestaurantInfo((currentText) => currentText);
     console.log(restaurantInfo);
   };
+  const collectionPath = "pubs"; // 파이어스토어 컬렉션 이름
+  const documentId = "Temp"; // 파이어스토어 문서 이름
 
-  const [photo, setPhoto] = useState(undefined);
-  const _handlePhotoChange = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
+  // storage 이미지 다운로드 파트
+  const storage = getStorage(App);
+  const [downloadImageUrls, setDownloadImageUrls] = useState([]);
+  const [refresh, setRefresh] = useState(0);
 
-    if (!result.cancelled) {
-      console.log(result.uri);
-      setPhoto(result.uri); // 이미지 변경
+  useEffect(() => {
+    const getImagesInDirectory = async () => {
+      try {
+        const imagesRef = ref(storage, documentId);
+        const imageList = await listAll(imagesRef);
+
+        // 각각 이미지들을 url을 다운로드
+        const urls = await Promise.all(
+          imageList.items.map(async (imageRef) => {
+            return getDownloadURL(imageRef);
+          })
+        );
+
+        // useState를 사용하여 이미지 URL 배열을 저장.
+        setDownloadImageUrls(urls);
+      } catch (error) {
+        console.error("에러: 이미지 URLs 다운로드 실패:", error);
+      }
+    };
+
+    getImagesInDirectory();
+    console.log("다운로드 된 이미지 갯수: " + downloadImageUrls.length)
+  }, [storage, refresh]);
+
+  { /* 003. firestore 이미지 url 저장 */}
+  const db = getFirestore(App);
+  
+  const updateImageUrl = async () => {
+    try {
+      const pubDocRef = doc(db, collectionPath, documentId);
+      const pubDocSnapshot = await getDoc(pubDocRef);
+      setRefresh(refresh + 1);
+      if (pubDocSnapshot.exists()) {
+        const currentPubImages = pubDocSnapshot.data().pubImages || [];
+
+        // 이미지 URL 배열을 Firestore 필드로 업데이트합니다.
+        const updatedImages = Array.from(new Set([...currentPubImages, ...downloadImageUrls]));
+
+        const updateData = {
+          pubImages: updatedImages,
+        };
+
+        // pubImages 필드를 업데이트합니다.
+        await updateDoc(pubDocRef, updateData);
+        console.log("업데이트 완료");
+      } else {
+        console.error("문서가 존재하지 않습니다.");
+      }
+    } catch (error) {
+      console.error('업데이트 실패', error);
     }
   };
+
+  // url 업로드 파트 끝 
+
+  
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -118,7 +171,11 @@ const RestaurantBasic = () => {
             ></TextInput>
           </View>
         </View>
-
+        <View style={styles.blockContainer}>
+          <ImagePick documentId={documentId} /> 
+        </View>
+        
+        {/*
         <View style={styles.blockContainer}>
           <View style={styles.blockTitleContainer}>
             <Text style={styles.phoneTitle}>대표 사진 등록하기</Text>
@@ -140,6 +197,8 @@ const RestaurantBasic = () => {
               </View>
             </Pressable>
           </View>
+          
+          가게 등록용 이미지 테스트 
           {photo ? (
             <View style={styles.phoneContentContainer}>
               <SetImage url={photo} onChangePhoto={setPhoto} />
@@ -165,7 +224,12 @@ const RestaurantBasic = () => {
                 <Feather name="plus" size={24} color="#B9B9B9" />
               </Pressable>
             </View>
-          )}
+          )} 
+        </View> */}
+        <View style={styles.buttonContainer}>   
+          <TouchableOpacity style={styles.button} onPress={() => [updateImageUrl()]} >
+            <Text style={styles.buttonText}>수정</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </View>
@@ -214,6 +278,24 @@ const styles = StyleSheet.create({
   photoContainer: {
     justifyContent: "center",
     alignItems: "center",
+  },
+  buttonContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  button: {
+    backgroundColor: 'blue',
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 20,
+    width: "15%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
   },
 });
 

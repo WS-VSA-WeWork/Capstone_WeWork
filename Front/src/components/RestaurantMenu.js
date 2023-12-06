@@ -34,7 +34,7 @@ const RestaurantMenuPost = () => {
         quality: 1,
       });
 
-      if (!result.cancelled) {
+      if (!result.canceled) {
         console.log(result.uri);
         setPhoto(result.uri);
         setNewMenu({

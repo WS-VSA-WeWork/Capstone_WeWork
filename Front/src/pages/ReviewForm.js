@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
+import ReviewImagePick from "../components/ReviewImagePick";
 
 const ReviewForm = ({ route }) => {
   const [text, setText] = useState("");
@@ -39,6 +40,9 @@ const ReviewForm = ({ route }) => {
   const submit = (review) => {
     console.log;
   };
+  const collectionPath = "pubReviews";
+  const documentId = "백수씨심야식당";
+  const [reviewNum, setReviewNum] = useState(1);
 
   return (
     <View style={styles.container}>
@@ -63,15 +67,16 @@ const ReviewForm = ({ route }) => {
         value={text}
         placeholder="리뷰 내용을 작성해주세요"
       />
-      <TouchableOpacity style={styles.imgButton} onPress={selectImage}>
+      <ReviewImagePick collectionPath={collectionPath} documentId={documentId} reviewNum={reviewNum}/>
+      {/* <TouchableOpacity style={styles.imgButton} onPress={selectImage}>
         <Feather name="camera" size={30} color="black" />
       </TouchableOpacity>
       <Text style={styles.comment}>*최대 4개까지 첨부 가능</Text>
       {image && (
         <Image source={{ uri: image }} style={styles.img} />
-      )}
+      )} */}
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={submit(text)} style={styles.submitButton}>
+        <TouchableOpacity onPress={() => {submit(text); setReviewNum(1);} } style={styles.submitButton}>
           <Text style={styles.buttonText}>리뷰 등록하기</Text>
         </TouchableOpacity>
       </View>

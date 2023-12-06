@@ -3,6 +3,17 @@ import * as ImagePicker from "expo-image-picker";
 import { View, Image, Button } from "react-native";
 
 const SetImage = ({ url, onChangePhoto }) => {
+  { /* 001. 이미지 url 불러와서 화면 표시 */}
+  // 디바이스의 카메라 및 사진 라이브러리에 액세스 권한 요청
+  useEffect(() => {
+      (async () => {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+          console.error('미디어 라이브러리 액세스 권한이 거부되었습니다!');
+      }
+      })();
+  }, []);
+
   const _handlePhotoBtnPress = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -11,7 +22,7 @@ const SetImage = ({ url, onChangePhoto }) => {
       quality: 1,
     });
 
-    if (!result.cancelled) {
+    if (!result.canceled) {
       console.log(result.uri);
       onChangePhoto(result.uri);
     }
