@@ -194,150 +194,153 @@ const BarOwnerMain = ({ route }) => {
     console.log(reservationCount);
   }, [reservationCount]); // 페이지에 접속 시 날짜별로 계산된 예약건수 반영
 
-  return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.topContainer}>
-        <View style={styles.TopMenu}>
-          <Text style={styles.title}>내 술집</Text>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("사장님 마이페이지");
-            }}
-          >
-            <Text style={styles.tag}>술집 정보 수정하기{` >`}</Text>
-          </TouchableOpacity>
+  // 데이터가 없으면 에러 발생하여 데이터 로드 후 렌더링되도록 설정
+  if (pubStatus === "succeeded") {
+    return (
+      <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.topContainer}>
+          <View style={styles.TopMenu}>
+            <Text style={styles.title}>내 술집</Text>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("사장님 마이페이지");
+              }}
+            >
+              <Text style={styles.tag}>술집 정보 수정하기{` >`}</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.myBarContainer}>
+            <Image
+              source={{ uri: myPubData.pubImages[1] }}
+              style={styles.barImage}
+              resizeMode="contain"
+            />
+            <View style={styles.BarInfo}>
+              <Text style={styles.semiTitle}>{myPubData.pubName}</Text>
+              <View style={styles.tags}>
+                {myPubData.hashTags.map((tag, index) => (
+                  <Text key={index} style={styles.tag}>
+                    {tag}{" "}
+                  </Text>
+                ))}
+              </View>
+
+              <Text>
+                <AntDesign name="star" size={20} color="#1AB277" />{" "}
+                {myPubData.rating}
+              </Text>
+            </View>
+          </View>
         </View>
 
-        <View style={styles.myBarContainer}>
-          <Image
-            source={{ uri: myPubData.pubImages[1] }}
-            style={styles.barImage}
-            resizeMode="contain"
-          />
-          <View style={styles.BarInfo}>
-            <Text style={styles.semiTitle}>{myPubData.pubName}</Text>
-            <View style={styles.tags}>
-              {myPubData.hashTags.map((tag, index) => (
-                <Text key={index} style={styles.tag}>
-                  {tag}{" "}
+        <View style={styles.bottomContainer}>
+          <View style={styles.contentTitle}>
+            <View style={styles.tabContainer}>
+              <TouchableOpacity onPress={onReservation}>
+                <Text
+                  style={{
+                    ...styles.title,
+                    color: reservation ? "#393E47" : "#9FA8B6",
+                    marginBottom: 5,
+                  }}
+                >
+                  예약 일정
                 </Text>
-              ))}
+              </TouchableOpacity>
             </View>
 
-            <Text>
-              <AntDesign name="star" size={20} color="#1AB277" />{" "}
-              {myPubData.rating}
-            </Text>
+            <View style={styles.tabContainer}>
+              <TouchableOpacity onPress={onReview}>
+                <Text
+                  style={{
+                    ...styles.title,
+                    color: review ? "#393E47" : "#9FA8B6",
+                    marginBottom: 5,
+                  }}
+                >
+                  리뷰
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </View>
 
-      <View style={styles.bottomContainer}>
-        <View style={styles.contentTitle}>
-          <View style={styles.tabContainer}>
-            <TouchableOpacity onPress={onReservation}>
-              <Text
-                style={{
-                  ...styles.title,
-                  color: reservation ? "#393E47" : "#9FA8B6",
-                  marginBottom: 5,
+          <Animated.View
+            style={{
+              backgroundColor: "#24242F",
+              width: barWidth,
+              height: 3,
+              marginBottom: 10,
+              transform: [
+                {
+                  translateX: MovingBar,
+                },
+              ],
+            }}
+          ></Animated.View>
+
+          {/* 예약 일정 탭 */}
+          {reservation && (
+            <View style={styles.contentContainer}>
+              <Calendar
+                onDayPress={onDayPress}
+                markedDates={{
+                  ...Object.keys(reservations).reduce((acc, curr) => {
+                    acc[curr] = { marked: true };
+                    return acc;
+                  }, {}),
+                  [selectedDate]: { selected: true },
                 }}
-              >
-                예약 일정
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.tabContainer}>
-            <TouchableOpacity onPress={onReview}>
-              <Text
-                style={{
-                  ...styles.title,
-                  color: review ? "#393E47" : "#9FA8B6",
-                  marginBottom: 5,
+                // markedDates={{
+                //   ...updateMarkedDates(),
+                //   [selectedDate]: { selected: true, selectedColor: "#1AB277" },
+                // }}
+                dayComponent={({ date, state }) => (
+                  <CustomDayComponent
+                    data={reservationCount}
+                    date={date}
+                    state={state}
+                    onDayPress={onDayPress}
+                  />
+                )}
+                markingType="custom"
+                theme={{
+                  selectedDayBackgroundColor: "#1AB277",
+                  dotColor: "#1AB277",
+                  todayTextColor: "#6E757B",
+                  dayTextColor: "#393E47",
                 }}
-              >
-                리뷰
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+              />
 
-        <Animated.View
-          style={{
-            backgroundColor: "#24242F",
-            width: barWidth,
-            height: 3,
-            marginBottom: 10,
-            transform: [
-              {
-                translateX: MovingBar,
-              },
-            ],
-          }}
-        ></Animated.View>
-
-        {/* 예약 일정 탭 */}
-        {reservation && (
-          <View style={styles.contentContainer}>
-            <Calendar
-              onDayPress={onDayPress}
-              markedDates={{
-                ...Object.keys(reservations).reduce((acc, curr) => {
-                  acc[curr] = { marked: true };
-                  return acc;
-                }, {}),
-                [selectedDate]: { selected: true },
-              }}
-              // markedDates={{
-              //   ...updateMarkedDates(),
-              //   [selectedDate]: { selected: true, selectedColor: "#1AB277" },
-              // }}
-              dayComponent={({ date, state }) => (
-                <CustomDayComponent
-                  data={reservationCount}
-                  date={date}
-                  state={state}
-                  onDayPress={onDayPress}
-                />
+              {selectedDate && (
+                <>
+                  <View style={styles.infoSummary}>
+                    <Text style={styles.semiTitle}>
+                      {selectedDate}
+                      {dayOfWeek(selectedDate)}
+                    </Text>
+                    <Text style={styles.semiTitle}>
+                      {todaysReservations.length !== 0
+                        ? todaysReservations.length + "건"
+                        : "예약 없음"}
+                    </Text>
+                  </View>
+                  <Reservations data={todaysReservations} isOwner />
+                </>
               )}
-              markingType="custom"
-              theme={{
-                selectedDayBackgroundColor: "#1AB277",
-                dotColor: "#1AB277",
-                todayTextColor: "#6E757B",
-                dayTextColor: "#393E47",
-              }}
-            />
+            </View>
+          )}
 
-            {selectedDate && (
-              <>
-                <View style={styles.infoSummary}>
-                  <Text style={styles.semiTitle}>
-                    {selectedDate}
-                    {dayOfWeek(selectedDate)}
-                  </Text>
-                  <Text style={styles.semiTitle}>
-                    {todaysReservations.length !== 0
-                      ? todaysReservations.length + "건"
-                      : "예약 없음"}
-                  </Text>
-                </View>
-                <Reservations data={todaysReservations} isOwner />
-              </>
-            )}
-          </View>
-        )}
-
-        {/* 리뷰 탭 */}
-        {review && (
-          <View style={styles.reviewContainer}>
-            <Reviews reviews={reviews} isOwner={true} />
-          </View>
-        )}
-      </View>
-    </ScrollView>
-  );
+          {/* 리뷰 탭 */}
+          {review && (
+            <View style={styles.reviewContainer}>
+              <Reviews reviews={reviews} isOwner={true} />
+            </View>
+          )}
+        </View>
+      </ScrollView>
+    );
+  }
 };
 
 const styles = StyleSheet.create({
