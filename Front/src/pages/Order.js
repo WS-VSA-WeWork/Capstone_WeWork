@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useDispatch } from "react-redux";
-import { pushReservData } from "../reducers/reserveReducer";
+import { pushReservationData } from "../reducers/reservationReducer";
 import { updateTimetable } from "../reducers/timetableReducer";
 
 const Order = ({ route }) => {
@@ -45,7 +45,7 @@ const Order = ({ route }) => {
 
     // 예약정보 이용자, 사장님 예약 DB에 저장
     dispatch(
-      pushReservData({
+      pushReservationData({
         pubName: resv.pubName,
         userId: userId,
         data: reservationInfo,
@@ -62,6 +62,7 @@ const Order = ({ route }) => {
         idx: resv.timeIdx,
       })
     );
+
     navigation.navigate("예약완료", reservationInfo);
   };
 
