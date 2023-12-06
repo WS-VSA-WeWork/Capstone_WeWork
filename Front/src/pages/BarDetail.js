@@ -26,6 +26,7 @@ import Reviews from "../components/Reviews";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchReviewsByPub } from "../reducers/reviewReducer";
 import { fetchTimetable } from "../reducers/timetableReducer";
+import Carousel from "../components/Carousel";
 
 const BarDetail = ({ route }) => {
   const dispatch = useDispatch();
@@ -182,15 +183,18 @@ const BarDetail = ({ route }) => {
     navigation.navigate("결제하기", reservationDetails);
   };
 
+  console.log(bar.pubImages);
+
   return (
     <>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.imageContainer}>
-          <Image
+          {/* <Image
             source={{ uri: bar.pubImages[1] }}
             style={styles.image}
             resizeMode="cover"
-          />
+          /> */}
+          <Carousel images={bar.pubImages.slice(1)} />
         </View>
 
         {/* 타이틀 */}
