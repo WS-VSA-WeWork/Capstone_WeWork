@@ -13,7 +13,6 @@ import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 
-import ReservationCard from "../components/ReservationCardforOwner";
 import CustomDayComponent from "../components/CustomDayComponent";
 import Reviews from "../components/Reviews";
 import { fetchReviewsByPub } from "../reducers/reviewReducer";
@@ -184,7 +183,7 @@ const BarOwnerMain = ({ route }) => {
   };
 
   useEffect(() => {
-    const pubName = "백수씨심야식당";
+    const pubName = "백수씨심야식당"; //tmp
     dispatch(fetchPubDataByName(pubName));
     dispatch(fetchReservationDataByPubName(pubName));
     countReservations(reservations); // 날짜별 예약건수 계산

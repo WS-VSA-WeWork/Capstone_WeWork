@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,14 +6,18 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
+  Keyboard,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
+import { useDispatch, useSelector } from "react-redux";
+import { pushReviewComment } from "../reducers/reviewReducer";
 
 import simya from "../../assets/심야식당.jpeg";
 import shrimp from "../../assets/shrimp.jpg";
 import salmon from "../../assets/salmon.jpg";
 
 const ReviewCard = ({ item, isOwner }) => {
+  const dispatch = useDispatch();
   const [reply, setReply] = useState("");
   const [submittedReply, setSubmittedReply] = useState("");
   const [showReplyInput, setShowReplyInput] = useState(false);
@@ -45,10 +49,26 @@ const ReviewCard = ({ item, isOwner }) => {
   };
 
   const submitReply = () => {
+    Keyboard.dismiss();
+    dispatch(
+      pushReviewComment({
+        pubName: "백수씨심야식당", //tmp
+        reviewId: item.reviewId,
+        comment: reply,
+      })
+    );
     setSubmittedReply(reply);
     setReply("");
     setShowReplyInput(false);
   };
+
+  useEffect(() => {
+    console.log(item);
+    if (item.reviewComment !== "") {
+      setSubmittedReply(item.reviewComment);
+      setShowReplyInput(false);
+    }
+  }, []);
 
   return (
     <View style={styles.Card}>
