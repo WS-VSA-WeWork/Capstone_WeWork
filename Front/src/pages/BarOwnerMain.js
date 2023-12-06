@@ -10,11 +10,13 @@ import {
 } from "react-native";
 import { LocaleConfig, Calendar, Agenda } from "react-native-calendars";
 import { AntDesign } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
 
 import ReservationCard from "../components/ReservationCardforOwner";
 import CustomDayComponent from "../components/CustomDayComponent";
 import Reviews from "../components/Reviews";
-import { useNavigation } from "@react-navigation/native";
+import { fetchReviewsByPub } from "../reducers/reviewReducer";
 
 const BarOwnerMain = ({ route }) => {
   const [reservation, setReservation] = useState(true);
@@ -23,12 +25,21 @@ const BarOwnerMain = ({ route }) => {
   const [selectedDay, setSelectedDay] = useState("");
 
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const reservations = {
-    "2023-11-20": [{ name: "예약 1" }, { name: "예약 2" }],
-    "2023-11-21": [{ name: "예약 3" }],
+    "2023-12-05": [{ name: "예약 1" }, { name: "예약 2" }],
+    "2023-12-06": [{ name: "예약 3" }],
     // 다른 날짜의 예약들...
   };
+
+  
+  const reviews = useSelector((state) => state.review.data);
+
+  useEffect(() => {
+    const date = "2023-12-02"; // 임시코드
+    dispatch(fetchReviewsByPub(bar.name));
+  }, []);
 
   const reviewData = [
     {
@@ -286,13 +297,13 @@ const BarOwnerMain = ({ route }) => {
                 <ReservationCard />
                 <TouchableOpacity style={styles.reservationContainer}>
                   <View style={styles.info}>
-                    <Text style={styles.semiTitle}>20:00 ~ 21:30</Text>
+                    <Text style={styles.semiTitle}>17:00 ~ 19:00</Text>
                     <Text style={styles.warning}>21시간 전</Text>
                   </View>
                   <View style={styles.info}>
                     <Text style={styles.infoLabel}>인원수</Text>
                     <Text sytle={styles.infoData}>
-                      <Text style={styles.warning}>25</Text>명
+                      <Text style={styles.warning}>23</Text>명
                     </Text>
                   </View>
                   <View style={styles.info}>
@@ -312,7 +323,7 @@ const BarOwnerMain = ({ route }) => {
         {/* 리뷰 탭 */}
         {review && (
           <View style={styles.reviewContainer}>
-            <Reviews reviews={reviewData} isOwner={true} />
+            <Reviews reviews={reviews} isOwner={true} />
           </View>
         )}
       </View>

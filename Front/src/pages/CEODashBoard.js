@@ -12,11 +12,13 @@ import { LineChart } from "react-native-chart-kit";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchReviewsByPub } from "../reducers/reviewReducer";
 import { fetchReservData } from "../reducers/reserveReducer";
-import { AntDesign } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
+import { AntDesign } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 
 import Reviews from "../components/Reviews";
 import ReservationCardforOwner from "../components/ReservationCardforOwner";
+import Reservations from "../components/Reservations";
+import ReservationCard from "../components/ReservationCard";
 // import { SCREEN_WIDTH } from "@gorhom/bottom-sheet";
 
 const CEODashBoard = ({ route }) => {
@@ -27,8 +29,6 @@ const CEODashBoard = ({ route }) => {
 
   const bar = route.params.bar;
   const reviews = useSelector((state) => state.review.data);
-
-  // 예약 데이터를 가져오기 위한 Redux 상태 선택
   const reservations = useSelector((state) => state.reservation.data);
 
   useEffect(() => {
@@ -106,6 +106,11 @@ const CEODashBoard = ({ route }) => {
     return `(${daysOfWeek[dateIdx]})`;
   };
 
+  useEffect(() => {
+    const date = "2023-12-02"; // 임시코드
+    dispatch(fetchReviewsByPub(bar.name));
+  }, []);
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.tab}>
@@ -115,7 +120,7 @@ const CEODashBoard = ({ route }) => {
             <TouchableOpacity
               style={styles.menuButton}
               onPress={() => {
-                navigation.navigate("사장님메인", {bar: bar});
+                navigation.navigate("사장님메인", { bar: bar });
               }}
             >
               <FontAwesome name="calendar-check-o" size={35} color="#393E47" />
@@ -159,8 +164,9 @@ const CEODashBoard = ({ route }) => {
           {selectedDate.toLocaleDateString()}
           {dayOfWeek(selectedDate)}
         </Text>
-        <ReservationCardforOwner />
-        <ReservationCardforOwner />
+
+        <Reservations data={reservations} isOwner={true} />
+
         <TouchableOpacity
           onPress={() => {
             navigation.navigate("사장님메인", { bar: bar });
@@ -229,7 +235,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   contentsContainer: {},
-  buttonContianer:{
+  buttonContianer: {
     marginHorizontal: 10,
     flexDirection: "column",
     alignItems: "center",
@@ -244,7 +250,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     marginBottom: 3,
   },
-  menuText:{
+  menuText: {
     color: "#ffffff",
   },
   center: {

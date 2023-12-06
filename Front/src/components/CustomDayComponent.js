@@ -2,8 +2,8 @@ import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
 
 const CustomDayComponent = ({ date, state, onDayPress }) => {
   const reservations = {
-    "2023-11-20": [{ name: "예약 1" }, { name: "예약 2" }],
-    "2023-11-21": [{ name: "예약 3" }],
+    "2023-12-5": [{ name: "예약 1" }, { name: "예약 2" }],
+    "2023-12-6": [{ name: "예약 3" }],
     // 다른 날짜의 예약들...
   };
 

@@ -1,4 +1,5 @@
 import {
+  ScrollView,
   View,
   Text,
   StyleSheet,
@@ -13,23 +14,28 @@ import { useNavigation } from "@react-navigation/native";
 import { fetchUserReservationData } from "../reducers/userReservationReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { AntDesign } from "@expo/vector-icons";
+
+import Reservations from "../components/Reservations";
+import { fetchReservData } from "../reducers/reserveReducer";
+
 const MyReservation = () => {
   const [haveReservation, setHaveReservation] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const reservationData = useSelector((state) => state.userreservation.data);
+  const reservationData = useSelector((state) => state.reservation.data);
+  console.log("reserveData: ", reservationData);
   const status = useSelector((state) => state.userreservation.status);
   const error = useSelector((state) => state.userreservation.error);
 
   useEffect(() => {
     const uid = "dGIYidylZq0wfmi6WkKB"; // 임시로 넣어놓은 uid
-    dispatch(fetchUserReservationData(uid));
+    dispatch(fetchReservData("백수씨심야식당"));
   }, []);
 
   useEffect(() => {
-    if (reservationData["haveReservation"] === true) {
+    if (reservationData) {
       setHaveReservation(true);
     }
   }, [reservationData]);
@@ -39,8 +45,12 @@ const MyReservation = () => {
     return <Text>Error loading data: {error}</Text>;
   }
 
+  const renderItem = ({ item }) => {
+    <Reservations data={item} />;
+  };
+
   return (
-    <View>
+    <ScrollView style={styles.scrollView}>
       {haveReservation ? (
         <View style={styles.myreservationContainer}>
           <Text
@@ -52,13 +62,18 @@ const MyReservation = () => {
           >
             나의 예약일정
           </Text>
-          <Pressable onPress={() => setModalVisible(true)}>
-            <View style={styles.reservationListContainer}>
+
+          <View style={styles.reservationListContainer}>
+            <Reservations data={reservationData} isOwner={false} />
+          </View>
+
+          {/* <View style={styles.reservationListContainer}>
               <View style={styles.reservationList1}>
                 <Text style={styles.reservationListTitle}>
-                  {reservationData["2311131200tnfus9"]["pubName"]}{" "}
-                  {/* 예약 DB에서 가져온 술집이름(임시) */}
-                </Text>
+                  {reservationData["2311131200tnfus9"]["pubName"]}{" "} */}
+          {/* 예약 DB에서 가져온 술집이름(임시) */}
+
+          {/* </Text>
                 <Text style={styles.reservationListLastTime}>19시간 전</Text>
               </View>
               <View style={styles.reservationList2}>
@@ -69,8 +84,7 @@ const MyReservation = () => {
                 <Text>예약금</Text>
                 <Text>56000원</Text>
               </View>
-            </View>
-          </Pressable>
+            </View> */}
 
           <View style={styles.reservationPast}>
             <Text
@@ -92,7 +106,9 @@ const MyReservation = () => {
               navigation.navigate("리뷰작성", {});
             }}
           >
-            <View style={styles.reservationList1}>
+            <Reservations data={reservationData} />
+
+            {/* <View style={styles.reservationList1}>
               <Text style={styles.reservationListTitle}>백수씨 심야식당</Text>
               <Text style={styles.reservationListLastTime}>19시간 전</Text>
             </View>
@@ -103,7 +119,7 @@ const MyReservation = () => {
             <View style={styles.reservationList3}>
               <Text>예약금</Text>
               <Text>56000원</Text>
-            </View>
+            </View> */}
           </TouchableOpacity>
 
           <Button
@@ -155,11 +171,14 @@ const MyReservation = () => {
           </View>
         </View>
       )}
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  scrollView: {
+    flex: 1,
+  },
   myreservationContainer: {
     marginVertical: 30,
   },
@@ -191,7 +210,6 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
   },
   reservationListContainer: {
-    backgroundColor: "#E0F7ED",
     marginHorizontal: 30,
     marginVertical: 10,
     paddingVertical: 20,
