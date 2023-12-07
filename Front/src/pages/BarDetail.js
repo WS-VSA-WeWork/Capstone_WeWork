@@ -27,6 +27,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchReviewsByPub } from "../reducers/reviewReducer";
 import { fetchTimetable } from "../reducers/timetableReducer";
 import Carousel from "../components/Carousel";
+import Accordion from "../components/Accordion";
 
 const BarDetail = ({ route }) => {
   const dispatch = useDispatch();
@@ -221,9 +222,10 @@ const BarDetail = ({ route }) => {
           </View>
 
           <View style={styles.introContainer}>
-            <Text style={styles.introduction} aria-expanded={true}>
+            {/* <Text style={styles.introduction} aria-expanded={true}>
               {bar.pubDescription}
-            </Text>
+            </Text> */}
+            <Accordion description={bar.pubDescription}/>
           </View>
 
           <GptDetail></GptDetail>
@@ -459,7 +461,7 @@ const styles = StyleSheet.create({
     color: "#393E47",
   },
   introContainer: {
-    height: 80,
+    minHeight: 80,
     marginBottom: 0,
   },
   introduction: {
