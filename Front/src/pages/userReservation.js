@@ -236,6 +236,14 @@ export default function UserReservation() {
 
   const [isDateTimePickerVisible, setDateTimePickerVisible] = useState(false);
   const [value, onChangeText] = useState("환불 사유를 입력해주세요");
+  const [stringDate, setStringDate] = useState(
+    date.getFullYear() +
+      "-" +
+      String(date.getMonth() + 1).padStart(2, "0") +
+      "-" +
+      String(date.getDate()).padStart(2, "0")
+  );
+
   const igakayaCategory = () => {
     const filtered = pubData.filter((pub) => pub.type === "이자카야");
     setFilteredData(filtered);
@@ -300,20 +308,17 @@ export default function UserReservation() {
     setDateTimePickerVisible(false);
   };
 
-  const [stringDate, setStringDate] = useState(
-    date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate()
-  );
-
-  const today = new Date();
-
   const handleDatePicked = (date) => {
     console.log("A date has been picked:", date);
 
     setStringDate(
-      date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
+      date.getFullYear() +
+        "-" +
+        String(date.getMonth() + 1).padStart(2, "0") +
+        "-" +
+        String(date.getDate()).padStart(2, "0")
     );
 
-    console.log(stringDate);
     hideDateTimePicker();
     setDate(date);
   };
