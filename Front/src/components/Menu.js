@@ -24,7 +24,6 @@ const Menu = ({ menu }) => {
 
 const styles = StyleSheet.create({
   menu: {
-    width: "100%",
     paddingVertical: 20,
     flexDirection: "row",
     justifyContent: "space-between",
@@ -33,7 +32,7 @@ const styles = StyleSheet.create({
     borderColor: "#D7DBDF",
   },
   menuText: {
-    maxWidth: "70%",
+    width: "70%",
     flexDirection: "column",
   },
   menuName: {

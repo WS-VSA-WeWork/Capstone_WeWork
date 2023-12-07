@@ -8,11 +8,11 @@ const GptDetail = () => {
           <MaterialCommunityIcons
             name="robot-outline"
             size={28}
-            color="black"
+            color="#1AB277"
           />
           <Text style={styles.titleContent}>AI가 정리한 후기</Text>
         </View>
-        <Text>
+        <Text style={styles.content}>
           "충무로의 백수씨 심야식당은 감각적인 분위기와 다양한 음식 메뉴로
           유명합니다. 특히, 신선한 재료와 훌륭한 맛으로 손님들을 매료시키며,
           매우 친절하고 서비스도 훌륭합니다. 가족, 친구와의 모임이나 특별한 날에
@@ -30,11 +30,11 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "white",
     borderRadius: 10,
-    borderColor: "black",
+    // borderColor: "6E757B",
     borderWidth: 1,
     padding: 10,
     gap: 10,
-    // borderColor: "#1AB277",
+    borderColor: "#1AB277",
   },
   title: {
     flexDirection: "row",
@@ -44,6 +44,10 @@ const styles = StyleSheet.create({
   titleContent: {
     fontSize: 15,
     fontWeight: "bold",
+    color: "#393E47",
+  },
+  content: {
+    color: "#393E47",
   },
 });
 

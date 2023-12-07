@@ -120,6 +120,7 @@ const TimeTable = ({ onTimeChange, timeSlots }) => {
             key={index}
             style={[
               styles.timeSlot,
+              index % 4 !== 0 && styles.additionalMargin, // 조건부 스타일 적용
               {
                 backgroundColor: selectedTimes.includes(timeSlot.label)
                   ? "#1AB277"
@@ -155,8 +156,10 @@ const TimeTable = ({ onTimeChange, timeSlots }) => {
 const styles = StyleSheet.create({
   timeContainer: {
     width: "100%",
-    flexDirection: "column",
+    flexDirection: "row",
+    justifyContent: "center",
     paddingVertical: 10,
+    paddingHorizontal: "4%",
     marginVertical: 10,
     backgroundColor: "#F9FAFC",
     borderWidth: 1,
@@ -168,11 +171,18 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
   },
+  additionalMargin:{
+    marginLeft: "4%"
+  },
   timeSlot: {
+    width: "22%",
     padding: 10,
-    paddingHorizontal: 15,
-    margin: 5,
+    paddingHorizontal: "3%",
+    marginVertical: 5,
     borderRadius: 5,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
   timeSlotText: {
     fontSize: 16,
