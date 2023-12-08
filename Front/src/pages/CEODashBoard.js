@@ -16,10 +16,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 
 import Reviews from "../components/Reviews";
-import ReservationCardforOwner from "../components/ReservationCardforOwner";
 import Reservations from "../components/Reservations";
-import ReservationCard from "../components/ReservationCard";
-// import { SCREEN_WIDTH } from "@gorhom/bottom-sheet";
 
 const CEODashBoard = ({ route }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -164,8 +161,11 @@ const CEODashBoard = ({ route }) => {
           {selectedDate.toLocaleDateString()}
           {dayOfWeek(selectedDate)}
         </Text>
-
+        
+        <View>
+              
         <Reservations data={reservations} isOwner={true} />
+        </View>
 
         <TouchableOpacity
           onPress={() => {
@@ -214,7 +214,6 @@ const CEODashBoard = ({ route }) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 10,
     backgroundColor: "#ffffff",
   },
   tab: {
@@ -257,6 +256,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     paddingVertical: 20,
+  },
+  contentContainer:{
+    paddingHorizontal: 15,
   },
   semiTitle: {
     fontSize: 20,

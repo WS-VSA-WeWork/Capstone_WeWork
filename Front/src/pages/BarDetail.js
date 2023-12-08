@@ -41,7 +41,6 @@ const BarDetail = ({ route }) => {
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState("시작시간과 종료시간을 선택해주세요");
   const [timeIdx, setTimeIdx] = useState([]);
-  const [showForm, setShowForm] = useState(false);
   const [btnActive, setBtnActive] = useState(false);
 
   const [menu, setMenu] = useState(true);
@@ -133,17 +132,6 @@ const BarDetail = ({ route }) => {
       setBtnActive(true);
     }
   };
-  // // Datepicker
-  // const onChange = (event, selectedDate) => {
-  //   const currentDate = selectedDate || date;
-  //   setDate(currentDate);
-  //   setOpen(false);
-  // };
-
-  // const openMode = (currentMode) => {
-  //   setOpen(true);
-  //   setMode(currentMode);
-  // };
 
   const openDatepicker = () => {
     // openMode("date");
@@ -442,6 +430,7 @@ const styles = StyleSheet.create({
   },
 
   detailsContainer: {
+    marginTop: 10,
     flexDirection: "column",
   },
   detailTopContainer: {
