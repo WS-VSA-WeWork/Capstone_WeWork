@@ -25,7 +25,9 @@ import Reviews from "../components/Reviews";
 
 import { useDispatch, useSelector } from "react-redux";
 import { fetchReviewsByPub } from "../reducers/reviewReducer";
-import { fetchTimetable, updateTimetable } from "../reducers/timetableReducer";
+import { fetchTimetable } from "../reducers/timetableReducer";
+import Carousel from "../components/Carousel";
+import Accordion from "../components/Accordion";
 
 const BarDetail = ({ route }) => {
   const dispatch = useDispatch();
@@ -188,15 +190,18 @@ const BarDetail = ({ route }) => {
     navigation.navigate("결제하기", reservationDetails);
   };
 
+  console.log(bar.pubImages);
+
   return (
     <>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.imageContainer}>
-          <Image
+          {/* <Image
             source={{ uri: bar.pubImages[1] }}
             style={styles.image}
             resizeMode="cover"
-          />
+          /> */}
+          <Carousel images={bar.pubImages.slice(1)} />
         </View>
 
         {/* 타이틀 */}
@@ -223,9 +228,10 @@ const BarDetail = ({ route }) => {
           </View>
 
           <View style={styles.introContainer}>
-            <Text style={styles.introduction} aria-expanded={true}>
+            {/* <Text style={styles.introduction} aria-expanded={true}>
               {bar.pubDescription}
-            </Text>
+            </Text> */}
+            <Accordion description={bar.pubDescription}/>
           </View>
 
           <GptDetail></GptDetail>
@@ -461,7 +467,7 @@ const styles = StyleSheet.create({
     color: "#393E47",
   },
   introContainer: {
-    height: 80,
+    minHeight: 80,
     marginBottom: 0,
   },
   introduction: {
