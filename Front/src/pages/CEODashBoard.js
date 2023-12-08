@@ -1,11 +1,10 @@
-import { React, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ScrollView,
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
-  Dimensions,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { LineChart } from "react-native-chart-kit";
@@ -16,13 +15,12 @@ import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 
 import Reviews from "../components/Reviews";
-import ReservationCardforOwner from "../components/ReservationCardforOwner";
 import Reservations from "../components/Reservations";
-import ReservationCard from "../components/ReservationCard";
-// import { SCREEN_WIDTH } from "@gorhom/bottom-sheet";
+import { width } from "../config/globalStyles";
 
 const CEODashBoard = ({ route }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [reservationCount, setreservationCount] = useState(0);
 
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -38,7 +36,8 @@ const CEODashBoard = ({ route }) => {
 
   useEffect(() => {
     // 예약 데이터가 업데이트되면 콘솔에 출력
-    console.log("예약 데이터:", reservations);
+    // console.log("예약 데이터:", reservations);
+    setreservationCount(reservations.length);
   }, [reservations]);
 
   // 요일을 계산하는 함수
@@ -54,13 +53,19 @@ const CEODashBoard = ({ route }) => {
   reservations.forEach((reservation) => {
     const dayOfWeek = getDayOfWeek(reservation.reservDate);
     weeklyReservations[dayOfWeek]++;
-    console.log(weeklyReservations);
   });
 
   // 차트 데이터
   const data = {
     labels: ["월", "화", "수", "목", "금", "토", "일"],
     datasets: [
+      {
+        data: [0], //lowest graph value
+      },
+      {
+        data: [4], //highest graph value
+        withDots: false, //a flage to make it hidden
+      },
       {
         data: weeklyReservations, // 주간 예약 수 데이터
       },
@@ -158,14 +163,18 @@ const CEODashBoard = ({ route }) => {
       </View>
       <View style={styles.contentContainer}>
         <View style={styles.center}>
-          <Text style={styles.semiTitle}>오늘은 2건의 예약이 있어요.</Text>
+          <Text style={styles.semiTitle}>
+            오늘은 {reservationCount}건의 예약이 있어요.
+          </Text>
         </View>
         <Text style={styles.semiTitle}>
           {selectedDate.toLocaleDateString()}
           {dayOfWeek(selectedDate)}
         </Text>
 
-        <Reservations data={reservations} isOwner={true} />
+        <View>
+          <Reservations data={reservations} isOwner={true} />
+        </View>
 
         <TouchableOpacity
           onPress={() => {
@@ -185,14 +194,18 @@ const CEODashBoard = ({ route }) => {
         <View style={styles.squareContainer}>
           <LineChart
             data={data}
-            width={Dimensions.get("window").width - 30} // 차트의 너비
+            width={width * 360} // 차트의 너비
             height={220}
+            fromZero={true}
+            withDots={false}
+            withShadow={false}
+            withInnerLines={false}
             chartConfig={{
               backgroundColor: "#ffffff", // 배경색
               backgroundGradientFrom: "#ffffff", // 그라데이션 시작 색상을 하얀색으로
               backgroundGradientTo: "#ffffff", // 그라데이션 끝 색상을 하얀색으로
               decimalPlaces: 0, // 소수점 자리수
-              color: (opacity = 1) => `rgba(31, 176, 119, ${opacity})`,
+              color: (opacity = 1) => `rgba(31, 176, 119, 1)`,
               labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
             }}
             style={styles.chartStyle}
@@ -214,7 +227,6 @@ const CEODashBoard = ({ route }) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 10,
     backgroundColor: "#ffffff",
   },
   tab: {
@@ -258,6 +270,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingVertical: 20,
   },
+  contentContainer: {
+    paddingHorizontal: 20,
+  },
   semiTitle: {
     fontSize: 20,
     fontWeight: "bold",
@@ -278,6 +293,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     borderRadius: 16,
     paddingTop: 15,
+    paddingRight: 40,
   },
   incontentBorderLine: {
     width: "1",
