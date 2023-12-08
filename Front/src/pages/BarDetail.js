@@ -40,6 +40,8 @@ const BarDetail = ({ route }) => {
 
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState("시작시간과 종료시간을 선택해주세요");
+  const [timeIdx, setTimeIdx] = useState([]);
+  const [showForm, setShowForm] = useState(false);
   const [btnActive, setBtnActive] = useState(false);
 
   const [menu, setMenu] = useState(true);
@@ -92,7 +94,7 @@ const BarDetail = ({ route }) => {
   };
 
   useEffect(() => {
-    const date = "2023-12-02"; // 임시코드
+    const date = "2023-12-04"; // 임시코드 selectedDate로 바꿔야함
     dispatch(fetchReviewsByPub(bar.pubName));
     dispatch(fetchTimetable({ pubName: bar.pubName, date: date }));
   }, []);
@@ -126,11 +128,22 @@ const BarDetail = ({ route }) => {
 
   const handleTimeChange = (selectTime) => {
     setTime(selectTime);
-
+    console.log(time);
     if (selectTime.charAt(selectTime.length - 3) === ":") {
       setBtnActive(true);
     }
   };
+  // // Datepicker
+  // const onChange = (event, selectedDate) => {
+  //   const currentDate = selectedDate || date;
+  //   setDate(currentDate);
+  //   setOpen(false);
+  // };
+
+  // const openMode = (currentMode) => {
+  //   setOpen(true);
+  //   setMode(currentMode);
+  // };
 
   const openDatepicker = () => {
     // openMode("date");
@@ -153,14 +166,20 @@ const BarDetail = ({ route }) => {
   };
 
   const navigateToOrder = () => {
+    const splitTimes = time.split(" - ");
+
     const reservationDetails = {
       pubName: bar.pubName,
       pubImage: bar.pubImages[1],
       reservDate: selectedDate,
       people: numberOfPeople,
       reserveTime: time,
+      timeIdx: [
+        timetable.findIndex((time) => time.label === splitTimes[0]),
+        timetable.findIndex((time) => time.label === splitTimes[1]),
+      ],
     };
-    console.log(reservationDetails);
+    console.log("bardetailnavigate", reservationDetails);
     navigation.navigate("결제하기", reservationDetails);
   };
 

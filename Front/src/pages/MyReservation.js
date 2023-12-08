@@ -7,35 +7,40 @@ import {
   Button,
   Pressable,
   TouchableOpacity,
+  TextInput,
 } from "react-native";
 import { useEffect, useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { fetchUserReservationData } from "../reducers/userReservationReducer";
+import { Feather } from "@expo/vector-icons";
+
 import { useDispatch, useSelector } from "react-redux";
 import { AntDesign } from "@expo/vector-icons";
 
 import Reservations from "../components/Reservations";
-import { fetchReservData } from "../reducers/reserveReducer";
+import { fetchReservationDataByUserId } from "../reducers/reservationReducer";
 
 const MyReservation = () => {
   const [haveReservation, setHaveReservation] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [typing, setTyping] = useState(false);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
 
   const navigation = useNavigation();
+
   const dispatch = useDispatch();
   const reservationData = useSelector((state) => state.reservation.data);
-  console.log("reserveData: ", reservationData);
-  const status = useSelector((state) => state.userreservation.status);
-  const error = useSelector((state) => state.userreservation.error);
+  const status = useSelector((state) => state.reservation.status);
+  const error = useSelector((state) => state.reservation.error);
+  const [value, onChangeText] = useState("환불 사유를 입력해주세요");
 
   useEffect(() => {
-    const uid = "dGIYidylZq0wfmi6WkKB"; // 임시로 넣어놓은 uid
-    dispatch(fetchReservData("백수씨심야식당"));
+    const userid = "1234567890"; // 임시로 넣어놓은 uid
+    dispatch(fetchReservationDataByUserId({ userId: userid }));
   }, []);
 
   useEffect(() => {
-    if (reservationData) {
+    if (reservationData.length > 0) {
       setHaveReservation(true);
     }
   }, [reservationData]);
@@ -63,29 +68,26 @@ const MyReservation = () => {
             나의 예약일정
           </Text>
 
-          <View style={styles.reservationListContainer}>
-            <Reservations data={reservationData} isOwner={false} />
-          </View>
-
-          {/* <View style={styles.reservationListContainer}>
+          {/* 이용전 예약건 */}
+          <TouchableOpacity onPress={() => navigation.navigate("환불")}>
+            <View style={styles.reservationListContainer}>
               <View style={styles.reservationList1}>
                 <Text style={styles.reservationListTitle}>
-                  {reservationData["2311131200tnfus9"]["pubName"]}{" "} */}
-          {/* 예약 DB에서 가져온 술집이름(임시) */}
-
-          {/* </Text>
-                <Text style={styles.reservationListLastTime}>19시간 전</Text>
+                  {reservationData[0].pubName}{" "}
+                </Text>
               </View>
               <View style={styles.reservationList2}>
-                <Text>2023-09-20</Text>
-                <Text>19:00</Text>
+                <Text>{reservationData[0].reservDate}</Text>
+                <Text>{reservationData[0].reserveTime}</Text>
               </View>
               <View style={styles.reservationList3}>
                 <Text>예약금</Text>
-                <Text>56000원</Text>
+                <Text>{reservationData[0].deposit}원</Text>
               </View>
-            </View> */}
+            </View>
+          </TouchableOpacity>
 
+          {/* 전체 대관 내역 */}
           <View style={styles.reservationPast}>
             <Text
               style={{
@@ -98,41 +100,22 @@ const MyReservation = () => {
             >
               나의 대관 내역
             </Text>
-            <Text style={styles.reservationPastNum}>5</Text>
+            <Text style={styles.reservationPastNum}>
+              {reservationData.length}
+            </Text>
           </View>
-          <TouchableOpacity
-            style={styles.reservationListContainer}
-            onPress={() => {
-              navigation.navigate("리뷰작성", {});
-            }}
-          >
-            <Reservations data={reservationData} />
 
-            {/* <View style={styles.reservationList1}>
-              <Text style={styles.reservationListTitle}>백수씨 심야식당</Text>
-              <Text style={styles.reservationListLastTime}>19시간 전</Text>
-            </View>
-            <View style={styles.reservationList2}>
-              <Text>2023-09-20</Text>
-              <Text>19:00</Text>
-            </View>
-            <View style={styles.reservationList3}>
-              <Text>예약금</Text>
-              <Text>56000원</Text>
-            </View> */}
-          </TouchableOpacity>
+          <View style={styles.reservationListContainer}>
+            <Reservations data={reservationData} isOwner={false} />
+          </View>
 
-          <Button
-            title="지금 예약하러가기"
-            color={"black"}
-            onPress={() => setHaveReservation(false)}
-          />
           <Pressable
             onPress={() => navigation.navigate("예약메인")}
             style={{
               alignItems: "center",
               justifyContent: "center",
-              marginTop: 30,
+              marginTop: 10,
+              marginBottom: 30,
               gap: 10,
             }}
           >
@@ -161,16 +144,78 @@ const MyReservation = () => {
                 예약을 진행해주세요 !
               </Text>
             </View>
-            <View style={styles.myreservationButton}>
-              <Button
-                title="지금 예약하러가기"
-                color={"black"}
-                onPress={() => setHaveReservation(true)}
-              />
-            </View>
           </View>
         </View>
       )}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        {/* <TouchableWithoutFeedback
+            onPress={() => setModalVisible(false)}
+            style={styles.backdrop}
+          /> */}
+
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalTitleContainer}>
+              <Text style={styles.modalTitle}>식당 정보</Text>
+              <Pressable onPress={() => setModalVisible(false)}>
+                <Feather name="x" size={25} color="black" />
+              </Pressable>
+            </View>
+            <View style={styles.modalRestaurantTop}>
+              <Text style={styles.modalRestaurantName}>
+                {reservationData[0].pubName}{" "}
+              </Text>
+              {/* <Text style={styles.modalRestaurantTime}>19시간 전</Text> */}
+            </View>
+            <View style={styles.modalRestaurantMiddle}>
+              <Text style={styles.modalRestaurantDate}>
+                {reservationData[0].reservDate}
+              </Text>
+              <Text style={styles.modalRestaurantTime}>
+                {reservationData[0].reserveTime}
+              </Text>
+            </View>
+            <View style={styles.modalRestaurantBottom}>
+              <Text style={styles.modalRestaurantMoney}>예약금</Text>
+              <Text style={styles.modalRestaurantMoney}>
+                {reservationData[0].deposit}원
+              </Text>
+            </View>
+            <View style={{}}>
+              <TextInput
+                style={styles.want}
+                onChangeText={(text) => onChangeText(text)}
+                value={value}
+                placeholder="환불사유를 입력해주세요"
+                multiline
+                numberOfLines={5}
+                maxLength={40}
+                onPressIn={() => setTyping(true)}
+              ></TextInput>
+            </View>
+            <View style={styles.wantButton}>
+              <Button
+                color={"white"}
+                onPress={(() => setTyping(false), () => setModalVisible(false))}
+                style={styles.wantButton}
+                title="환불 요청하기"
+              ></Button>
+            </View>
+            <View
+              style={{
+                height: typing ? 0 : keyboardHeight - 20,
+              }}
+            ></View>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
