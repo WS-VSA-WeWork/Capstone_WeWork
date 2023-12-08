@@ -1,6 +1,7 @@
 import React from "react";
 
 import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
+import { colors } from "../config/globalStyles";
 
 const ReservationCardforOwner = ({ item }) => {
   console.log(item);
@@ -62,16 +63,16 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#393E47",
+    color: colors.black,
     marginBottom: 15,
   },
   semiTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#393E47",
+    color: colors.black,
   },
   reservationContainer: {
-    backgroundColor: "#E0F7ED",
+    backgroundColor: colors.lightGreen,
     padding: 15,
     borderRadius: 10,
     marginVertical: 10,
@@ -81,15 +82,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    color: "#393E47",
+    color: colors.black,
   },
   warning: {
-    color: "#DD3737",
+    color: colors.red,
     fontSize: 18,
     fontWeight: "bold",
   },
-  infoLabel: {},
-  infoData: {},
+  infoLabel: {
+    color: colors.grey,
+  },
+  infoData: {
+    color: colors.grey,
+  },
 });
 
 export default ReservationCardforOwner;
