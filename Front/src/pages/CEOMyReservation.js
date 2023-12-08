@@ -142,9 +142,11 @@ const styles = StyleSheet.create({
   ScrollViewContainer: {
     height: "85%",
     marginVertical: 20,
+    backgroundColor: "#ffffff",
   },
   myreservationContainer: {
-    marginVertical: 30,
+    paddingVertical: 30,
+    backgroundColor: "#ffffff",
   },
   myreservation: {
     justifyContent: "center",

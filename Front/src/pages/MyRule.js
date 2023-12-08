@@ -300,6 +300,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 10,
     gap: 20,
+    backgroundColor: "#ffffff",
   },
   scroll: {
     gap: 15,

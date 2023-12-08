@@ -223,6 +223,7 @@ const MyReservation = () => {
 const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
+    backgroundColor: "#ffffff",
   },
   myreservationContainer: {
     marginVertical: 30,
