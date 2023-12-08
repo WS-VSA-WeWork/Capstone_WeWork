@@ -72,27 +72,28 @@ const RestaurantBasic = () => {
       const pubDocSnapshot = await getDoc(pubDocRef);
       setRefresh(refresh + 1);
       if (pubDocSnapshot.exists()) {
-        const currentPubImages = pubDocSnapshot.data().pubImages || [];
+        const currentReviewImg = pubDocSnapshot.data().reviewImg || [];
 
         // 이미지 URL 배열을 Firestore 필드로 업데이트합니다.
-        const updatedImages = Array.from(new Set([...currentPubImages, ...downloadImageUrls]));
+        const updatedImages = Array.from(new Set([...currentReviewImg, ...downloadImageUrls]));
 
         const updateData = {
-          pubImages: updatedImages,
+          reviewImg: updatedImages,
         };
 
         // pubImages 필드를 업데이트합니다.
         await updateDoc(pubDocRef, updateData);
         console.log("업데이트 완료");
       } else {
-        console.error("문서가 존재하지 않습니다.");
+        const newPubDocRef = doc(db, collectionPath, documentId);
+        await setDoc(newPubDocRef, { reviewImg: downloadImageUrls });
+        console.log("새로운 문서 생성 및 업데이트 완료.");
       }
     } catch (error) {
       console.error('업데이트 실패', error);
     }
   };
 
-  // url 업로드 파트 끝 
 
   
   return (
@@ -285,17 +286,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   button: {
-    backgroundColor: 'blue',
+    backgroundColor: '#1AB277',
     padding: 10,
-    borderRadius: 5,
+    borderRadius: 8,
     marginBottom: 20,
-    width: "15%",
+    width: "85%",
+    height: 50,
     justifyContent: "center",
     alignItems: "center",
   },
   buttonText: {
-    color: '#fff',
+    color: '#ffffff',
     fontSize: 16,
+    fontWeight: "bold",
   },
 });
 

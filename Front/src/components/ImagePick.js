@@ -192,14 +192,14 @@ const ImagePick = (documentId) => {
           <ScrollView horizontal>
             {selectedImages.map((uri, index) => (
               <View key={index}>            
-                <TouchableOpacity style={styles.imageSection} key={index} onPress={() => changeImage(index)}>
+                <TouchableOpacity style={styles.imageSection} key={index} onPressIn={() => changeImage(index)}>
                   <Image key={index} source={{ uri }} style={styles.image} />
                 </TouchableOpacity>
                 <Ionicons name="close-circle-sharp"style={styles.closeCircle} size={15} onPress={() => deleteImage(index)}/>
               </View>
             ))} 
           </ScrollView>
-          <TouchableOpacity style={styles.syncIcon} onPress={uploadImageToFirebase}>
+          <TouchableOpacity style={styles.syncIcon} onPressIn={uploadImageToFirebase}>
               <Ionicons name="sync-circle" size={36} color="grey" />
           </TouchableOpacity>
           </View>) : (
@@ -209,7 +209,7 @@ const ImagePick = (documentId) => {
                 width: "90%",
                 alignItems: "center",
                 justifyContent: "center",
-                height: 100,
+                height: "100",
                 borderColor: "#E5E5E5",
                 borderWidth: 3,
                 marginVertical: 10,
