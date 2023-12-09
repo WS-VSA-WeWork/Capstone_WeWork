@@ -10,13 +10,15 @@ import { useNavigation } from "@react-navigation/native";
 import { LineChart } from "react-native-chart-kit";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchReviewsByPub } from "../reducers/reviewReducer";
-import { fetchReservData } from "../reducers/reserveReducer";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 
 import Reviews from "../components/Reviews";
 import Reservations from "../components/Reservations";
 import { width } from "../config/globalStyles";
+
+import { fetchPubDataByName } from "../reducers/pubReducer";
+import { fetchReservationDataByPubName } from "../reducers/reservationReducer";
 
 const CEODashBoard = ({ route }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -25,20 +27,13 @@ const CEODashBoard = ({ route }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
-  const bar = route.params.bar;
+  const myPub = useSelector((state) => state.pub.myPub);
+  const pubStatus = useSelector((state) => state.pub.status);
+  const pubError = useSelector((state) => state.pub.error);
   const reviews = useSelector((state) => state.review.data);
   const reservations = useSelector((state) => state.reservation.data);
-
-  useEffect(() => {
-    // 컴포넌트가 마운트 될 때 예약 데이터를 불러옴
-    dispatch(fetchReservData({ pubName: bar.name })); // bar.name은 현재 선택된 펍의 이름
-  }, [dispatch, bar.name]);
-
-  useEffect(() => {
-    // 예약 데이터가 업데이트되면 콘솔에 출력
-    // console.log("예약 데이터:", reservations);
-    setreservationCount(reservations.length);
-  }, [reservations]);
+  const rStatus = useSelector((state) => state.reservation.status);
+  const [todaysReservations, setTodaysReservations] = useState([]);
 
   // 요일을 계산하는 함수
   const getDayOfWeek = (dateString) => {
@@ -112,20 +107,46 @@ const CEODashBoard = ({ route }) => {
   };
 
   useEffect(() => {
-    const date = "2023-12-02"; // 임시코드
-    dispatch(fetchReviewsByPub(bar.name));
+    const pubName = "백수씨심야식당"; //tmp
+    const today = new Date();
+
+    // 날짜 형식 변환(두자리수로 맞추기)
+    const date =
+      today.getFullYear() +
+      "-" +
+      String(today.getMonth() + 1).padStart(2, "0") +
+      "-" +
+      String(today.getDate()).padStart(2, "0");
+
+    // 오늘의 예약만 필터링해 todaysReservations에 저장
+    dispatch(fetchReservationDataByPubName(pubName)).then((action) => {
+      const reservations = action.payload;
+      setTodaysReservations(
+        reservations.filter((reservation) => reservation.reservDate === date)
+      );
+    });
+
+    // 내 술집 데이터 가져옴
+    dispatch(fetchPubDataByName(pubName));
+
+    // 내 술집 리뷰 데이터 가져옴
+    dispatch(fetchReviewsByPub(pubName));
   }, []);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.tab}>
-        <Text style={styles.title}>백수씨 심야식당</Text>
+        <Text style={styles.title}>{myPub.pubName}</Text>
         <View style={styles.menuContainer}>
           <View style={styles.buttonContianer}>
             <TouchableOpacity
               style={styles.menuButton}
               onPress={() => {
-                navigation.navigate("사장님메인", { bar: bar });
+                navigation.navigate("사장님메인", {
+                  myPub,
+                  reviews,
+                  reservations,
+                });
               }}
             >
               <FontAwesome name="calendar-check-o" size={35} color="#393E47" />
@@ -138,7 +159,7 @@ const CEODashBoard = ({ route }) => {
             <TouchableOpacity
               style={styles.menuButton}
               onPress={() => {
-                navigation.navigate("가게 등록");
+                navigation.navigate("가게 등록", { myPub });
               }}
             >
               <AntDesign name="pluscircleo" size={35} color="#393E47" />
@@ -151,7 +172,7 @@ const CEODashBoard = ({ route }) => {
             <TouchableOpacity
               style={styles.menuButton}
               onPress={() => {
-                navigation.navigate("사장님 마이페이지");
+                navigation.navigate("사장님 마이페이지", { myPub });
               }}
             >
               <AntDesign name="user" size={35} color="#393E47" />
@@ -162,23 +183,23 @@ const CEODashBoard = ({ route }) => {
         </View>
       </View>
       <View style={styles.contentContainer}>
-        <View style={styles.center}>
-          <Text style={styles.semiTitle}>
-            오늘은 {reservationCount}건의 예약이 있어요.
-          </Text>
-        </View>
         <Text style={styles.semiTitle}>
           {selectedDate.toLocaleDateString()}
           {dayOfWeek(selectedDate)}
         </Text>
+        <View style={styles.center}>
+          <Text style={styles.semiTitle}>
+            오늘은 {todaysReservations.length}건의 예약이 있어요.
+          </Text>
+        </View>
 
         <View>
-          <Reservations data={reservations} isOwner={true} />
+          <Reservations data={todaysReservations} isOwner={true} />
         </View>
 
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("사장님메인", { bar: bar });
+            navigation.navigate("사장님메인", { pub: myPub });
           }}
         >
           <View style={styles.center}>
@@ -277,6 +298,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     color: "#393E47",
+    marginTop: 20,
   },
   squareContainer: {
     borderRadius: 10,
