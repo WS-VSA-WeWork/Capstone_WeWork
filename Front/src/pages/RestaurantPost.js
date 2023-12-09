@@ -11,12 +11,15 @@ import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 
 const Tab = createMaterialTopTabNavigator();
-function MainScreen() {
+function MainScreen({ route }) {
+  const myPubData = route.params.myPub;
+  console.log("post", myPubData);
   return (
     <Tab.Navigator initialRouteName="Home">
       <Tab.Screen
         name="기본정보"
         component={RestaurantBasic}
+        initialParams={{ myPubData }}
         options={{
           tabBarIcon: ({ color }) => (
             <Ionicons name="restaurant-outline" size={24} color="black" />
@@ -26,6 +29,7 @@ function MainScreen() {
       <Tab.Screen
         name="메뉴등록"
         component={MenuManagementComponent}
+        initialParams={{ myPubData }}
         options={{
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="menu-open" size={27} color="black" />

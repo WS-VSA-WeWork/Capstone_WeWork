@@ -26,7 +26,7 @@ import store from "./src/store";
 import CEODashBoard from "./src/pages/CEODashBoard";
 import MainScreen from "./src/pages/RestaurantPost";
 import Refund from "./src/pages/refund";
-
+import ImagePick from "./src/components/ImagePick";
 const Stack = createNativeStackNavigator();
 
 LogBox.ignoreLogs(["VirtualizedLists", "Key", "Failed"]);
@@ -56,6 +56,7 @@ export default function App() {
           <Stack.Screen name="규정 사항" component={MyRule} />
           <Stack.Screen name="가게 등록" component={MainScreen} />
           <Stack.Screen name="환불" component={Refund} />
+          <Stack.Screen name="ImagePickPage" component={ImagePick} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
