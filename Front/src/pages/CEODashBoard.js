@@ -199,7 +199,7 @@ const CEODashBoard = ({ route }) => {
 
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("사장님메인", { pub: myPub });
+            navigation.navigate("사장님메인", { myPub });
           }}
         >
           <View style={styles.center}>
