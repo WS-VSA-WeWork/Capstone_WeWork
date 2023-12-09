@@ -844,7 +844,6 @@ export default function UserReservation() {
                     <View style={styles.myreservationButton}>
                       <Button
                         title="지금 예약하러가기"
-                        color={"black"}
                         onPress={() => setHaveReservation(true)}
                       />
                     </View>
