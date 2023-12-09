@@ -25,7 +25,7 @@ const MyBan = () => {
           위약 기간에는 예약이 불가하며, 자세한 내용은 고객센터에 문의 바랍니다.
         </Text>
       </View>
-      <Button
+      {/* <Button
         title="위약 내역 생성"
         onPress={() =>
           setBanList([
@@ -36,7 +36,7 @@ const MyBan = () => {
             },
           ])
         }
-      ></Button>
+      ></Button> */}
     </View>
   );
 };

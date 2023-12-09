@@ -32,24 +32,6 @@ function MainScreen() {
           ),
         }}
       />
-      {/* <Tab.Screen
-        name="운영정보"
-        component={RestaurantInfo}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <AntDesign name="down" size={24} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="댓글관리"
-        component={MenuManagementComponent}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <AntDesign name="down" size={24} color={color} />
-          ),
-        }}
-      /> */}
     </Tab.Navigator>
   );
 }

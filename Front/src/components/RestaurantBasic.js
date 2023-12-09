@@ -61,8 +61,10 @@ const RestaurantBasic = () => {
               ]}
             >
               <View style={styles.myInfoContentButton}>
-                <SimpleLineIcons name="pencil" size={15} color="blue" />
-                <Text style={{ color: "blue", fontWeight: "bold" }}>변경</Text>
+                <SimpleLineIcons name="pencil" size={15} color="#1FB077" />
+                <Text style={{ color: "#1FB077", fontWeight: "bold" }}>
+                  변경
+                </Text>
               </View>
             </Pressable>
           </View>
@@ -102,8 +104,10 @@ const RestaurantBasic = () => {
               ]}
             >
               <View style={styles.myInfoContentButton}>
-                <SimpleLineIcons name="pencil" size={15} color="blue" />
-                <Text style={{ color: "blue", fontWeight: "bold" }}>변경</Text>
+                <SimpleLineIcons name="pencil" size={15} color="#1FB077" />
+                <Text style={{ color: "#1FB077", fontWeight: "bold" }}>
+                  변경
+                </Text>
               </View>
             </Pressable>
           </View>
@@ -135,8 +139,10 @@ const RestaurantBasic = () => {
               ]}
             >
               <View style={styles.myInfoContentButton}>
-                <SimpleLineIcons name="pencil" size={15} color="blue" />
-                <Text style={{ color: "blue", fontWeight: "bold" }}>변경</Text>
+                <SimpleLineIcons name="pencil" size={15} color="#1FB077" />
+                <Text style={{ color: "#1FB077", fontWeight: "bold" }}>
+                  변경
+                </Text>
               </View>
             </Pressable>
           </View>

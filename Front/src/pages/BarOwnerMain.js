@@ -205,7 +205,7 @@ const BarOwnerMain = ({ route }) => {
             <Text style={styles.title}>내 술집</Text>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("사장님 마이페이지");
+                navigation.navigate("가게 등록");
               }}
             >
               <Text style={styles.tag}>술집 정보 수정하기{` >`}</Text>
@@ -354,7 +354,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F1F2F6",
     padding: 20,
   },
-  TopMenu:{
+  TopMenu: {
     flexDirection: "row",
     justifyContent: "space-between",
   },

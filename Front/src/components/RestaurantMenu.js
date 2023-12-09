@@ -14,7 +14,8 @@ import * as ImagePicker from "expo-image-picker";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 const RestaurantMenuPost = () => {
   const [menuList, setMenuList] = useState([]); // 메뉴 리스트
   const [modalVisible, setModalVisible] = useState(false); // 모달창 보이기/숨기기
@@ -153,16 +154,6 @@ const RestaurantMenuPost = () => {
                   },
                 ]}
               >
-                {/* <View style={styles.myInfoContentButton}>
-                  <Feather name="plus" size={24} color="#B9B9B9" />
-                  <Text style={{ color: "#B9B9B9" }}>눌러서 사진 추가하기</Text>
-                </View>
-                {photo && (
-                  <Image
-                    source={{ uri: photo }}
-                    style={{ width: 100, height: 100 }}
-                  />
-                )} */}
                 {photo ? (
                   <Image
                     source={{ uri: photo }}
@@ -191,7 +182,7 @@ const RestaurantMenuPost = () => {
               >
                 <Text>메뉴 이름 : </Text>
                 <TextInput
-                  placeholder="메뉴 설명 입력"
+                  placeholder="메뉴 이름 입력"
                   style={styles.input}
                   value={newMenu.description}
                   onChangeText={(text) =>
@@ -235,8 +226,26 @@ const RestaurantMenuPost = () => {
                   },
                 ]}
               >
-                <View>
-                  <Text>메뉴 추가하기</Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    gap: 6,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <MaterialCommunityIcons
+                    name="checkbox-marked-circle-plus-outline"
+                    size={24}
+                    color="#1FB077"
+                  />
+                  <Text
+                    style={{
+                      color: "#1FB077",
+                    }}
+                  >
+                    메뉴 추가하기
+                  </Text>
                 </View>
               </Pressable>
             </View>
@@ -287,16 +296,17 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     elevation: 5,
-    height: "40%",
+    height: 350,
     width: 300,
   },
   input: {
     height: 30,
-    width: 100,
+    width: 110,
     borderColor: "gray",
     borderBottomWidth: 1,
     marginBottom: 10,
     paddingHorizontal: 10,
+    justifyContent: "center",
   },
   myInfoContentButton: {
     alignItems: "center",
