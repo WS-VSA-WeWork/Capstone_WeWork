@@ -42,7 +42,7 @@ const ReservationCardforUser = ({ item }) => {
         navigation.navigate("리뷰작성", {});
       }}
     >
-      <View style={styles.info}>
+      <View style={styles.TitleContainer}>
         <Text style={styles.semiTitle}>
           {item.pubName} /{" "}
           <Text style={styles.warning}>{item.numberOfPeople}</Text>명
@@ -59,13 +59,18 @@ const ReservationCardforUser = ({ item }) => {
       </View>
       <View style={styles.info}>
         <Text style={styles.infoLabel}>예약금</Text>
-        <Text style={styles.infoData}>{item.deposit}</Text>
+        <Text style={styles.infoData}>{item.deposit}원</Text>
       </View>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
+  TitleContainer:{
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 15,
+  },
   title: {
     fontSize: 24,
     fontWeight: "bold",

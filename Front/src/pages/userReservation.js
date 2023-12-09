@@ -29,6 +29,7 @@ import { Octicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Reservations from "../components/Reservations";
 import { fetchReservationDataByUserId } from "../reducers/reservationReducer";
+import ReservationCardforUser from "../components/ReservationCardforUser";
 
 export default function UserReservation() {
   const dispatch = useDispatch();
@@ -783,19 +784,22 @@ export default function UserReservation() {
                   </Text>
                   <TouchableOpacity onPress={() => navigation.navigate("환불")}>
                     <View style={styles.reservationListContainer}>
-                      <View style={styles.reservationList1}>
-                        <Text style={styles.reservationListTitle}>
-                          {reservationData[0].pubName}{" "}
-                        </Text>
-                      </View>
-                      <View style={styles.reservationList2}>
-                        <Text>{reservationData[0].reservDate}</Text>
-                        <Text>{reservationData[0].reserveTime}</Text>
-                      </View>
-                      <View style={styles.reservationList3}>
-                        <Text>예약금</Text>
-                        <Text>{reservationData[0].deposit}원</Text>
-                      </View>
+                      <ReservationCardforUser item={reservationData[0]} />
+                      {/* <View style={styles.reservationContainer}>
+                        <View style={styles.reservationList1}>
+                          <Text style={styles.reservationListTitle}>
+                            {reservationData[0].pubName}{" "}
+                          </Text>
+                        </View>
+                        <View style={styles.reservationList2}>
+                          <Text>{reservationData[0].reservDate}</Text>
+                          <Text>{reservationData[0].reserveTime}</Text>
+                        </View>
+                        <View style={styles.reservationList3}>
+                          <Text>예약금</Text>
+                          <Text>{reservationData[0].deposit}원</Text>
+                        </View>
+                      </View> */}
                     </View>
                   </TouchableOpacity>
 
@@ -814,7 +818,9 @@ export default function UserReservation() {
                     <Text style={styles.reservationPastNum}>5</Text>
                   </View>
 
-                  <Reservations data={reservationData} isOwner={false} />
+                  <View style={styles.reservationListContainer}>
+                    <Reservations data={reservationData} isOwner={false} />
+                  </View>
                 </View>
               ) : (
                 <View style={styles.myreservationContainer}>
@@ -862,12 +868,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
   },
-  reservationListContainer: {
-    marginHorizontal: 30,
-    marginVertical: 10,
+  reservationContainer: {
+    backgroundColor: "#E0F7ED",
     paddingVertical: 20,
     paddingHorizontal: 20,
     gap: 10,
+    borderRadius: 10,
   },
   header: {
     paddingHorizontal: 40,
@@ -1007,10 +1013,9 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
   },
   reservationListContainer: {
-    backgroundColor: "#E0F7ED",
     marginHorizontal: 30,
-    marginVertical: 10,
-    paddingVertical: 20,
+    // marginVertical: 10,
+    paddingVertical: 10,
     paddingHorizontal: 20,
     gap: 10,
   },
