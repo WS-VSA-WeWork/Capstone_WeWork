@@ -52,7 +52,7 @@ const CEODashBoard = ({ route }) => {
 
   // 차트 데이터
   const data = {
-    labels: ["월", "화", "수", "목", "금", "토", "일"],
+    labels: ["일", "월", "화", "수", "목", "금", "토"],
     datasets: [
       {
         data: [0], //lowest graph value

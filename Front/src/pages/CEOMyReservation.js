@@ -11,7 +11,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 
 import Reservations from "../components/Reservations";
-import { fetchReservData } from "../reducers/reserveReducer";
+import { fetchReservationDataByPubName } from "../reducers/reservationReducer";
 
 const CEOMyReservation = () => {
   const [haveReservation, setHaveReservation] = useState(true);
@@ -21,7 +21,7 @@ const CEOMyReservation = () => {
 
   useEffect(() => {
     // 컴포넌트가 마운트 될 때 예약 데이터를 불러옴
-    dispatch(fetchReservData({ pubName: "백수씨심야식당" })); // bar.name은 현재 선택된 펍의 이름
+    dispatch(fetchReservationDataByPubName({ pubName: "백수씨심야식당" })); // bar.name은 현재 선택된 펍의 이름
   }, [dispatch, "백수씨심야식당"]);
 
   return (
