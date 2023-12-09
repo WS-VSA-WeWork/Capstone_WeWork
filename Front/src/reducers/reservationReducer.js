@@ -62,7 +62,6 @@ export const fetchReservationDataByUserId = createAsyncThunk(
     const q = query(colref, orderBy("updatedAt", "desc"));
     const docref = await getDocs(q);
     const snap = docref.docs.map((doc) => doc.data());
-    console.log(snap);
     return snap;
   }
 );
@@ -74,31 +73,9 @@ export const fetchReservationDataByPubName = createAsyncThunk(
     const colref = collection(db, "pubReservations", pubName, "reservations");
     const docref = await getDocs(colref);
     const snap = docref.docs.map((doc) => doc.data());
-    console.log(snap);
     return snap;
   }
 );
-
-// 특정 예약 데이터 날짜별로 불러오기 (사장님 페이지)
-export const fetchPubReservationByDate = createAsyncThunk(
-  "reservation/fetchPubReservationByDate",
-  async ({ pubName, date }) => {
-    const colref = collection(db, "pubReservations", pubName, "reservations");
-    const docref = await getDocs(colref);
-    const snap = docref.docs.map((doc) => doc.data());
-    console.log(snap);
-
-    //filter
-    const filteredSnap = snap.filter((data) => data.reservDate === date);
-    console.log(filteredSnap);
-    if (filteredSnap.length === 0) {
-      return null;
-    }
-    return filteredSnap;
-  }
-);
-
-// update specific reservation data
 
 const reservationSlice = createSlice({
   name: "reservation",
@@ -126,14 +103,6 @@ const reservationSlice = createSlice({
         state.data = action.payload;
       })
       .addCase(fetchReservationDataByPubName.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message;
-      })
-      .addCase(fetchPubReservationByDate.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.data = action.payload;
-      })
-      .addCase(fetchPubReservationByDate.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
