@@ -19,6 +19,7 @@ import { AntDesign } from "@expo/vector-icons";
 
 import Reservations from "../components/Reservations";
 import { fetchReservationDataByUserId } from "../reducers/reservationReducer";
+import ReservationCardforUser from "../components/ReservationCardforUser";
 
 const MyReservation = () => {
   const [haveReservation, setHaveReservation] = useState(false);
@@ -71,7 +72,8 @@ const MyReservation = () => {
           {/* 이용전 예약건 */}
           <TouchableOpacity onPress={() => navigation.navigate("환불")}>
             <View style={styles.reservationListContainer}>
-              <View style={styles.reservationList1}>
+              <ReservationCardforUser item={reservationData[0]} />
+              {/* <View style={styles.reservationList1}>
                 <Text style={styles.reservationListTitle}>
                   {reservationData[0].pubName}{" "}
                 </Text>
@@ -83,9 +85,11 @@ const MyReservation = () => {
               <View style={styles.reservationList3}>
                 <Text>예약금</Text>
                 <Text>{reservationData[0].deposit}원</Text>
-              </View>
+              </View> */}
             </View>
           </TouchableOpacity>
+
+          <View style={styles.outcontentBorderLine}></View>
 
           {/* 전체 대관 내역 */}
           <View style={styles.reservationPast}>
@@ -209,6 +213,7 @@ const MyReservation = () => {
 const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
+    backgroundColor: "#ffffff",
   },
   myreservationContainer: {
     marginVertical: 30,
@@ -242,8 +247,9 @@ const styles = StyleSheet.create({
   },
   reservationListContainer: {
     marginHorizontal: 30,
-    marginVertical: 10,
-    paddingVertical: 20,
+    // marginVertical: 10,
+    marginBottom: 10,
+    paddingVertical: 10,
     paddingHorizontal: 20,
     gap: 10,
   },
@@ -271,6 +277,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+  },
+  outcontentBorderLine: {
+    width: "100%",
+    borderBottomWidth: 8,
+    borderColor: "#E6EBEF",
   },
   reservationPast: {
     flexDirection: "row",
