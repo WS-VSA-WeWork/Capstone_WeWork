@@ -24,7 +24,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { FlatList } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPubsData } from "../reducers/pubReducer";
+import { fetchAvailablePubsData, fetchPubsData } from "../reducers/pubReducer";
 import { Octicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Reservations from "../components/Reservations";
@@ -233,10 +233,6 @@ export default function UserReservation() {
   const [modalVisible, setModalVisible] = useState(false);
   const [haveReservation, setHaveReservation] = useState(false);
   const [typing, setTyping] = useState(false);
-  dismissKeyboard = () => {
-    Keyboard.dismiss();
-  };
-
   const [isDateTimePickerVisible, setDateTimePickerVisible] = useState(false);
   const [value, onChangeText] = useState("환불 사유를 입력해주세요");
   const [stringDate, setStringDate] = useState(
@@ -393,18 +389,21 @@ export default function UserReservation() {
     return <Text>Error loading data: {error}</Text>;
   }
 
-  // 저장 버튼이 클릭되었을 때 실행되는 함수
+  // 검색 버튼이 클릭되었을 때 실행되는 함수
   //  newDate에 시간과 인원수를 json형태로 저장
-  const onSave = () => {
-    // 저장 버튼이 클릭되었을 때 실행되는 로직
-    if (date && numberOfPeople) {
-      const newData = {
-        date: date,
-        numberOfPeople: parseInt(numberOfPeople),
-      };
+  const onSearch = () => {
+    // 검색 버튼이 클릭되었을 때 실행되는 로직
 
-      // 여기서 newData를 어딘가에 저장하거나 활용할 수 있습니다.
-      console.log(newData);
+    Keyboard.dismiss(); // 키보드 없애기
+    if (date && numberOfPeople) {
+      const selectedDate = stringDate.toString();
+
+      dispatch(
+        fetchAvailablePubsData({
+          date: selectedDate,
+          numberOfPeople: numberOfPeople,
+        })
+      );
     }
   };
 
@@ -604,11 +603,11 @@ export default function UserReservation() {
             editable
             onChangeText={(number) => setNumberOfPeople(number)}
             style={{ padding: 10 }}
-            placeholder={
-              numberOfPeople > 4 ? `${numberOfPeople} 명` : "인원수 입력"
-            }
+            placeholder={"인원수 입력"}
             inputMode="numeric"
             keyboardType="numeric"
+            value={numberOfPeople}
+            clearTextOnFocus={true}
           ></TextInput>
         </View>
         <View
@@ -620,7 +619,7 @@ export default function UserReservation() {
           }}
         >
           {/* <Text>찾기</Text> */}
-          <Pressable onPress={onSave}>
+          <Pressable onPress={onSearch}>
             <Ionicons name="ios-search-sharp" size={24} color="black" />
           </Pressable>
         </View>
@@ -637,7 +636,7 @@ export default function UserReservation() {
               </View>
 
               <View style={styles.timePeople}>
-                {handleDatePicked && numberOfPeople > 4 ? (
+                {handleDatePicked && numberOfPeople >= 15 ? (
                   <View style={{ gap: 5 }}>
                     <Text style={styles.timePeopleTitle}>
                       함께 할 시간과 인원수
