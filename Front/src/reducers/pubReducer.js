@@ -4,6 +4,8 @@ import {
   getDoc,
   getDocs,
   getFirestore,
+  setDoc,
+  updateDoc,
 } from "@firebase/firestore";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import app from "../../firebaseConfig";
@@ -60,6 +62,15 @@ export const fetchAvailablePubsData = createAsyncThunk(
   }
 );
 
+export const pushPubData = createAsyncThunk(
+  "pub/pushPubData",
+  async ({ pubName, data }) => {
+    // console.log(pubName, data);
+    await updateDoc(doc(db, "pubs", pubName), data);
+    return data;
+  }
+);
+
 const pubSlice = createSlice({
   name: "pub",
   initialState: { data: [], myPub: [], status: "idle", error: null },
@@ -89,6 +100,10 @@ const pubSlice = createSlice({
       .addCase(fetchPubDataByName.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
+      })
+      .addCase(pushPubData.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.myPub = action.payload;
       });
   },
 });
