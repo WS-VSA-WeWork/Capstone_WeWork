@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { colors } from "../config/globalStyles";
 
-const TimeTable = ({ onTimeChange, timeSlots }) => {
+const TimeTable = ({ onTimeChange, timeSlots = [] }) => {
   //임시 시간 목록
   // const timeSlots = [
   //   { label: "17:00", value: "17:00", available: true },
@@ -114,9 +115,12 @@ const TimeTable = ({ onTimeChange, timeSlots }) => {
     }
   };
 
+  console.log("timeSlots", timeSlots);
+
   return (
     <View style={styles.timeContainer}>
       <View style={styles.timeSlotsContainer}>
+        {!timeSlots.length && (<Text style={styles.text}>지금은 예약 가능한 시간이 없어요</Text>)}
         {timeSlots.map((timeSlot, index) => (
           <TouchableOpacity
             key={index}
@@ -189,6 +193,11 @@ const styles = StyleSheet.create({
   timeSlotText: {
     fontSize: 16,
     fontWeight: "500",
+  },
+  text:{
+    color: colors.grey,
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
 
