@@ -27,9 +27,10 @@ import CEODashBoard from "./src/pages/CEODashBoard";
 import MainScreen from "./src/pages/RestaurantPost";
 import Refund from "./src/pages/refund";
 import ImagePick from "./src/components/ImagePick";
+import Join from "./src/pages/Join";
 const Stack = createNativeStackNavigator();
 
-LogBox.ignoreLogs(["VirtualizedLists", "Key", "Failed"]);
+LogBox.ignoreLogs(["VirtualizedLists", "Key", "Failed", "Login", "Possible"]);
 
 export default function App() {
   return (
@@ -41,6 +42,7 @@ export default function App() {
           <Stack.Screen name="결제하기" component={Order} />
           <Stack.Screen name="예약완료" component={Confirm} />
           <Stack.Screen name="예약메인" component={UserReservation} />
+          <Stack.Screen name="회원가입" component={Join} />
           <Stack.Screen name="로그인화면" component={Login} />
           <Stack.Screen name="마이페이지" component={MyPage} />
           <Stack.Screen name="위약정보" component={MyBan} />
