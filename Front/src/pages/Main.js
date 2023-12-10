@@ -1,7 +1,7 @@
 import { Text, View, Button, StyleSheet, StatusBar } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
-
+import Login from "./Login";
 import simya from "../../assets/심야식당.jpeg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -82,8 +82,8 @@ const Main = () => {
 
   return (
     <View style={styles.container}>
-      <Text>끼리끼리</Text>
-      <Button
+      <Login></Login>
+      {/* <Button
         title="식당 상세페이지"
         onPress={() => {
           navigation.navigate("식당 상세", { bar: bars.simya });
@@ -161,7 +161,7 @@ const Main = () => {
         onPress={() => {
           navigation.navigate("대시보드", { bar: bars.simya });
         }}
-      />
+      /> */}
 
       <StatusBar style="auto" />
     </View>
@@ -174,6 +174,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+    width: "100%",
   },
 });
 
