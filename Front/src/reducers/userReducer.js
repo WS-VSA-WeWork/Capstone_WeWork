@@ -5,6 +5,7 @@ import {
   getDocs,
   getFirestore,
   setDoc,
+  updateDoc,
 } from "@firebase/firestore";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import app from "../../firebaseConfig";
@@ -22,6 +23,20 @@ export const setUserInfo = createAsyncThunk(
       await setDoc(doc(db, "owners", uid), data);
     } else {
       await setDoc(doc(db, "customers", uid), data);
+    }
+  }
+);
+
+export const updateUserInfo = createAsyncThunk(
+  "user/updateUserInfo",
+  async ({ uid, type, data }) => {
+    console.log("uid", uid);
+    console.log("type", type);
+    console.log("data", data);
+    if (type === "사장님") {
+      await updateDoc(doc(db, "owners", uid), data);
+    } else {
+      await updateDoc(doc(db, "customers", uid), data);
     }
   }
 );

@@ -62,8 +62,33 @@ export const fetchAvailablePubsData = createAsyncThunk(
   }
 );
 
+export const pushAvailablePubsData = createAsyncThunk(
+  "pub/pushAvailablePubsData",
+  async (pubName) => {
+    for (let i = 1; i <= 31; i++) {
+      const day = i.toString().padStart(2, "0");
+      const date = `2023-12-${day}`;
+
+      await setDoc(doc(db, "availablePubs", date, "pubName", pubName), {
+        booked: available,
+        maxSeats: maxSeats,
+        pubName: pubName,
+      });
+    }
+    return data;
+  }
+);
+
 export const pushPubData = createAsyncThunk(
   "pub/pushPubData",
+  async ({ pubName, data }) => {
+    await setDoc(doc(db, "pubs", pubName), data);
+    return data;
+  }
+);
+
+export const updatePubData = createAsyncThunk(
+  "pub/updatePubData",
   async ({ pubName, data }) => {
     // console.log(pubName, data);
     await updateDoc(doc(db, "pubs", pubName), data);
@@ -85,11 +110,22 @@ const pubSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       })
+      .addCase(fetchPubsData.pending, (state, action) => {
+        state.status = "loading";
+      })
       .addCase(fetchAvailablePubsData.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.data = action.payload;
       })
       .addCase(fetchAvailablePubsData.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(pushAvailablePubsData.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.data = action.payload;
+      })
+      .addCase(pushAvailablePubsData.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })
@@ -101,9 +137,13 @@ const pubSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       })
-      .addCase(pushPubData.fulfilled, (state, action) => {
+      .addCase(updatePubData.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.myPub = action.payload;
+      })
+      .addCase(pushPubData.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
       });
   },
 });

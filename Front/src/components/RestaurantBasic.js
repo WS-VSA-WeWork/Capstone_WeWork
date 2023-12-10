@@ -10,16 +10,24 @@ import {
 } from "react-native";
 import SelectDropdown from "react-native-select-dropdown";
 import { useEffect, useState } from "react";
-import { MaterialIcons } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
-import { Octicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { SimpleLineIcons } from "@expo/vector-icons";
-import SetImage from "./Image";
-import * as ImagePicker from "expo-image-picker";
+import axios from "axios";
 import ImagePick from "./ImagePick";
 import { useDispatch } from "react-redux";
 import { pushPubData } from "../reducers/pubReducer";
+
+//firebase import 파트
+import App from "../../firebaseConfig.js";
+import {
+  getFirestore,
+  getDoc,
+  doc,
+  updateDoc,
+  setDoc,
+} from "firebase/firestore";
+import { getStorage, ref, getDownloadURL, listAll } from "firebase/storage";
+
 const RestaurantBasic = ({ route }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -36,7 +44,6 @@ const RestaurantBasic = ({ route }) => {
   const [hashTag, setHashTag] = useState("");
   const [hashTags, setHashTags] = useState([]);
   const [restaurantInfo, setRestaurantInfo] = useState("");
-  const [photo, setPhoto] = useState(undefined);
   const categories = ["이자카야", "치킨집", "전집", "막걸리", "기타"];
 
   const handlePress = () => {
@@ -97,17 +104,118 @@ const RestaurantBasic = ({ route }) => {
     setRestaurantInfo(text);
   };
 
-  const _handlePhotoChange = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
+  const collectionPath = "pubs"; // 파이어스토어 컬렉션 이름
+  const documentId = "백수씨심야식당"; // 파이어스토어 문서 이름
 
-    if (!result.canceled) {
-      console.log(result.uri);
-      setPhoto(result.uri); // 이미지 변경
+  // storage 이미지 다운로드 파트
+  const storage = getStorage(App);
+  const [downloadImageUrls, setDownloadImageUrls] = useState([]);
+  const [refresh, setRefresh] = useState(0);
+
+  // greenEye 파트
+  const greenEyeEndpoint =
+    "https://clovagreeneye.apigw.ntruss.com/custom/v1/96/de9025ac060faf49dd43d45f6ad4683a43c33cc35b3f299b0e01f1ffebe98565/predict";
+  const greenEyeApiKey = "VVdSRmxKTUd0SFpTU2RCR0tKSGhxQkFhT0h4Z0pja0E=";
+  const filteringImage = async (uri) => {
+    try {
+      // 바디 요청 데이터를 구성합니다.
+      const requestBody = {
+        version: "V1",
+        requestId: "requestId",
+        timestamp: 1666321382402,
+        images: [
+          {
+            name: "demo",
+            url: uri,
+          },
+        ],
+      };
+
+      // API 요청을 보냅니다.
+      const response = await axios.post(greenEyeEndpoint, requestBody, {
+        headers: {
+          "X-GREEN-EYE-SECRET": greenEyeApiKey,
+          "Content-Type": "application/json",
+        },
+      });
+
+      console.log("클로바 그린아이 API 응답:", response.data.images[0].message);
+      return response.data.images[0].message;
+    } catch (error) {
+      console.error("Error sending request to 클로바 그린아이 API:", error);
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    const getImagesInDirectory = async () => {
+      try {
+        const imagesRef = ref(storage, documentId);
+        const imageList = await listAll(imagesRef);
+
+        // 각각 이미지들을 url을 다운로드
+        const urls = await Promise.all(
+          imageList.items.map(async (imageRef) => {
+            return getDownloadURL(imageRef);
+          })
+        );
+
+        // useState를 사용하여 이미지 URL 배열을 저장.
+        setDownloadImageUrls(urls);
+      } catch (error) {
+        console.error("에러: 이미지 URLs 다운로드 실패:", error);
+      }
+    };
+
+    getImagesInDirectory();
+    console.log("다운로드 된 이미지 갯수: " + downloadImageUrls.length);
+    downloadImageUrls.map((url, index) => {
+      filteringImage(url).then((result) => {
+        if (result === "SUCCESS") {
+          console.log("정상 이미지입니다.");
+          const newDownloadImageUrls = downloadImageUrls[index];
+          setDownloadImageUrls(newDownloadImageUrls);
+        } else {
+          console.log("유해 이미지입니다.");
+          console.log("index: ", index);
+          console.log("url: ", url);
+        }
+      });
+    });
+  }, [storage, refresh]);
+
+  {
+    /* 003. firestore 이미지 url 저장 */
+  }
+  const db = getFirestore(App);
+
+  const updateImageUrl = async () => {
+    try {
+      const pubDocRef = doc(db, collectionPath, documentId);
+      const pubDocSnapshot = await getDoc(pubDocRef);
+      setRefresh(refresh + 1);
+      if (pubDocSnapshot.exists()) {
+        const currentPubImages = pubDocSnapshot.data().pubImages || [];
+
+        // 이미지 URL 배열을 Firestore 필드로 업데이트합니다.
+        const updatedImages = Array.from(
+          new Set([...currentPubImages, ...downloadImageUrls])
+        );
+
+        const updateData = {
+          pubImages: updatedImages,
+        };
+
+        // pubImages 필드를 업데이트합니다.
+        await updateDoc(pubDocRef, updateData);
+        console.log("업데이트 완료");
+      } else {
+        const newPubDocRef = doc(db, collectionPath, documentId);
+        await setDoc(newPubDocRef, { pubImages: downloadImageUrls });
+        console.log("새로운 문서 생성 및 업데이트 완료.");
+      }
+    } catch (error) {
+      console.error("업데이트 실패", error);
     }
   };
 
@@ -149,7 +257,7 @@ const RestaurantBasic = ({ route }) => {
           <View style={styles.blockTitleContainer}>
             <Text style={styles.blockTitle}>가게 정보</Text>
             <Pressable
-              onPress={handlePress}
+              onPress={() => [handlePress(), updateImageUrl()]}
               style={({ pressed }) => [
                 {
                   backgroundColor: pressed ? "#E0E0E0" : "#FFFFFF",
@@ -371,54 +479,7 @@ const RestaurantBasic = ({ route }) => {
         </View>
 
         <View style={styles.blockContainer}>
-          <View style={styles.contentContainer}>
-            <Text style={styles.fieldTitle}>대표 사진 등록하기</Text>
-
-            {/* <Pressable
-              onPress={() => _handlePhotoChange()}
-              style={({ pressed }) => [
-                {
-                  backgroundColor: pressed ? "#E0E0E0" : "#FFFFFF",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: 50,
-                  height: 30,
-                },
-              ]}
-            >
-              <View style={styles.myInfoContentButton}>
-                <SimpleLineIcons name="pencil" size={15} color="blue" />
-                <Text style={{ color: "blue", fontWeight: "bold" }}>변경</Text>
-              </View>
-            </Pressable> */}
-            <ImagePick collectionPath="pubs" documentId="백수씨심야식당" />
-            {/* {photo ? (
-            <View style={styles.phoneContentContainer}>
-              <SetImage url={photo} onChangePhoto={setPhoto} />
-            </View>
-          ) : (
-            <View style={{ justifyContent: "center", alignItems: "center" }}>
-              <Pressable
-                style={{
-                  width: "90%",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  height: 100,
-                  borderColor: "#E5E5E5",
-                  borderWidth: 3,
-                  marginVertical: 10,
-                  borderRadius: 10,
-                  borderStyle: "dashed",
-                  paddingHorizontal: 50,
-                  paddingVertical: 30,
-                }}
-                onPress={() => _handlePhotoChange()}
-              >
-                <Feather name="plus" size={24} color="#B9B9B9" />
-              </Pressable>
-            </View>
-          )}*/}
-          </View>
+          <ImagePick documentId={documentId} />
         </View>
       </ScrollView>
     </View>
@@ -513,6 +574,26 @@ const styles = StyleSheet.create({
   photoContainer: {
     justifyContent: "center",
     alignItems: "center",
+  },
+  buttonContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  button: {
+    backgroundColor: "#1AB277",
+    padding: 10,
+    borderRadius: 8,
+    marginBottom: 20,
+    width: "85%",
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#ffffff",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
 
