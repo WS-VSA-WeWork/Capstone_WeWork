@@ -13,6 +13,7 @@ import app from "../../firebaseConfig";
 
 const db = getFirestore(app);
 
+// 술집 별 예약가능 시간 불러오기
 export const fetchTimetable = createAsyncThunk(
   "timetable/fetchData",
   async ({ pubName, date }) => {
@@ -28,6 +29,7 @@ export const fetchTimetable = createAsyncThunk(
   }
 );
 
+// 예약 시 예약된 시간 비활성화 및 술집 예약가능여부 변경
 export const updateTimetable = createAsyncThunk(
   "timetable/updateData",
   async ({ pubName, date, idx }) => {
@@ -68,6 +70,52 @@ export const updateTimetable = createAsyncThunk(
   }
 );
 
+const pushTimetable = createAsyncThunk(
+  "timetable/pushTimetable",
+  async ({ pubName, openHours }) => {
+    const splitTimes = openHours.split(" - ");
+    const startTime = splitTimes[0];
+    const endTime = splitTimes[1];
+    const formatTime = (hour, minute) =>
+      `${hour.toString().padStart(2, "0")}:${minute
+        .toString()
+        .padStart(2, "0")}`;
+    const startDate = new Date(`2000-01-01 ${startTime}`);
+    const endDate = new Date(`2000-01-01 ${endTime}`);
+
+    // Calculate the number of half-hour intervals
+    const numberOfIntervals = (endDate - startDate) / (30 * 60 * 1000);
+
+    const timeslot = Array.from({ length: numberOfIntervals }, (_, index) => {
+      const currentTime = new Date(
+        startDate.getTime() + index * 30 * 60 * 1000
+      );
+      const label = formatTime(
+        currentTime.getHours(),
+        currentTime.getMinutes()
+      );
+      return {
+        available: true,
+        label: label,
+      };
+    });
+
+    console.log(timeslot);
+
+    for (let i = 1; i <= 31; i++) {
+      const day = i.toString().padStart(2, "0");
+      const date = `2023-12-${day}`;
+
+      await setDoc(doc(db, "pubs", pubName, "timetable", date), {
+        date: date,
+        timeslot: timeslot,
+      });
+    }
+
+    return data;
+  }
+);
+
 const timetableSlice = createSlice({
   name: "timetable",
   initialState: { data: [], status: "idle", error: null },
@@ -87,6 +135,14 @@ const timetableSlice = createSlice({
         state.data = action.payload;
       })
       .addCase(updateTimetable.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(pushTimetable.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.data = action.payload;
+      })
+      .addCase(pushTimetable.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

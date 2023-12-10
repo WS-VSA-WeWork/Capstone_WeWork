@@ -5,14 +5,24 @@ import { Feather } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const MyPage = () => {
+const MyPage = ({ route }) => {
   const navigation = useNavigation();
+
+  const userInfo = route.params;
+
+  const handleLogout = () => {
+    alert("로그아웃 되었습니다.");
+    AsyncStorage.removeItem("userData");
+    navigation.navigate("로그인화면");
+  };
+
   return (
     <View style={styles.myPageContainer}>
       <View style={styles.header}>
         <Pressable
-          onPress={() => navigation.navigate("프로필관리")}
+          onPress={() => navigation.navigate("프로필관리", userInfo)}
           style={({ pressed }) => [
             {
               backgroundColor: pressed ? "#F2F2F2" : "#FFFFFF",
@@ -25,7 +35,7 @@ const MyPage = () => {
                 source={require("../../assets/dongwan.jpg")}
                 style={styles.avatar}
               ></Image>
-              <Text style={styles.userName}>동완</Text>
+              <Text style={styles.userName}>{userInfo.name}</Text>
             </View>
             <MaterialIcons
               name="keyboard-arrow-right"
@@ -34,19 +44,19 @@ const MyPage = () => {
             />
           </View>
         </Pressable>
-        <View style={styles.userBook}>
+        {/* <View style={styles.userBook}>
           <Text style={styles.userBookTitle}>예정된 대관 일정</Text>
           <View style={styles.userBookContent}>
             <Text style={styles.userBookContentTop}>2023-11-14</Text>
             <Text>15:30 ~ 17:30 / 35명</Text>
           </View>
-        </View>
+        </View> */}
       </View>
 
       <ScrollView>
         <View style={styles.bodyContainer}>
           <Pressable
-            onPress={() => navigation.navigate("내예약관리")}
+            onPress={() => navigation.navigate("내예약관리", userInfo)}
             style={({ pressed }) => [
               {
                 backgroundColor: pressed ? "#F2F2F2" : "#FFFFFF",
@@ -140,6 +150,26 @@ const MyPage = () => {
               />
             </View>
           </Pressable>
+          <Pressable
+            onPress={handleLogout}
+            style={({ pressed }) => [
+              {
+                backgroundColor: pressed ? "#F2F2F2" : "#FFFFFF",
+              },
+            ]}
+          >
+            <View style={styles.reservationManage}>
+              <View style={styles.reservationManageLeft}>
+                <Octicons name="stop" size={24} color="black" />
+                <Text style={styles.reservationManageTitle}>로그아웃</Text>
+              </View>
+              <MaterialIcons
+                name="keyboard-arrow-right"
+                size={26}
+                color="black"
+              />
+            </View>
+          </Pressable>
         </View>
       </ScrollView>
     </View>
@@ -153,7 +183,7 @@ const styles = StyleSheet.create({
   //첫번째 섹터
   header: {
     backgroundColor: "#FFFFFF",
-    height: "30%",
+    height: "15%",
   },
   userLeft: {
     flexDirection: "row",

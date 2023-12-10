@@ -1,8 +1,9 @@
 import { Text, View, Button, StyleSheet, StatusBar } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
-
+import Login from "./Login";
 import simya from "../../assets/심야식당.jpeg";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Main = () => {
   const navigation = useNavigation();
@@ -48,10 +49,41 @@ const Main = () => {
     },
   };
 
+  const retrieveUserData = async () => {
+    try {
+      const storage = await AsyncStorage.getItem("userData");
+      if (storage) {
+        // storage에 userData가 존재하면 로그인 처리
+        const userData = await AsyncStorage.getItem("userData");
+        const userInfo = JSON.parse(userData);
+        const user = {
+          uid: userInfo.uid,
+          type: userInfo.type,
+        };
+
+        if (userInfo.type === "사장님") {
+          navigation.navigate("대시보드", { user });
+        } else {
+          navigation.navigate("예약메인", { user });
+        }
+
+        // 이후 필요한 로그인 처리를 여기에 추가
+      } else {
+        // userData가 존재하지 않으면 로그인이 필요한 상태
+        console.log("No stored user data. User needs to log in.");
+        navigation.navigate("로그인화면");
+      }
+    } catch (error) {
+      console.error("Error retrieving user data:", error);
+    }
+  };
+
+  retrieveUserData();
+
   return (
     <View style={styles.container}>
-      <Text>끼리끼리</Text>
-      <Button
+      <Login></Login>
+      {/* <Button
         title="식당 상세페이지"
         onPress={() => {
           navigation.navigate("식당 상세", { bar: bars.simya });
@@ -129,7 +161,7 @@ const Main = () => {
         onPress={() => {
           navigation.navigate("대시보드", { bar: bars.simya });
         }}
-      />
+      /> */}
 
       <StatusBar style="auto" />
     </View>
@@ -142,6 +174,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+    width: "100%",
   },
 });
 

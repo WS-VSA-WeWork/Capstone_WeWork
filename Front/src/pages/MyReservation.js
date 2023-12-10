@@ -21,7 +21,7 @@ import Reservations from "../components/Reservations";
 import { fetchReservationDataByUserId } from "../reducers/reservationReducer";
 import ReservationCardforUser from "../components/ReservationCardforUser";
 
-const MyReservation = () => {
+const MyReservation = ({ route }) => {
   const [haveReservation, setHaveReservation] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [typing, setTyping] = useState(false);
@@ -30,15 +30,18 @@ const MyReservation = () => {
   const navigation = useNavigation();
 
   const dispatch = useDispatch();
+  const uid = route.params.uid;
+  const type = route.params.type;
   const reservationData = useSelector((state) => state.reservation.data);
   const status = useSelector((state) => state.reservation.status);
   const error = useSelector((state) => state.reservation.error);
   const [value, onChangeText] = useState("환불 사유를 입력해주세요");
+  const [user, setUser] = useState({});
 
   useEffect(() => {
-    const userid = "1234567890"; // 임시로 넣어놓은 uid
-    dispatch(fetchReservationDataByUserId({ userId: userid }));
-  }, []);
+    dispatch(fetchReservationDataByUserId({ userId: uid }));
+    setUser({ uid: uid, type: type });
+  }, [uid]);
 
   useEffect(() => {
     if (reservationData.length > 0) {
@@ -72,7 +75,7 @@ const MyReservation = () => {
           {/* 이용전 예약건 */}
           <TouchableOpacity onPress={() => navigation.navigate("환불")}>
             <View style={styles.reservationListContainer}>
-              <ReservationCardforUser item={reservationData[0]} />
+              <ReservationCardforUser item={reservationData[0]} notFinished={true}/>
               {/* <View style={styles.reservationList1}>
                 <Text style={styles.reservationListTitle}>
                   {reservationData[0].pubName}{" "}
@@ -114,7 +117,7 @@ const MyReservation = () => {
           </View>
 
           <Pressable
-            onPress={() => navigation.navigate("예약메인")}
+            onPress={() => navigation.navigate("예약메인", { user })}
             style={{
               alignItems: "center",
               justifyContent: "center",
@@ -151,61 +154,6 @@ const MyReservation = () => {
           </View>
         </View>
       )}
-      <View style={styles.modalContainer}>
-        <View style={styles.modalContent}>
-          <View style={styles.modalTitleContainer}>
-            <Text style={styles.modalTitle}>식당 정보</Text>
-            <Pressable onPress={() => setModalVisible(false)}>
-              <Feather name="x" size={25} color="black" />
-            </Pressable>
-          </View>
-          <View style={styles.modalRestaurantTop}>
-            <Text style={styles.modalRestaurantName}>
-              {reservationData[0].pubName}{" "}
-            </Text>
-            {/* <Text style={styles.modalRestaurantTime}>19시간 전</Text> */}
-          </View>
-          <View style={styles.modalRestaurantMiddle}>
-            <Text style={styles.modalRestaurantDate}>
-              {reservationData[0].reservDate}
-            </Text>
-            <Text style={styles.modalRestaurantTime}>
-              {reservationData[0].reserveTime}
-            </Text>
-          </View>
-          <View style={styles.modalRestaurantBottom}>
-            <Text style={styles.modalRestaurantMoney}>예약금</Text>
-            <Text style={styles.modalRestaurantMoney}>
-              {reservationData[0].deposit}원
-            </Text>
-          </View>
-          <View style={{}}>
-            <TextInput
-              style={styles.want}
-              onChangeText={(text) => onChangeText(text)}
-              value={value}
-              placeholder="환불사유를 입력해주세요"
-              multiline
-              numberOfLines={5}
-              maxLength={40}
-              onPressIn={() => setTyping(true)}
-            ></TextInput>
-          </View>
-          <View style={styles.wantButton}>
-            <Button
-              color={"white"}
-              onPress={(() => setTyping(false), () => setModalVisible(false))}
-              style={styles.wantButton}
-              title="환불 요청하기"
-            ></Button>
-          </View>
-          <View
-            style={{
-              height: typing ? 0 : keyboardHeight - 20,
-            }}
-          ></View>
-        </View>
-      </View>
     </ScrollView>
   );
 };

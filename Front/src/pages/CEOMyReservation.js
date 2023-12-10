@@ -21,8 +21,15 @@ const CEOMyReservation = () => {
 
   useEffect(() => {
     // 컴포넌트가 마운트 될 때 예약 데이터를 불러옴
-    dispatch(fetchReservationDataByPubName({ pubName: "백수씨심야식당" })); // bar.name은 현재 선택된 펍의 이름
-  }, [dispatch, "백수씨심야식당"]);
+    const pubName = "백수씨심야식당";
+    dispatch(fetchReservationDataByPubName({ pubName: pubName }));
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (reservationData.length > 0) {
+      setHaveReservation(true);
+    }
+  }, [reservationData]);
 
   return (
     <View>

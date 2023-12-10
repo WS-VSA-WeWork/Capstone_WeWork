@@ -6,30 +6,58 @@ import {
   Pressable,
   TextInput,
   Button,
+  TouchableOpacity,
 } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { setUserInfo } from "../reducers/userReducer";
 
-const MyProfile = () => {
-  const [phone, onChangePhone] = useState("01033600449");
-  const [name, onChangeName] = useState("동완");
-  const [email, onChangeEmail] = useState("ehddhks1234@naver.com");
-  const [nickName, onChangeNickName] = useState("완동");
-  const phonehandlePress = () => {
-    onChangePhone((currentText) => currentText);
-    console.log(phone);
+const MyProfile = ({ route }) => {
+  const dispatch = useDispatch();
+
+  const userInfo = route.params;
+  console.log(userInfo);
+  const [phone, onChangePhone] = useState("");
+  const [name, onChangeName] = useState(" ");
+  const [email, onChangeEmail] = useState(" ");
+  const [nickName, onChangeNickName] = useState("");
+
+  // const phonehandlePress = () => {
+  //   onChangePhone((currentText) => currentText);
+  //   console.log(phone);
+  // };
+  // const namehandlePress = () => {
+  //   onChangeName((currentText) => currentText);
+  //   console.log(name);
+  // };
+  // const emailhandlePress = () => {
+  //   onChangeEmail((currentEmail) => currentEmail);
+  //   console.log(email);
+  // };
+  // const nickNamehandlePress = () => {
+  //   onChangeNickName((currentText) => currentText);
+  //   console.log(nickName);
+  // };
+
+  const onSubmit = () => {
+    const data = {
+      name: name,
+      phoneNum: phone,
+      email: email,
+    };
+
+    dispatch(setUserInfo({ uid: userInfo.uid, type: userInfo.type, data }));
   };
-  const namehandlePress = () => {
-    onChangeName((currentText) => currentText);
-    console.log(name);
-  };
-  const emailhandlePress = () => {
-    onChangeEmail((currentEmail) => currentEmail);
-    console.log(email);
-  };
-  const nickNamehandlePress = () => {
-    onChangeNickName((currentText) => currentText);
-    console.log(nickName);
-  };
+
+  useEffect(() => {
+    console.log(userInfo);
+    if (userInfo) {
+      onChangePhone(userInfo.phoneNum);
+      onChangeName(userInfo.name);
+      onChangeEmail(userInfo.email);
+      onChangeNickName(userInfo.nickName);
+    }
+  }, [userInfo]);
 
   return (
     <View style={styles.container}>
@@ -51,7 +79,7 @@ const MyProfile = () => {
             value={name}
             maxLength={5}
           ></TextInput>
-          <Pressable
+          {/* <Pressable
             onPress={namehandlePress}
             style={({ pressed }) => [
               {
@@ -62,7 +90,7 @@ const MyProfile = () => {
             <View style={styles.myInfoContentButton}>
               <Text>이름 변경</Text>
             </View>
-          </Pressable>
+          </Pressable> */}
         </View>
 
         <View style={styles.myInfoContent}>
@@ -73,7 +101,7 @@ const MyProfile = () => {
             value={phone}
             maxLength={11}
           ></TextInput>
-          <Pressable
+          {/* <Pressable
             onPress={phonehandlePress}
             style={({ pressed }) => [
               {
@@ -84,7 +112,7 @@ const MyProfile = () => {
             <View style={styles.myInfoContentButton}>
               <Text>연락처 변경</Text>
             </View>
-          </Pressable>
+          </Pressable> */}
         </View>
         <View style={styles.myInfoContent}>
           <Text style={styles.myInfoContentTitle}>이메일</Text>
@@ -92,10 +120,9 @@ const MyProfile = () => {
             style={styles.myInfoInput}
             onChangeText={(email) => onChangeEmail(email)}
             value={email}
-            maxLength={11}
             keyboardType="email-address"
           ></TextInput>
-          <Pressable
+          {/* <Pressable
             onPress={emailhandlePress}
             style={({ pressed }) => [
               {
@@ -106,7 +133,7 @@ const MyProfile = () => {
             <View style={styles.myInfoContentButton}>
               <Text>이메일 변경</Text>
             </View>
-          </Pressable>
+          </Pressable> */}
         </View>
         <View style={styles.myInfoContent}>
           <Text style={styles.myInfoContentTitle}>별명</Text>
@@ -116,7 +143,7 @@ const MyProfile = () => {
             value={nickName}
             maxLength={11}
           ></TextInput>
-          <Pressable
+          {/* <Pressable
             onPress={nickNamehandlePress}
             style={({ pressed }) => [
               {
@@ -127,8 +154,13 @@ const MyProfile = () => {
             <View style={styles.myInfoContentButton}>
               <Text>별명 변경</Text>
             </View>
-          </Pressable>
+          </Pressable> */}
         </View>
+        <TouchableOpacity onPress={onSubmit}>
+          <View style={styles.myInfoContentButton}>
+            <Text>변경사항 저장</Text>
+          </View>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -193,6 +225,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 10,
     borderRadius: 2,
+    width: "35%",
   },
 });
 

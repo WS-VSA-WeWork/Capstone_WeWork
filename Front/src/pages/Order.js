@@ -9,20 +9,20 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { pushReservationData } from "../reducers/reservationReducer";
 import { updateTimetable } from "../reducers/timetableReducer";
 
 const Order = ({ route }) => {
-  const [userReq, setUserReq] = useState("");
-  const [cutOffDate, setCutOffDate] = useState("2021.12.08(금)"); //tmp
-  const [userId, setUserId] = useState("1234567890"); //tmp
-  const [userName, setUserName] = useState("홍길동"); //tmp
-  const [userPhonenum, setUserPhonenum] = useState("010-1234-5678"); //tmp
-
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const resv = route.params;
+
+  const resv = route.params.reservationDetails;
+  const userInfo = route.params.userInfo;
+  console.log("userInfoddd", userInfo);
+  const [userReq, setUserReq] = useState("");
+  const [cutOffDate, setCutOffDate] = useState("2021.12.08(금)"); //tmp
+  const [userId, setUserId] = useState(userInfo.uid);
 
   const onChangeText = (text) => {
     setUserReq(text);
@@ -36,9 +36,10 @@ const Order = ({ route }) => {
       reserveTime: resv.reserveTime,
       userRequest: userReq,
       cutOffDate: cutOffDate,
-      userId: userId,
-      userName: userName,
-      userPhonenum: userPhonenum,
+      userId: userInfo.uid,
+      type: userInfo.type,
+      userName: userInfo.name,
+      userPhonenum: userInfo.phoneNum,
       deposit: 1000 * resv.people, //tmp
       status: "예약완료", //tmp
     };
@@ -54,11 +55,10 @@ const Order = ({ route }) => {
     );
 
     // timetable 예약완료 된 시간에 대한 update
-    const date = "2023-12-04"; // 임시코드 selectedDate로 바꿔야함
     dispatch(
       updateTimetable({
         pubName: resv.pubName,
-        date: date,
+        date: resv.reservDate,
         idx: resv.timeIdx,
       })
     );
@@ -134,11 +134,11 @@ const Order = ({ route }) => {
           <View style={styles.userInfoContainer}>
             <View style={styles.info}>
               <Text style={styles.infoLabel}>이름</Text>
-              <Text style={styles.infoValue}>{userName}</Text>
+              <Text style={styles.infoValue}>{userInfo.name}</Text>
             </View>
             <View style={styles.info}>
               <Text style={styles.infoLabel}>전화번호</Text>
-              <Text style={styles.infoValue}>{userPhonenum}</Text>
+              <Text style={styles.infoValue}>{userInfo.phoneNum}</Text>
             </View>
           </View>
         </View>

@@ -10,21 +10,23 @@ import {
 } from "react-native";
 import SelectDropdown from "react-native-select-dropdown";
 import { useEffect, useState } from "react";
-
 import { useNavigation } from "@react-navigation/native";
 import { SimpleLineIcons } from "@expo/vector-icons";
-
 import axios from "axios";
-
 import ImagePick from "./ImagePick";
 import { useDispatch } from "react-redux";
 import { pushPubData } from "../reducers/pubReducer";
-
+import { Ionicons } from "@expo/vector-icons";
 //firebase import 파트
 import App from "../../firebaseConfig.js";
-import { getFirestore, getDoc, doc, updateDoc, setDoc} from "firebase/firestore";
-import  { getStorage, ref, getDownloadURL, listAll } from "firebase/storage";
-
+import {
+  getFirestore,
+  getDoc,
+  doc,
+  updateDoc,
+  setDoc,
+} from "firebase/firestore";
+import { getStorage, ref, getDownloadURL, listAll } from "firebase/storage";
 
 const RestaurantBasic = ({ route }) => {
   const navigation = useNavigation();
@@ -42,7 +44,6 @@ const RestaurantBasic = ({ route }) => {
   const [hashTag, setHashTag] = useState("");
   const [hashTags, setHashTags] = useState([]);
   const [restaurantInfo, setRestaurantInfo] = useState("");
-  
   const categories = ["이자카야", "치킨집", "전집", "막걸리", "기타"];
 
   const handlePress = () => {
@@ -112,7 +113,8 @@ const RestaurantBasic = ({ route }) => {
   const [refresh, setRefresh] = useState(0);
 
   // greenEye 파트
-  const greenEyeEndpoint = "https://clovagreeneye.apigw.ntruss.com/custom/v1/96/de9025ac060faf49dd43d45f6ad4683a43c33cc35b3f299b0e01f1ffebe98565/predict";
+  const greenEyeEndpoint =
+    "https://clovagreeneye.apigw.ntruss.com/custom/v1/96/de9025ac060faf49dd43d45f6ad4683a43c33cc35b3f299b0e01f1ffebe98565/predict";
   const greenEyeApiKey = "VVdSRmxKTUd0SFpTU2RCR0tKSGhxQkFhT0h4Z0pja0E=";
   const filteringImage = async (uri) => {
     try {
@@ -121,23 +123,21 @@ const RestaurantBasic = ({ route }) => {
         version: "V1",
         requestId: "requestId",
         timestamp: 1666321382402,
-        images: [{
-          "name": "demo",
-          "url": uri,
-          }]
-    };
+        images: [
+          {
+            name: "demo",
+            url: uri,
+          },
+        ],
+      };
 
-    // API 요청을 보냅니다.
-    const response = await axios.post(
-      greenEyeEndpoint,
-      requestBody,
-      {
+      // API 요청을 보냅니다.
+      const response = await axios.post(greenEyeEndpoint, requestBody, {
         headers: {
-          'X-GREEN-EYE-SECRET': greenEyeApiKey,
-          'Content-Type': 'application/json',
+          "X-GREEN-EYE-SECRET": greenEyeApiKey,
+          "Content-Type": "application/json",
         },
-      }
-    );
+      });
 
       console.log("클로바 그린아이 API 응답:", response.data.images[0].message);
       return response.data.images[0].message;
@@ -145,8 +145,7 @@ const RestaurantBasic = ({ route }) => {
       console.error("Error sending request to 클로바 그린아이 API:", error);
       throw error;
     }
-  };  
-
+  };
 
   useEffect(() => {
     const getImagesInDirectory = async () => {
@@ -160,16 +159,15 @@ const RestaurantBasic = ({ route }) => {
             return getDownloadURL(imageRef);
           })
         );
-        
         // useState를 사용하여 이미지 URL 배열을 저장.
         setDownloadImageUrls(urls);
       } catch (error) {
         console.error("에러: 이미지 URLs 다운로드 실패:", error);
       }
     };
-    
+
     getImagesInDirectory();
-    console.log("다운로드 된 이미지 갯수: " + downloadImageUrls.length)
+    console.log("다운로드 된 이미지 갯수: " + downloadImageUrls.length);
     downloadImageUrls.map((url, index) => {
       filteringImage(url).then((result) => {
         if (result === "SUCCESS") {
@@ -185,9 +183,10 @@ const RestaurantBasic = ({ route }) => {
     });
   }, [storage, refresh]);
 
-  { /* 003. firestore 이미지 url 저장 */}
+  {
+    /* 003. firestore 이미지 url 저장 */
+  }
   const db = getFirestore(App);
-
 
   const updateImageUrl = async () => {
     try {
@@ -198,7 +197,9 @@ const RestaurantBasic = ({ route }) => {
         const currentPubImages = pubDocSnapshot.data().pubImages || [];
 
         // 이미지 URL 배열을 Firestore 필드로 업데이트합니다.
-        const updatedImages = Array.from(new Set([...currentPubImages, ...downloadImageUrls]));
+        const updatedImages = Array.from(
+          new Set([...currentPubImages, ...downloadImageUrls])
+        );
 
         const updateData = {
           pubImages: updatedImages,
@@ -213,7 +214,7 @@ const RestaurantBasic = ({ route }) => {
         console.log("새로운 문서 생성 및 업데이트 완료.");
       }
     } catch (error) {
-      console.error('업데이트 실패', error);
+      console.error("업데이트 실패", error);
     }
   };
 
@@ -423,7 +424,77 @@ const RestaurantBasic = ({ route }) => {
           </View>
         </View>                    
         <View style={styles.blockContainer}>
-          <ImagePick documentId={documentId} /> 
+          <View style={styles.contentContainer}>
+            <Text style={styles.fieldTitle}>가게 해시태그</Text>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                width: "70%",
+              }}
+            >
+              <TextInput
+                onChangeText={(text) => onChangeHashtag(text)}
+                value={hashTag}
+                style={styles.content}
+                placeholder={"해시 태그를 입력하세요."}
+              ></TextInput>
+              <TouchableOpacity
+                style={{ backgroundColor: "#FFFFFF" }}
+                onPress={addHashTag}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Ionicons
+                    name="ios-add-circle-outline"
+                    size={24}
+                    color="black"
+                  />
+                  <Text>Add Hashtag</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                flexWrap: "wrap",
+              }}
+            >
+              {hashTags.map((item, index) => (
+                <View
+                  key={index}
+                  style={{
+                    flexDirection: "row",
+                    borderRadius: 10,
+                    backgroundColor: "#E0E0E0",
+                    padding: 5,
+                    margin: 3,
+                    height: 25,
+                    paddingVertical: 2,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={{ marginRight: 8 }}>{item}</Text>
+                  <TouchableOpacity onPress={() => removeHashTag(item)}>
+                    <Text style={{ color: "red" }}>X</Text>
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.blockContainer}>
+          <ImagePick documentId={documentId} />
         </View>
       </ScrollView>
     </View>
@@ -525,7 +596,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   button: {
-    backgroundColor: '#1AB277',
+    backgroundColor: "#1AB277",
     padding: 10,
     borderRadius: 8,
     marginBottom: 20,
@@ -535,7 +606,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   buttonText: {
-    color: '#ffffff',
+    color: "#ffffff",
     fontSize: 16,
     fontWeight: "bold",
   },

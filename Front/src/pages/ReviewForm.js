@@ -15,14 +15,19 @@ import axios from "axios";
 
 //firebase import 파트
 import App from "../../firebaseConfig.js";
-import { getFirestore, getDoc, doc, updateDoc, setDoc} from "firebase/firestore";
-import  { getStorage, ref, getDownloadURL, listAll } from "firebase/storage";
+import {
+  getFirestore,
+  getDoc,
+  doc,
+  updateDoc,
+  setDoc,
+} from "firebase/firestore";
+import { getStorage, ref, getDownloadURL, listAll } from "firebase/storage";
 
 const ReviewForm = ({ route }) => {
   const [text, setText] = useState("");
   const [images, setImages] = useState([]);
   const [image, setImage] = useState(null);
-
 
   const handleTextChange = (text) => {
     setText(text);
@@ -51,7 +56,8 @@ const ReviewForm = ({ route }) => {
   const [reviewNum, setReviewNum] = useState(1);
 
   // greenEye 파트
-  const greenEyeEndpoint = "https://clovagreeneye.apigw.ntruss.com/custom/v1/96/de9025ac060faf49dd43d45f6ad4683a43c33cc35b3f299b0e01f1ffebe98565/predict";
+  const greenEyeEndpoint =
+    "https://clovagreeneye.apigw.ntruss.com/custom/v1/96/de9025ac060faf49dd43d45f6ad4683a43c33cc35b3f299b0e01f1ffebe98565/predict";
   const greenEyeApiKey = "VVdSRmxKTUd0SFpTU2RCR0tKSGhxQkFhT0h4Z0pja0E=";
   const filteringImage = async (uri) => {
     try {
@@ -60,23 +66,21 @@ const ReviewForm = ({ route }) => {
         version: "V1",
         requestId: "requestId",
         timestamp: 1666321382402,
-        images: [{
-          "name": "demo",
-          "url": uri,
-          }]
-    };
+        images: [
+          {
+            name: "demo",
+            url: uri,
+          },
+        ],
+      };
 
-    // API 요청을 보냅니다.
-    const response = await axios.post(
-      greenEyeEndpoint,
-      requestBody,
-      {
+      // API 요청을 보냅니다.
+      const response = await axios.post(greenEyeEndpoint, requestBody, {
         headers: {
-          'X-GREEN-EYE-SECRET': greenEyeApiKey,
-          'Content-Type': 'application/json',
+          "X-GREEN-EYE-SECRET": greenEyeApiKey,
+          "Content-Type": "application/json",
         },
-      }
-    );
+      });
 
       console.log("클로바 그린아이 API 응답:", response.data.images[0].result);
       return response.data.images[0].message;
@@ -84,8 +88,7 @@ const ReviewForm = ({ route }) => {
       console.error("Error sending request to 클로바 그린아이 API:", error);
       throw error;
     }
-  };  
-  
+  };
 
   // storage 이미지 다운로드 파트
   const storage = getStorage(App);
@@ -113,7 +116,7 @@ const ReviewForm = ({ route }) => {
     };
 
     getImagesInDirectory();
-    console.log("다운로드 된 이미지 갯수: " + downloadImageUrls.length)
+    console.log("다운로드 된 이미지 갯수: " + downloadImageUrls.length);
     downloadImageUrls.map((url, index) => {
       filteringImage(url).then((result) => {
         if (result === "SUCCESS") {
@@ -129,7 +132,9 @@ const ReviewForm = ({ route }) => {
     });
   }, [storage, refresh]);
 
-  { /* 003. firestore 이미지 url 저장 */}
+  {
+    /* 003. firestore 이미지 url 저장 */
+  }
   const db = getFirestore(App);
 
   const updateImageUrl = async () => {
@@ -141,13 +146,15 @@ const ReviewForm = ({ route }) => {
         const currentReviewImg = pubDocSnapshot.data().reviewImg || [];
 
         // 이미지 URL 배열을 Firestore 필드로 업데이트합니다.
-        const updatedImages = Array.from(new Set([...currentReviewImg, ...downloadImageUrls]));
+        const updatedImages = Array.from(
+          new Set([...currentReviewImg, ...downloadImageUrls])
+        );
 
         const updateData = {
           reviewImg: updatedImages,
         };
 
-        // pubImages 필드를 업데이트합니다. 
+        // pubImages 필드를 업데이트합니다.
         await updateDoc(pubDocRef, updateData);
         console.log("업데이트 완료");
       } else {
@@ -156,12 +163,11 @@ const ReviewForm = ({ route }) => {
         console.log("새로운 문서 생성 및 업데이트 완료.");
       }
     } catch (error) {
-      console.error('업데이트 실패', error);
+      console.error("업데이트 실패", error);
     }
   };
 
-  // url 업로드 파트 끝 
-
+  // url 업로드 파트 끝
 
   return (
     <View style={styles.container}>
@@ -188,7 +194,7 @@ const ReviewForm = ({ route }) => {
           placeholder="리뷰 내용을 작성해주세요"
         />
         <View style={styles.reviewImgContainer}>
-          <ReviewImagePick documentId={documentId} reviewNum={reviewNum}/>  
+          <ReviewImagePick documentId={documentId} reviewNum={reviewNum} />
         </View>
         {/* <TouchableOpacity style={styles.imgButton} onPress={selectImage}>
           <Feather name="camera" size={30} color="black" />
@@ -198,7 +204,10 @@ const ReviewForm = ({ route }) => {
           <Image source={{ uri: image }} style={styles.img} />
         )} */}
         <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={() => [submit(text), setReviewNum(1), updateImageUrl() ]} style={styles.submitButton}>
+          <TouchableOpacity
+            onPress={() => [submit(text), setReviewNum(1), updateImageUrl()]}
+            style={styles.submitButton}
+          >
             <Text style={styles.buttonText}>리뷰 등록하기</Text>
           </TouchableOpacity>
         </View>
@@ -261,7 +270,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     paddingHorizontal: 10,
   },
-  comment:{
+  comment: {
     color: "#7E8389",
   },
   submitButton: {
