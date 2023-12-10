@@ -16,7 +16,7 @@ import axios from "axios";
 import ImagePick from "./ImagePick";
 import { useDispatch } from "react-redux";
 import { pushPubData } from "../reducers/pubReducer";
-
+import { Ionicons } from "@expo/vector-icons";
 //firebase import 파트
 import App from "../../firebaseConfig.js";
 import {
@@ -441,13 +441,27 @@ const RestaurantBasic = ({ route }) => {
                 onChangeText={(text) => onChangeHashtag(text)}
                 value={hashTag}
                 style={styles.content}
-                placeholder={"해시 태그"}
+                placeholder={"해시 태그를 입력하세요."}
               ></TextInput>
-              <Button
+              <TouchableOpacity
                 style={{ backgroundColor: "#FFFFFF" }}
-                title="Add HashTag"
                 onPress={addHashTag}
-              />
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Ionicons
+                    name="ios-add-circle-outline"
+                    size={24}
+                    color="black"
+                  />
+                  <Text>Add Hashtag</Text>
+                </View>
+              </TouchableOpacity>
             </View>
             <View
               style={{
@@ -466,6 +480,9 @@ const RestaurantBasic = ({ route }) => {
                     padding: 5,
                     margin: 3,
                     height: 25,
+                    paddingVertical: 2,
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
                 >
                   <Text style={{ marginRight: 8 }}>{item}</Text>
