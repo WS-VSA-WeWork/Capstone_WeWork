@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 
-import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
+import { TouchableOpacity, View, Text, StyleSheet, Modal } from "react-native";
 import { colors } from "../config/globalStyles";
+import ReservDetailModal from "./ReservDetailModal";
 
 const ReservationCardforOwner = ({ item }) => {
+  const [modalVisible, setModalVisible] = useState(false);
   console.log(item);
 
   const startTime = item.reserveTime
@@ -35,27 +37,45 @@ const ReservationCardforOwner = ({ item }) => {
   };
 
   return (
-    <TouchableOpacity style={styles.reservationContainer}>
-      <View style={styles.info}>
-        <Text style={styles.semiTitle}>
-          {item.userName} /{" "}
-          <Text style={styles.warning}>{item.numberOfPeople}</Text>명
-        </Text>
-        <Text style={styles.warning}>{getTimeDifference(startTime)}</Text>
-      </View>
-      <View style={styles.info}>
-        <Text style={styles.infoLabel}>예약일: {item.reservDate}</Text>
-        <Text style={styles.semiTitle}>{item.reserveTime}</Text>
-      </View>
-      <View style={styles.info}>
-        <Text style={styles.infoLabel}>예약금</Text>
-        <Text style={styles.infoData}>{item.deposit}</Text>
-      </View>
-      <View style={styles.info}>
-        <Text style={styles.infoLabel}>연락처</Text>
-        <Text style={styles.infoData}>{item.userPhonenum}</Text>
-      </View>
-    </TouchableOpacity>
+    <>
+      <TouchableOpacity style={styles.reservationContainer} onPress={() => setModalVisible(true)}>
+        <View style={styles.info}>
+          <Text style={styles.semiTitle}>
+            {item.userName} /{" "}
+            <Text style={styles.warning}>{item.numberOfPeople}</Text>명
+          </Text>
+          <Text style={styles.warning}>{getTimeDifference(startTime)}</Text>
+        </View>
+        <View style={styles.info}>
+          <Text style={styles.infoLabel}>예약일: {item.reservDate}</Text>
+          <Text style={styles.semiTitle}>{item.reserveTime}</Text>
+        </View>
+        <View style={styles.info}>
+          <Text style={styles.infoLabel}>예약금</Text>
+          <Text style={styles.infoData}>{item.deposit}</Text>
+        </View>
+        <View style={styles.info}>
+          <Text style={styles.infoLabel}>연락처</Text>
+          <Text style={styles.infoData}>{item.userPhonenum}</Text>
+        </View>
+      </TouchableOpacity>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalView}>
+          <ReservDetailModal resv={item} />
+          <TouchableOpacity
+            style={styles.reserveButton}
+            onPress={() => setModalVisible(false)}
+          >
+            <Text style={styles.buttonText}>닫기</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+    </>
   );
 };
 
@@ -94,6 +114,44 @@ const styles = StyleSheet.create({
   },
   infoData: {
     color: colors.grey,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+  },
+
+  reserveButton: {
+    width: "100%",
+    height: 50,
+    marginVertical: 10,
+    backgroundColor: "#1AB277",
+    borderRadius: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  buttonText: {
+    height: "100%",
+    fontSize: 18,
+    fontWeight: "500",
+    textAlign: "center",
+    textAlignVertical: "center",
+    color: "#ffffff",
   },
 });
 
