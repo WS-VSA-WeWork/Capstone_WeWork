@@ -141,23 +141,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 20,
-    height: "25%",
+    height: "28%",
     backgroundColor: "#FFFFFF",
   },
   avatar: {
-    width: 120,
-    height: 120,
+    width: 100,
+    height: 100,
     borderRadius: 100,
     backgroundColor: "grey",
   },
   userName: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "600",
   },
   //내 정보
   myInfo: {
     marginVertical: 10,
-    height: "40%",
+    height: "60%",
     backgroundColor: "#FFFFFF",
     paddingVertical: 20,
     paddingHorizontal: 20,

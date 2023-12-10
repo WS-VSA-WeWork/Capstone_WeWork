@@ -102,6 +102,10 @@ const Main = () => {
           navigation.navigate("사장님메인", { bar: bars.simya });
         }}
       />
+      <Text>
+        사장님메인페이지는 사장님대시보드 통해서 들어가주세요(인자가 안넘어가서
+        에러뜸)
+      </Text>
       <Button
         title="리뷰작성"
         onPress={() => {
@@ -118,6 +122,12 @@ const Main = () => {
         title="가게 등록"
         onPress={() => {
           navigation.navigate("가게 등록");
+        }}
+      />
+      <Button
+        title="사장님 대시보드"
+        onPress={() => {
+          navigation.navigate("대시보드", { bar: bars.simya });
         }}
       />
 

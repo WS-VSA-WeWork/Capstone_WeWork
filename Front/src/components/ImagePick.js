@@ -85,48 +85,7 @@ const ImagePick = (documentId) => {
     });
   };
 
-  // greenEye 파트
-  const greenEyeEndpoint = "https://clovagreeneye.apigw.ntruss.com/custom/v1/96/de9025ac060faf49dd43d45f6ad4683a43c33cc35b3f299b0e01f1ffebe98565/predict";
-  const greenEyeApiKey = "VVdSRmxKTUd0SFpTU2RCR0tKSGhxQkFhT0h4Z0pja0E=";
-  const filteringImage = async () => {
-    try {
-      const response = await axios.post(
-        greenEyeEndpoint,
-        { images: [selectedImages[0]] },
-        {
-          headers: {
-            Authorization: `Bearer ${greenEyeApiKey}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
   
-      console.log("클로바 그린아이 API 응답:", response.data);
-      return response.data;
-    } catch (error) {
-      console.error("Error sending request to 클로바 그린아이 API:", error);
-      throw error;
-    }
-    // const greeneyeResponse = await axios.post(greeneyeEndpoint, {
-    //     images: selectedImages[0]
-    // },
-    // {
-    //   headers: {
-    //     Authorization: "Bearer VVdSRmxKTUd0SFpTU2RCR0tKSGhxQkFhT0h4Z0pja0E=",
-    //   },
-    // });
-    // console.log("그린아이 :" + greeneyeResponse.data);
-
-    // greeneyeResponse.data.forEach((result, index) => {
-    //   if (result.is_harmful) {
-    //     console.log(`이미지 ${index + 1}이 유해합니다.`, result);
-    //   } else {
-    //     console.log(`이미지 ${index + 1}이 유해하지 않습니다.`);
-    //   }
-    // });
-
-  };  
-
   { /* 002. storage 이미지 url 업로드 */}
   // firebase storage 파트
   const storage = getStorage(App);
@@ -166,64 +125,66 @@ const ImagePick = (documentId) => {
 
   return (
     <View>
-      <View style={styles.blockTitleContainer}>
-        <Text style={styles.phoneTitle}>대표 사진 등록하기</Text>
-        <Pressable
-          onPress={() => [pickImages()]} 
-          style={({ pressed }) => [
-            {
-              backgroundColor: pressed ? "#E0E0E0" : "#FFFFFF",
-              justifyContent: "center",
-              alignItems: "center",
-              width: 50,
-              height: 30,
-            },
-          ]}
-        >
-          <View style={styles.myInfoContentButton}>
-            <SimpleLineIcons name="pencil" size={15} color="blue" />
-            <Text style={{ color: "blue", fontWeight: "bold" }}>추가</Text>
-          </View>
-        </Pressable>
-      </View>
-      <View style={styles.container}>
-        {/* 선택된 이미지 표시 (있는 경우) */}
-        {selectedImages ? (<View style={styles.phoneContentContainer}>
-          <ScrollView horizontal>
-            {selectedImages.map((uri, index) => (
-              <View key={index}>            
-                <TouchableOpacity style={styles.imageSection} key={index} onPressIn={() => changeImage(index)}>
-                  <Image key={index} source={{ uri }} style={styles.image} />
-                </TouchableOpacity>
-                <Ionicons name="close-circle-sharp"style={styles.closeCircle} size={15} onPress={() => deleteImage(index)}/>
-              </View>
-            ))} 
-          </ScrollView>
-          <TouchableOpacity style={styles.syncIcon} onPressIn={uploadImageToFirebase}>
-              <Ionicons name="sync-circle" size={36} color="grey" />
-          </TouchableOpacity>
-          </View>) : (
-            <View style={{ justifyContent: "center", alignItems: "center" }}>
-            <Pressable
-              style={{
-                width: "90%",
-                alignItems: "center",
+      <ScrollView>
+        <View style={styles.blockTitleContainer}>
+          <Text style={styles.phoneTitle}>대표 사진 등록하기</Text>
+          <Pressable
+            onPress={() => [pickImages()]} 
+            style={({ pressed }) => [
+              {
+                backgroundColor: pressed ? "#E0E0E0" : "#FFFFFF",
                 justifyContent: "center",
-                height: "100",
-                borderColor: "#E5E5E5",
-                borderWidth: 3,
-                marginVertical: 10,
-                borderRadius: 10,
-                borderStyle: "dashed",
-                paddingHorizontal: 50,
-                paddingVertical: 30,
-              }}
-              onPress={() => [pickImages(), filteringImage()]}
-            >
-              <Feather name="plus" size={24} color="#B9B9B9" />
-            </Pressable>
-          </View>)}
-      </View>
+                alignItems: "center",
+                width: 50,
+                height: 30,
+              },
+            ]}
+          >
+            <View style={styles.myInfoContentButton}>
+              <SimpleLineIcons name="pencil" size={15} color="blue" />
+              <Text style={{ color: "blue", fontWeight: "bold" }}>추가</Text>
+            </View>
+          </Pressable>
+        </View>
+        <View style={styles.container}>
+          {/* 선택된 이미지 표시 (있는 경우) */}
+          {selectedImages ? (<View style={styles.phoneContentContainer}>
+            <ScrollView horizontal>
+              {selectedImages.map((uri, index) => (
+                <View key={index}>            
+                  <TouchableOpacity style={styles.imageSection} key={index} onPressIn={() => changeImage(index)}>
+                    <Image key={index} source={{ uri }} style={styles.image} />
+                  </TouchableOpacity>
+                  <Ionicons name="close-circle-sharp"style={styles.closeCircle} size={15} onPress={() => deleteImage(index)}/>
+                </View>
+              ))} 
+            </ScrollView>
+            <TouchableOpacity style={styles.syncIcon} onPressIn={uploadImageToFirebase}>
+                <Ionicons name="sync-circle" size={36} color="grey" />
+            </TouchableOpacity>
+            </View>) : (
+              <View style={{ justifyContent: "center", alignItems: "center" }}>
+              <Pressable
+                style={{
+                  width: "90%",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: "100",
+                  borderColor: "#E5E5E5",
+                  borderWidth: 3,
+                  marginVertical: 10,
+                  borderRadius: 10,
+                  borderStyle: "dashed",
+                  paddingHorizontal: 50,
+                  paddingVertical: 30,
+                }}
+                onPress={() => [pickImages(), filteringImage()]}
+              >
+                <Feather name="plus" size={24} color="#B9B9B9" />
+              </Pressable>
+            </View>)}
+        </View>
+      </ScrollView>
     </View>
   );
 };

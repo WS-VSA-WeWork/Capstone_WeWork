@@ -24,9 +24,12 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { FlatList } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPubsData } from "../reducers/pubReducer";
+import { fetchAvailablePubsData, fetchPubsData } from "../reducers/pubReducer";
 import { Octicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Reservations from "../components/Reservations";
+import { fetchReservationDataByUserId } from "../reducers/reservationReducer";
+import ReservationCardforUser from "../components/ReservationCardforUser";
 
 export default function UserReservation() {
   const dispatch = useDispatch();
@@ -230,12 +233,16 @@ export default function UserReservation() {
   const [modalVisible, setModalVisible] = useState(false);
   const [haveReservation, setHaveReservation] = useState(false);
   const [typing, setTyping] = useState(false);
-  dismissKeyboard = () => {
-    Keyboard.dismiss();
-  };
-
   const [isDateTimePickerVisible, setDateTimePickerVisible] = useState(false);
   const [value, onChangeText] = useState("환불 사유를 입력해주세요");
+  const [stringDate, setStringDate] = useState(
+    date.getFullYear() +
+      "-" +
+      String(date.getMonth() + 1).padStart(2, "0") +
+      "-" +
+      String(date.getDate()).padStart(2, "0")
+  );
+
   const igakayaCategory = () => {
     const filtered = pubData.filter((pub) => pub.type === "이자카야");
     setFilteredData(filtered);
@@ -300,20 +307,17 @@ export default function UserReservation() {
     setDateTimePickerVisible(false);
   };
 
-  const [stringDate, setStringDate] = useState(
-    date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate()
-  );
-
-  const today = new Date();
-
   const handleDatePicked = (date) => {
     console.log("A date has been picked:", date);
 
     setStringDate(
-      date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
+      date.getFullYear() +
+        "-" +
+        String(date.getMonth() + 1).padStart(2, "0") +
+        "-" +
+        String(date.getDate()).padStart(2, "0")
     );
 
-    console.log(stringDate);
     hideDateTimePicker();
     setDate(date);
   };
@@ -385,19 +389,44 @@ export default function UserReservation() {
     return <Text>Error loading data: {error}</Text>;
   }
 
-  // 저장 버튼이 클릭되었을 때 실행되는 함수
+  // 검색 버튼이 클릭되었을 때 실행되는 함수
   //  newDate에 시간과 인원수를 json형태로 저장
-  const onSave = () => {
-    // 저장 버튼이 클릭되었을 때 실행되는 로직
-    if (date && numberOfPeople) {
-      const newData = {
-        date: date,
-        numberOfPeople: parseInt(numberOfPeople),
-      };
+  const onSearch = () => {
+    // 검색 버튼이 클릭되었을 때 실행되는 로직
 
-      // 여기서 newData를 어딘가에 저장하거나 활용할 수 있습니다.
-      console.log(newData);
+    Keyboard.dismiss(); // 키보드 없애기
+    if (date && numberOfPeople) {
+      const selectedDate = stringDate.toString();
+
+      dispatch(
+        fetchAvailablePubsData({
+          date: selectedDate,
+          numberOfPeople: numberOfPeople,
+        })
+      );
     }
+  };
+
+  const reservationData = useSelector((state) => state.reservation.data);
+
+  useEffect(() => {
+    const userid = "1234567890"; // 임시로 넣어놓은 uid
+    dispatch(fetchReservationDataByUserId({ userId: userid }));
+  }, []);
+
+  useEffect(() => {
+    if (reservationData.length > 0) {
+      setHaveReservation(true);
+    }
+  }, [reservationData]);
+
+  //데이터 로딩 실패 시
+  if (status === "failed") {
+    return <Text>Error loading data: {error}</Text>;
+  }
+
+  const renderItem = ({ item }) => {
+    <Reservations data={item} />;
   };
 
   // 화면 상태창//
@@ -460,29 +489,41 @@ export default function UserReservation() {
           pagingEnabled
           showsHorizontalScrollIndicator={false}
         >
-          <View
+          {/* <View
             style={{
               ...styles.categorybtn,
               backgroundColor: igakaya ? "#282834" : "white",
             }}
+          > */}
+          <TouchableOpacity
+            style={{
+              ...styles.categorybtn,
+              backgroundColor: igakaya ? "#282834" : "white",
+            }}
+            onPress={igakayaCategory}
           >
-            <Button
-              title="이자카야"
-              color={igakaya ? "white" : "#68707D"}
-              onPress={igakayaCategory}
-            />
-          </View>
+            <Text style={{ color: igakaya ? "white" : "#68707D" }}>
+              이자카야
+            </Text>
+          </TouchableOpacity>
+          {/* </View> */}
           <View
             style={{
               ...styles.categorybtn,
               backgroundColor: chicken ? "#282834" : "white",
             }}
           >
-            <Button
-              title="치킨집"
-              color={chicken ? "white" : "#68707D"}
+            <TouchableOpacity
+              style={{
+                ...styles.categorybtn,
+                backgroundColor: chicken ? "#282834" : "white",
+              }}
               onPress={chickenCategory}
-            />
+            >
+              <Text style={{ color: chicken ? "white" : "#68707D" }}>
+                치킨집
+              </Text>
+            </TouchableOpacity>
           </View>
           <View
             style={{
@@ -490,11 +531,15 @@ export default function UserReservation() {
               backgroundColor: jun ? "#282834" : "white",
             }}
           >
-            <Button
-              title="전집"
-              color={jun ? "white" : "#68707D"}
+            <TouchableOpacity
+              style={{
+                ...styles.categorybtn,
+                backgroundColor: jun ? "#282834" : "white",
+              }}
               onPress={JunCategory}
-            />
+            >
+              <Text style={{ color: jun ? "white" : "#68707D" }}>전집</Text>
+            </TouchableOpacity>
           </View>
           <View
             style={{
@@ -502,11 +547,17 @@ export default function UserReservation() {
               backgroundColor: makgul ? "#282834" : "white",
             }}
           >
-            <Button
-              title="막걸리"
-              color={makgul ? "white" : "#68707D"}
+            <TouchableOpacity
+              style={{
+                ...styles.categorybtn,
+                backgroundColor: makgul ? "#282834" : "white",
+              }}
               onPress={MakgulCategory}
-            />
+            >
+              <Text style={{ color: makgul ? "white" : "#68707D" }}>
+                막걸리
+              </Text>
+            </TouchableOpacity>
           </View>
           <View
             style={{
@@ -514,11 +565,15 @@ export default function UserReservation() {
               backgroundColor: all ? "#282834" : "white",
             }}
           >
-            <Button
-              title="ALL +"
-              color={all ? "white" : "#68707D"}
+            <TouchableOpacity
+              style={{
+                ...styles.categorybtn,
+                backgroundColor: all ? "#282834" : "white",
+              }}
               onPress={allCategory}
-            />
+            >
+              <Text style={{ color: all ? "white" : "#68707D" }}>ALL +</Text>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </View>
@@ -526,12 +581,14 @@ export default function UserReservation() {
       <View style={styles.header2}>
         <View style={styles.calender}>
           <AntDesign name="calendar" size={24} color="black" />
-          <Button
-            title={stringDate}
+          <TouchableOpacity
             onPress={showDateTimePicker}
-            color="black"
-          />
+            style={{ marginLeft: 10 }}
+          >
+            <Text>{stringDate}</Text>
+          </TouchableOpacity>
           <DateTimePicker
+            backgroundColor="black"
             mode="date"
             isVisible={isDateTimePickerVisible}
             onConfirm={handleDatePicked}
@@ -546,11 +603,11 @@ export default function UserReservation() {
             editable
             onChangeText={(number) => setNumberOfPeople(number)}
             style={{ padding: 10 }}
-            placeholder={
-              numberOfPeople > 4 ? `${numberOfPeople} 명` : "인원수 입력"
-            }
+            placeholder={"인원수 입력"}
             inputMode="numeric"
             keyboardType="numeric"
+            value={numberOfPeople}
+            clearTextOnFocus={true}
           ></TextInput>
         </View>
         <View
@@ -562,7 +619,7 @@ export default function UserReservation() {
           }}
         >
           {/* <Text>찾기</Text> */}
-          <Pressable onPress={onSave}>
+          <Pressable onPress={onSearch}>
             <Ionicons name="ios-search-sharp" size={24} color="black" />
           </Pressable>
         </View>
@@ -579,7 +636,7 @@ export default function UserReservation() {
               </View>
 
               <View style={styles.timePeople}>
-                {handleDatePicked && numberOfPeople > 4 ? (
+                {handleDatePicked && numberOfPeople >= 15 ? (
                   <View style={{ gap: 5 }}>
                     <Text style={styles.timePeopleTitle}>
                       함께 할 시간과 인원수
@@ -724,26 +781,26 @@ export default function UserReservation() {
                   >
                     나의 예약일정
                   </Text>
-                  <Pressable onPress={() => setModalVisible(true)}>
+                  <TouchableOpacity onPress={() => navigation.navigate("환불")}>
                     <View style={styles.reservationListContainer}>
-                      <View style={styles.reservationList1}>
-                        <Text style={styles.reservationListTitle}>
-                          백수씨 심야식당
-                        </Text>
-                        <Text style={styles.reservationListLastTime}>
-                          19시간 전
-                        </Text>
-                      </View>
-                      <View style={styles.reservationList2}>
-                        <Text>2023-09-20</Text>
-                        <Text>19:00</Text>
-                      </View>
-                      <View style={styles.reservationList3}>
-                        <Text>예약금</Text>
-                        <Text>56000원</Text>
-                      </View>
+                      <ReservationCardforUser item={reservationData[0]} />
+                      {/* <View style={styles.reservationContainer}>
+                        <View style={styles.reservationList1}>
+                          <Text style={styles.reservationListTitle}>
+                            {reservationData[0].pubName}{" "}
+                          </Text>
+                        </View>
+                        <View style={styles.reservationList2}>
+                          <Text>{reservationData[0].reservDate}</Text>
+                          <Text>{reservationData[0].reserveTime}</Text>
+                        </View>
+                        <View style={styles.reservationList3}>
+                          <Text>예약금</Text>
+                          <Text>{reservationData[0].deposit}원</Text>
+                        </View>
+                      </View> */}
                     </View>
-                  </Pressable>
+                  </TouchableOpacity>
 
                   <View style={styles.reservationPast}>
                     <Text
@@ -759,30 +816,10 @@ export default function UserReservation() {
                     </Text>
                     <Text style={styles.reservationPastNum}>5</Text>
                   </View>
-                  <View style={styles.reservationListContainer}>
-                    <View style={styles.reservationList1}>
-                      <Text style={styles.reservationListTitle}>
-                        백수씨 심야식당
-                      </Text>
-                      <Text style={styles.reservationListLastTime}>
-                        19시간 전
-                      </Text>
-                    </View>
-                    <View style={styles.reservationList2}>
-                      <Text>2023-09-20</Text>
-                      <Text>19:00</Text>
-                    </View>
-                    <View style={styles.reservationList3}>
-                      <Text>예약금</Text>
-                      <Text>56000원</Text>
-                    </View>
-                  </View>
 
-                  <Button
-                    title="지금 예약하러가기"
-                    color={"black"}
-                    onPress={() => setHaveReservation(false)}
-                  />
+                  <View style={styles.reservationListContainer}>
+                    <Reservations data={reservationData} isOwner={false} />
+                  </View>
                 </View>
               ) : (
                 <View style={styles.myreservationContainer}>
@@ -812,7 +849,6 @@ export default function UserReservation() {
                     <View style={styles.myreservationButton}>
                       <Button
                         title="지금 예약하러가기"
-                        color={"black"}
                         onPress={() => setHaveReservation(true)}
                       />
                     </View>
@@ -823,68 +859,6 @@ export default function UserReservation() {
           )}
         </View>
       </ScrollView>
-
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-      >
-        {/* <TouchableWithoutFeedback
-            onPress={() => setModalVisible(false)}
-            style={styles.backdrop}
-          /> */}
-
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalTitleContainer}>
-              <Text style={styles.modalTitle}>식당 정보</Text>
-              <Pressable onPress={() => setModalVisible(false)}>
-                <Feather name="x" size={25} color="black" />
-              </Pressable>
-            </View>
-            <View style={styles.modalRestaurantTop}>
-              <Text style={styles.modalRestaurantName}>백수씨 심야식당</Text>
-              <Text style={styles.modalRestaurantTime}>19시간 전</Text>
-            </View>
-            <View style={styles.modalRestaurantMiddle}>
-              <Text style={styles.modalRestaurantDate}>2023-09-20</Text>
-              <Text style={styles.modalRestaurantTime}>19:00</Text>
-            </View>
-            <View style={styles.modalRestaurantBottom}>
-              <Text style={styles.modalRestaurantMoney}>예약금</Text>
-              <Text style={styles.modalRestaurantMoney}>56000원</Text>
-            </View>
-            <View style={{}}>
-              <TextInput
-                style={styles.want}
-                onChangeText={(text) => onChangeText(text)}
-                value={value}
-                placeholder="환불사유를 입력해주세요"
-                multiline
-                numberOfLines={5}
-                maxLength={40}
-                onPressIn={() => setTyping(true)}
-              ></TextInput>
-            </View>
-            <View style={styles.wantButton}>
-              <Button
-                color={"white"}
-                onPress={(() => setTyping(false), () => setModalVisible(false))}
-                style={styles.wantButton}
-                title="환불 요청하기"
-              ></Button>
-            </View>
-            <View
-              style={{
-                height: typing ? 0 : keyboardHeight - 20,
-              }}
-            ></View>
-          </View>
-        </View>
-      </Modal>
     </View>
   );
 }
@@ -892,6 +866,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
+  },
+  reservationContainer: {
+    backgroundColor: "#E0F7ED",
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    gap: 10,
+    borderRadius: 10,
   },
   header: {
     paddingHorizontal: 40,
@@ -928,6 +909,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderColor: "#282834",
+    paddingVertical: 3.5,
+    paddingHorizontal: 5,
   },
   categoryText: {
     fontSize: 20,
@@ -1029,10 +1012,9 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
   },
   reservationListContainer: {
-    backgroundColor: "#E0F7ED",
     marginHorizontal: 30,
-    marginVertical: 10,
-    paddingVertical: 20,
+    // marginVertical: 10,
+    paddingVertical: 10,
     paddingHorizontal: 20,
     gap: 10,
   },
@@ -1085,11 +1067,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 4,
-    borderColor: "rgba(0, 0, 0, 0.1)",
+    borderColor: "rgba(0, 0, 0, 0.2)",
     width: "100%",
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
-    borderColor: "black",
+    borderTopWidth: 1,
   },
   modalTitleContainer: {
     flexDirection: "row",

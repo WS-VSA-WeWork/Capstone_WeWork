@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>494469542541-kunpr8l9sjfblml3hat34s07hc7s6nao.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.494469542541-kunpr8l9sjfblml3hat34s07hc7s6nao</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>494469542541-p91f7eqoului7456ejr4b4n0502of48e.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyB45Hw2XaVT9nyNIt_XznM10XpZ6p6TYlE</string>
+	<key>GCM_SENDER_ID</key>
+	<string>494469542541</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.wework.kirikiri</string>
+	<key>PROJECT_ID</key>
+	<string>wework-back</string>
+	<key>STORAGE_BUCKET</key>
+	<string>wework-back.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:494469542541:ios:061a0e0068325410ef68c4</string>
+	<key>DATABASE_URL</key>
+	<string>https://wework-back-default-rtdb.asia-southeast1.firebasedatabase.app</string>
+</dict>
+</plist>

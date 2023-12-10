@@ -42,7 +42,7 @@ const SetImage = ({ url, onChangePhoto }) => {
       <Image
         key={url}
         source={{ uri: url }}
-        style={{ width: "85%", height: "85%" }}
+        style={{ width: "85%", height: 200 }}
       />
     </View>
   );

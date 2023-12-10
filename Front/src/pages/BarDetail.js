@@ -26,6 +26,8 @@ import Reviews from "../components/Reviews";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchReviewsByPub } from "../reducers/reviewReducer";
 import { fetchTimetable } from "../reducers/timetableReducer";
+import Carousel from "../components/Carousel";
+import Accordion from "../components/Accordion";
 
 const BarDetail = ({ route }) => {
   const dispatch = useDispatch();
@@ -37,12 +39,9 @@ const BarDetail = ({ route }) => {
   const timetable = useSelector((state) => state.timetable.data);
 
   const [date, setDate] = useState(new Date());
-  // const [open, setOpen] = useState(false);
-  // const [mode, setMode] = useState("date");
   const [time, setTime] = useState("시작시간과 종료시간을 선택해주세요");
-  const [showForm, setShowForm] = useState(false);
+  const [timeIdx, setTimeIdx] = useState([]);
   const [btnActive, setBtnActive] = useState(false);
-  const [reservDate, setReservDate] = useState();
 
   const [menu, setMenu] = useState(true);
   const [review, setReviews] = useState(false);
@@ -94,7 +93,7 @@ const BarDetail = ({ route }) => {
   };
 
   useEffect(() => {
-    const date = "2023-12-02"; // 임시코드
+    const date = "2023-12-04"; // 임시코드 selectedDate로 바꿔야함
     dispatch(fetchReviewsByPub(bar.pubName));
     dispatch(fetchTimetable({ pubName: bar.pubName, date: date }));
   }, []);
@@ -103,52 +102,36 @@ const BarDetail = ({ route }) => {
     // 상태에 따라 바 위치를 조절
     if (menu) {
       Animated.timing(MovingBar, {
-        toValue: 0,
+        toValue: 5,
         duration: 300,
         useNativeDriver: false,
       }).start();
       Animated.timing(barWidth, {
-        toValue: 100,
+        toValue: 75,
         duration: 300,
         useNativeDriver: false,
       }).start();
     } else if (review) {
       Animated.timing(MovingBar, {
-        toValue: 185, // 원하는 위치로 바 이동
+        toValue: 195, // 원하는 위치로 바 이동
         duration: 300,
         useNativeDriver: false,
       }).start();
       Animated.timing(barWidth, {
-        toValue: 50,
+        toValue: 43,
         duration: 300,
         useNativeDriver: false,
       }).start();
     }
   }, [menu, review, MovingBar]);
 
-  const showReservationForm = () => {
-    setShowForm(true);
-  };
-
   const handleTimeChange = (selectTime) => {
     setTime(selectTime);
-
+    console.log(time);
     if (selectTime.charAt(selectTime.length - 3) === ":") {
       setBtnActive(true);
     }
   };
-
-  // // Datepicker
-  // const onChange = (event, selectedDate) => {
-  //   const currentDate = selectedDate || date;
-  //   setDate(currentDate);
-  //   setOpen(false);
-  // };
-
-  // const openMode = (currentMode) => {
-  //   setOpen(true);
-  //   setMode(currentMode);
-  // };
 
   const openDatepicker = () => {
     // openMode("date");
@@ -171,26 +154,30 @@ const BarDetail = ({ route }) => {
   };
 
   const navigateToOrder = () => {
+    const splitTimes = time.split(" - ");
+
     const reservationDetails = {
       pubName: bar.pubName,
       pubImage: bar.pubImages[1],
       reservDate: selectedDate,
       people: numberOfPeople,
       reserveTime: time,
+      timeIdx: [
+        timetable.findIndex((time) => time.label === splitTimes[0]),
+        timetable.findIndex((time) => time.label === splitTimes[1]),
+      ],
     };
-    console.log(reservationDetails);
+    console.log("bardetailnavigate", reservationDetails);
     navigation.navigate("결제하기", reservationDetails);
   };
+
+  console.log(bar.pubImages);
 
   return (
     <>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.imageContainer}>
-          <Image
-            source={{ uri: bar.pubImages[1] }}
-            style={styles.image}
-            resizeMode="cover"
-          />
+          <Carousel images={bar.pubImages.slice(1)} />
         </View>
 
         {/* 타이틀 */}
@@ -217,9 +204,7 @@ const BarDetail = ({ route }) => {
           </View>
 
           <View style={styles.introContainer}>
-            <Text style={styles.introduction} aria-expanded={true}>
-              {bar.pubDescription}
-            </Text>
+            <Accordion description={bar.pubDescription} />
           </View>
 
           <GptDetail></GptDetail>
@@ -239,23 +224,24 @@ const BarDetail = ({ route }) => {
               <Text style={styles.entryData}>총 {bar.maxSeats}석</Text>
             </View>
             <View style={styles.openTimeContainer}>
-              {/* <Text style={styles.entryTitle}>영업시간</Text> */}
               <Image
                 source={timeIcon}
                 style={styles.iconImg}
                 resizeMode="contain"
               />
+              <Text style={styles.entryTitle}>영업시간</Text>
               <Text style={styles.entryData}>
                 {bar.startTime} ~ {bar.endTime}
               </Text>
             </View>
             <View style={styles.phoneContainer}>
-              <Text style={styles.entryTitle}>전화번호</Text>
               <Image
                 source={telephone}
                 style={styles.iconImg}
                 resizeMode="contain"
               />
+
+              <Text style={styles.entryTitle}>전화번호</Text>
               <Text style={styles.entryData}>{bar.pubPhonenum}</Text>
             </View>
           </View>
@@ -293,84 +279,65 @@ const BarDetail = ({ route }) => {
         <View style={styles.outcontentBorderLine}></View>
 
         <View style={styles.content}>
-          <View style={styles.timetable}>
-            <View style={styles.menuContainer}>
-              <View style={styles.tabmenu}>
-                <View style={styles.tabContainer}>
-                  <TouchableOpacity onPress={onMenu}>
-                    <Text
-                      style={{
-                        ...styles.menuTitle,
-                        color: menu ? "#393E47" : "#9FA8B6",
-                        marginBottom: 5,
-                      }}
-                    >
-                      대표메뉴
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.tabContainer}>
-                  <TouchableOpacity onPress={onReview}>
-                    <Text
-                      style={{
-                        ...styles.menuTitle,
-                        color: review ? "#393E47" : "#9FA8B6",
-                        marginBottom: 5,
-                      }}
-                    >
-                      리뷰
-                    </Text>
-                  </TouchableOpacity>
-                </View>
+          <View style={styles.menuContainer}>
+            <View style={styles.tabmenu}>
+              <View style={styles.tabContainer}>
+                <TouchableOpacity onPress={onMenu}>
+                  <Text
+                    style={{
+                      ...styles.menuTitle,
+                      color: menu ? "#393E47" : "#9FA8B6",
+                      marginBottom: 5,
+                    }}
+                  >
+                    대표메뉴
+                  </Text>
+                </TouchableOpacity>
               </View>
-
-              <Animated.View
-                style={{
-                  backgroundColor: "#24242F",
-                  width: barWidth,
-                  height: 3,
-                  marginBottom: 10,
-                  transform: [
-                    {
-                      translateX: MovingBar,
-                    },
-                  ],
-                }}
-              ></Animated.View>
-
-              <View style={styles.menuTitleLine}></View>
-              {/* 대표메뉴 */}
-              {menu && (
-                <>
-                  <Menu menu={bar.pubMenus[0]} />
-                  <Menu menu={bar.pubMenus[1]} />
-                </>
-              )}
-              {/* 리뷰 */}
-              {/* {review && reviewData && ( */}
-              {review && (
-                <View style={styles.reviewContainer}>
-                  {/* <ReviewCard isOwner={false} /> */}
-                  <Reviews reviews={reviews} isOwner={false} />
-                </View>
-              )}
+              <View style={styles.tabContainer}>
+                <TouchableOpacity onPress={onReview}>
+                  <Text
+                    style={{
+                      ...styles.menuTitle,
+                      color: review ? "#393E47" : "#9FA8B6",
+                      marginBottom: 5,
+                    }}
+                  >
+                    리뷰
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
 
-            <View style={styles.reservationContainer}>
-              {showForm && (
-                <>
-                  {/* <View style={styles.requestContainer}>
-                    <Text>요청사항</Text>
-                    <TextInput
-                      style={styles.textInput}
-                      onChangeText={(e) => onChangeText(e)}
-                      value={text}
-                      placeholder="요청사항을 입력해주세요."
-                    />
-                  </View> */}
-                </>
-              )}
-            </View>
+            <Animated.View
+              style={{
+                backgroundColor: "#24242F",
+                width: barWidth,
+                height: 3,
+                marginBottom: 15,
+                transform: [
+                  {
+                    translateX: MovingBar,
+                  },
+                ],
+              }}
+            ></Animated.View>
+
+            <View style={styles.menuTitleLine}></View>
+            {/* 대표메뉴 */}
+            {menu && (
+              <View style={styles.cardsContainer}>
+                <Menu menu={bar.pubMenus[0]} />
+                <Menu menu={bar.pubMenus[1]} />
+              </View>
+            )}
+            {/* 리뷰 */}
+            {/* {review && reviewData && ( */}
+            {review && (
+              <View style={styles.cardsContainer}>
+                <Reviews reviews={reviews} isOwner={false} />
+              </View>
+            )}
           </View>
         </View>
       </ScrollView>
@@ -455,7 +422,7 @@ const styles = StyleSheet.create({
     color: "#393E47",
   },
   introContainer: {
-    height: 80,
+    minHeight: 80,
     marginBottom: 0,
   },
   introduction: {
@@ -463,6 +430,7 @@ const styles = StyleSheet.create({
   },
 
   detailsContainer: {
+    marginTop: 10,
     flexDirection: "column",
   },
   detailTopContainer: {
@@ -551,13 +519,14 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    padding: 16,
+    margin: 16,
   },
   menuContainer: {
     width: "100%",
     marginVertical: 20,
   },
   tabmenu: {
+    width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
   },
@@ -570,7 +539,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: "#393E47",
-    paddingVertical: 10,
     paddingHorizontal: 8,
   },
   menuTitleLine: {
@@ -578,7 +546,8 @@ const styles = StyleSheet.create({
     borderColor: "#393E47",
     borderWidth: 1,
   },
-  reviewContainer: {
+  cardsContainer: {
+    maxWidth: "100%",
     marginTop: 10,
   },
   reservationContainer: {},
@@ -628,6 +597,9 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     backgroundColor: "#1AB277",
     borderRadius: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
   buttonText: {
     height: "100%",

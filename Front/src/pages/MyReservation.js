@@ -1,4 +1,5 @@
 import {
+  ScrollView,
   View,
   Text,
   StyleSheet,
@@ -6,30 +7,41 @@ import {
   Button,
   Pressable,
   TouchableOpacity,
+  TextInput,
 } from "react-native";
 import { useEffect, useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { fetchUserReservationData } from "../reducers/userReservationReducer";
+import { Feather } from "@expo/vector-icons";
+
 import { useDispatch, useSelector } from "react-redux";
 import { AntDesign } from "@expo/vector-icons";
+
+import Reservations from "../components/Reservations";
+import { fetchReservationDataByUserId } from "../reducers/reservationReducer";
+import ReservationCardforUser from "../components/ReservationCardforUser";
+
 const MyReservation = () => {
   const [haveReservation, setHaveReservation] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [typing, setTyping] = useState(false);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
 
   const navigation = useNavigation();
+
   const dispatch = useDispatch();
-  const reservationData = useSelector((state) => state.userreservation.data);
-  const status = useSelector((state) => state.userreservation.status);
-  const error = useSelector((state) => state.userreservation.error);
+  const reservationData = useSelector((state) => state.reservation.data);
+  const status = useSelector((state) => state.reservation.status);
+  const error = useSelector((state) => state.reservation.error);
+  const [value, onChangeText] = useState("환불 사유를 입력해주세요");
 
   useEffect(() => {
-    const uid = "dGIYidylZq0wfmi6WkKB"; // 임시로 넣어놓은 uid
-    dispatch(fetchUserReservationData(uid));
+    const userid = "1234567890"; // 임시로 넣어놓은 uid
+    dispatch(fetchReservationDataByUserId({ userId: userid }));
   }, []);
 
   useEffect(() => {
-    if (reservationData["haveReservation"] === true) {
+    if (reservationData.length > 0) {
       setHaveReservation(true);
     }
   }, [reservationData]);
@@ -39,8 +51,12 @@ const MyReservation = () => {
     return <Text>Error loading data: {error}</Text>;
   }
 
+  const renderItem = ({ item }) => {
+    <Reservations data={item} />;
+  };
+
   return (
-    <View>
+    <ScrollView style={styles.scrollView}>
       {haveReservation ? (
         <View style={styles.myreservationContainer}>
           <Text
@@ -52,26 +68,30 @@ const MyReservation = () => {
           >
             나의 예약일정
           </Text>
-          <Pressable onPress={() => setModalVisible(true)}>
+
+          {/* 이용전 예약건 */}
+          <TouchableOpacity onPress={() => navigation.navigate("환불")}>
             <View style={styles.reservationListContainer}>
-              <View style={styles.reservationList1}>
+              <ReservationCardforUser item={reservationData[0]} />
+              {/* <View style={styles.reservationList1}>
                 <Text style={styles.reservationListTitle}>
-                  {reservationData["2311131200tnfus9"]["pubName"]}{" "}
-                  {/* 예약 DB에서 가져온 술집이름(임시) */}
+                  {reservationData[0].pubName}{" "}
                 </Text>
-                <Text style={styles.reservationListLastTime}>19시간 전</Text>
               </View>
               <View style={styles.reservationList2}>
-                <Text>2023-09-20</Text>
-                <Text>19:00</Text>
+                <Text>{reservationData[0].reservDate}</Text>
+                <Text>{reservationData[0].reserveTime}</Text>
               </View>
               <View style={styles.reservationList3}>
                 <Text>예약금</Text>
-                <Text>56000원</Text>
-              </View>
+                <Text>{reservationData[0].deposit}원</Text>
+              </View> */}
             </View>
-          </Pressable>
+          </TouchableOpacity>
 
+          <View style={styles.outcontentBorderLine}></View>
+
+          {/* 전체 대관 내역 */}
           <View style={styles.reservationPast}>
             <Text
               style={{
@@ -84,39 +104,22 @@ const MyReservation = () => {
             >
               나의 대관 내역
             </Text>
-            <Text style={styles.reservationPastNum}>5</Text>
+            <Text style={styles.reservationPastNum}>
+              {reservationData.length}
+            </Text>
           </View>
-          <TouchableOpacity
-            style={styles.reservationListContainer}
-            onPress={() => {
-              navigation.navigate("리뷰작성", {});
-            }}
-          >
-            <View style={styles.reservationList1}>
-              <Text style={styles.reservationListTitle}>백수씨 심야식당</Text>
-              <Text style={styles.reservationListLastTime}>19시간 전</Text>
-            </View>
-            <View style={styles.reservationList2}>
-              <Text>2023-09-20</Text>
-              <Text>19:00</Text>
-            </View>
-            <View style={styles.reservationList3}>
-              <Text>예약금</Text>
-              <Text>56000원</Text>
-            </View>
-          </TouchableOpacity>
 
-          <Button
-            title="지금 예약하러가기"
-            color={"black"}
-            onPress={() => setHaveReservation(false)}
-          />
+          <View style={styles.reservationListContainer}>
+            <Reservations data={reservationData} isOwner={false} />
+          </View>
+
           <Pressable
             onPress={() => navigation.navigate("예약메인")}
             style={{
               alignItems: "center",
               justifyContent: "center",
-              marginTop: 30,
+              marginTop: 10,
+              marginBottom: 30,
               gap: 10,
             }}
           >
@@ -145,21 +148,73 @@ const MyReservation = () => {
                 예약을 진행해주세요 !
               </Text>
             </View>
-            <View style={styles.myreservationButton}>
-              <Button
-                title="지금 예약하러가기"
-                color={"black"}
-                onPress={() => setHaveReservation(true)}
-              />
-            </View>
           </View>
         </View>
       )}
-    </View>
+      <View style={styles.modalContainer}>
+        <View style={styles.modalContent}>
+          <View style={styles.modalTitleContainer}>
+            <Text style={styles.modalTitle}>식당 정보</Text>
+            <Pressable onPress={() => setModalVisible(false)}>
+              <Feather name="x" size={25} color="black" />
+            </Pressable>
+          </View>
+          <View style={styles.modalRestaurantTop}>
+            <Text style={styles.modalRestaurantName}>
+              {reservationData[0].pubName}{" "}
+            </Text>
+            {/* <Text style={styles.modalRestaurantTime}>19시간 전</Text> */}
+          </View>
+          <View style={styles.modalRestaurantMiddle}>
+            <Text style={styles.modalRestaurantDate}>
+              {reservationData[0].reservDate}
+            </Text>
+            <Text style={styles.modalRestaurantTime}>
+              {reservationData[0].reserveTime}
+            </Text>
+          </View>
+          <View style={styles.modalRestaurantBottom}>
+            <Text style={styles.modalRestaurantMoney}>예약금</Text>
+            <Text style={styles.modalRestaurantMoney}>
+              {reservationData[0].deposit}원
+            </Text>
+          </View>
+          <View style={{}}>
+            <TextInput
+              style={styles.want}
+              onChangeText={(text) => onChangeText(text)}
+              value={value}
+              placeholder="환불사유를 입력해주세요"
+              multiline
+              numberOfLines={5}
+              maxLength={40}
+              onPressIn={() => setTyping(true)}
+            ></TextInput>
+          </View>
+          <View style={styles.wantButton}>
+            <Button
+              color={"white"}
+              onPress={(() => setTyping(false), () => setModalVisible(false))}
+              style={styles.wantButton}
+              title="환불 요청하기"
+            ></Button>
+          </View>
+          <View
+            style={{
+              height: typing ? 0 : keyboardHeight - 20,
+            }}
+          ></View>
+        </View>
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  scrollView: {
+    flex: 1,
+    backgroundColor: "#ffffff",
+  },
   myreservationContainer: {
     marginVertical: 30,
   },
@@ -191,10 +246,10 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
   },
   reservationListContainer: {
-    backgroundColor: "#E0F7ED",
     marginHorizontal: 30,
-    marginVertical: 10,
-    paddingVertical: 20,
+    // marginVertical: 10,
+    marginBottom: 10,
+    paddingVertical: 10,
     paddingHorizontal: 20,
     gap: 10,
   },
@@ -222,6 +277,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+  },
+  outcontentBorderLine: {
+    width: "100%",
+    borderBottomWidth: 8,
+    borderColor: "#E6EBEF",
   },
   reservationPast: {
     flexDirection: "row",

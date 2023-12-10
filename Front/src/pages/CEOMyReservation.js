@@ -6,11 +6,23 @@ import {
   Button,
   ScrollView,
 } from "react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FontAwesome } from "@expo/vector-icons";
+import { useDispatch, useSelector } from "react-redux";
+
+import Reservations from "../components/Reservations";
+import { fetchReservationDataByPubName } from "../reducers/reservationReducer";
 
 const CEOMyReservation = () => {
-  const [haveReservation, setHaveReservation] = useState(false);
+  const [haveReservation, setHaveReservation] = useState(true);
+  const dispatch = useDispatch();
+
+  const reservationData = useSelector((state) => state.reservation.data);
+
+  useEffect(() => {
+    // 컴포넌트가 마운트 될 때 예약 데이터를 불러옴
+    dispatch(fetchReservationDataByPubName({ pubName: "백수씨심야식당" })); // bar.name은 현재 선택된 펍의 이름
+  }, [dispatch, "백수씨심야식당"]);
 
   return (
     <View>
@@ -33,66 +45,24 @@ const CEOMyReservation = () => {
               paddingHorizontal: 30,
             }}
           >
-            오늘은 총 3개의 예약이 있어요.
+            오늘은 총 {reservationData.length}개의 예약이 있어요.
           </Text>
 
           <ScrollView style={styles.ScrollViewContainer}>
             <View style={styles.seperateDate}>
-              <Text style={styles.seperateDateContent}>2023-09-20</Text>
+              <Text style={styles.seperateDateContent}>2023-12-5</Text>
             </View>
             <View style={styles.reservationListContainer}>
-              <View style={styles.reservationList1}>
-                <Text style={styles.reservationListTitle}>
-                  김동완(#2324) / 23명
-                </Text>
-                <Text style={styles.reservationListLastTime}>19시간 전</Text>
-              </View>
-              <View style={styles.reservationList2}>
-                <Text>2023-09-20</Text>
-                <Text>19:00 - 21:00</Text>
-              </View>
-              <View style={styles.reservationList3}>
-                <Text>예약금</Text>
-                <Text>56000원</Text>
-              </View>
-            </View>
-            <View style={styles.reservationListContainer}>
-              <View style={styles.reservationList1}>
-                <Text style={styles.reservationListTitle}>
-                  박수련(#2324) / 30명
-                </Text>
-                <Text style={styles.reservationListLastTime}>20시간 전</Text>
-              </View>
-              <View style={styles.reservationList2}>
-                <Text>2023-09-20</Text>
-                <Text>19:00 - 21:00</Text>
-              </View>
-              <View style={styles.reservationList3}>
-                <Text>예약금</Text>
-                <Text>56000원</Text>
-              </View>
-            </View>
-            <View style={styles.reservationListContainer}>
-              <View style={styles.reservationList1}>
-                <Text style={styles.reservationListTitle}>
-                  이상민(#2324) / 45명
-                </Text>
-                <Text style={styles.reservationListLastTime}>22시간 전</Text>
-              </View>
-              <View style={styles.reservationList2}>
-                <Text>2023-09-20</Text>
-                <Text>19:00 - 21:00</Text>
-              </View>
-              <View style={styles.reservationList3}>
-                <Text>예약금</Text>
-                <Text>56000원</Text>
-              </View>
+              <Reservations data={reservationData} />
             </View>
 
             <View style={styles.seperateDate}>
-              <Text style={styles.seperateDateContent}>2023-09-20</Text>
+              <Text style={styles.seperateDateContent}>2023-12-6</Text>
             </View>
             <View style={styles.reservationListContainer}>
+              <Reservations data={reservationData} />
+            </View>
+            {/* <View style={styles.reservationListContainer}>
               <View style={styles.reservationList1}>
                 <Text style={styles.reservationListTitle}>
                   안도영(#2324) / 23명
@@ -100,7 +70,7 @@ const CEOMyReservation = () => {
                 <Text style={styles.reservationListLastTime}>19시간 전</Text>
               </View>
               <View style={styles.reservationList2}>
-                <Text>2023-09-20</Text>
+                <Text>2023-12-6</Text>
                 <Text>19:00 - 21:00</Text>
               </View>
               <View style={styles.reservationList3}>
@@ -117,14 +87,14 @@ const CEOMyReservation = () => {
                 <Text style={styles.reservationListLastTime}>19시간 전</Text>
               </View>
               <View style={styles.reservationList2}>
-                <Text>2023-09-20</Text>
-                <Text>19:00 - 21:00</Text>
+                <Text>2023-12-6</Text>
+                <Text>22:30 - 23:30</Text>
               </View>
               <View style={styles.reservationList3}>
                 <Text>예약금</Text>
                 <Text>56000원</Text>
               </View>
-            </View>
+            </View> */}
           </ScrollView>
 
           <Button
@@ -172,9 +142,11 @@ const styles = StyleSheet.create({
   ScrollViewContainer: {
     height: "85%",
     marginVertical: 20,
+    backgroundColor: "#ffffff",
   },
   myreservationContainer: {
-    marginVertical: 30,
+    paddingVertical: 30,
+    backgroundColor: "#ffffff",
   },
   myreservation: {
     justifyContent: "center",
@@ -204,11 +176,11 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
   },
   reservationListContainer: {
-    backgroundColor: "#E0F7ED",
+    // backgroundColor: "#E0F7ED",
     marginHorizontal: 30,
     marginVertical: 10,
-    paddingVertical: 20,
-    paddingHorizontal: 20,
+    // paddingVertical: 20,
+    // paddingHorizontal: 20,
     gap: 10,
   },
   reservationListTitle: {

@@ -125,44 +125,6 @@ const ReviewImagePick = ({documentId, reviewNum}) => {
   }
 
 
-  { /* 003. firestore 이미지 url 저장 
-  const db = getFirestore(App);
-  const collectionPathInComponent = collectionPath;
-  const documentIdInComponent = documentId; // 위에 생성한 디렉토리 이름 'Temp'
-
-  useEffect(() => {
-    const updateImageUrl = async () => {
-      try {
-        const pubDocRef = doc(db, collectionPathInComponent, documentIdInComponent);
-        const pubDocSnapshot = await getDoc(pubDocRef);
-
-        if (pubDocSnapshot.exists()) {
-          const currentPubReviewImages = pubDocSnapshot.data().reviewImg || [];
-
-          // 이미지 URL 배열을 Firestore 필드로 업데이트합니다.
-          const updatedImages = Array.from(new Set([...currentPubReviewImages, ...imageUrls]));
-
-          const updateData = {
-            reviewImg: updatedImages,
-          };
-
-          // pubImages 필드를 업데이트합니다.
-          await updateDoc(pubDocRef, updateData);
-          console.log("업데이트 완료");
-        } else {
-          console.error("문서가 존재하지 않습니다.");
-        }
-      } catch (error) {
-        console.error('업데이트 실패', error);
-      }
-    };
-
-    updateImageUrl();
-  }, [db, imageUrls]);
-  // [참고용: 마지막에 [db, imageUrls] 때문에 많은 렌더링이 발생했었음]
-  // url 업로드 파트 끝  
-	*/}
-
   { /* 005. CLOVA greeneye 파트
   const filteringImage = async () => {
     const greeneyeEndpoint = "https://clovagreeneye.apigw.ntruss.com/custom/v1/96/de9025ac060faf49dd43d45f6ad4683a43c33cc35b3f299b0e01f1ffebe98565/predict";

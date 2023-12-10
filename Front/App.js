@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { LogBox } from "react-native";
 
 import Main from "./src/pages/Main";
 import BarDetail from "./src/pages/BarDetail";
@@ -24,8 +25,11 @@ import { Provider } from "react-redux";
 import store from "./src/store";
 import CEODashBoard from "./src/pages/CEODashBoard";
 import MainScreen from "./src/pages/RestaurantPost";
-
+import Refund from "./src/pages/refund";
+import ImagePick from "./src/components/ImagePick";
 const Stack = createNativeStackNavigator();
+
+LogBox.ignoreLogs(["VirtualizedLists", "Key", "Failed"]);
 
 export default function App() {
   return (
@@ -44,12 +48,15 @@ export default function App() {
           <Stack.Screen name="내예약관리" component={MyReservation} />
           <Stack.Screen name="사장님메인" component={BarOwnerMain} />
           <Stack.Screen name="리뷰작성" component={ReviewForm} />
+          <Stack.Screen name="대시보드" component={CEODashBoard} />
           <Stack.Screen name="사장님 마이페이지" component={CEOMyPage} />
           <Stack.Screen name="사장님 예약관리" component={CEOMyReservation} />
           <Stack.Screen name="사장님 위약정보" component={CEOMyBan} />
           <Stack.Screen name="사장님 프로필관리" component={CEOMyProfile} />
           <Stack.Screen name="규정 사항" component={MyRule} />
           <Stack.Screen name="가게 등록" component={MainScreen} />
+          <Stack.Screen name="환불" component={Refund} />
+          <Stack.Screen name="ImagePickPage" component={ImagePick} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

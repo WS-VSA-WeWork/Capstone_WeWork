@@ -11,6 +11,7 @@ import {
 import { Feather } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import ReviewImagePick from "../components/ReviewImagePick";
+import axios from "axios";
 
 //firebase import 파트
 import App from "../../firebaseConfig.js";
@@ -49,6 +50,43 @@ const ReviewForm = ({ route }) => {
   const documentId = "Temp";
   const [reviewNum, setReviewNum] = useState(1);
 
+  // greenEye 파트
+  const greenEyeEndpoint = "https://clovagreeneye.apigw.ntruss.com/custom/v1/96/de9025ac060faf49dd43d45f6ad4683a43c33cc35b3f299b0e01f1ffebe98565/predict";
+  const greenEyeApiKey = "VVdSRmxKTUd0SFpTU2RCR0tKSGhxQkFhT0h4Z0pja0E=";
+  const filteringImage = async (uri) => {
+    try {
+      // 바디 요청 데이터를 구성합니다.
+      const requestBody = {
+        version: "V1",
+        requestId: "requestId",
+        timestamp: 1666321382402,
+        images: [{
+          "name": "demo",
+          "url": uri,
+          }]
+    };
+
+    // API 요청을 보냅니다.
+    const response = await axios.post(
+      greenEyeEndpoint,
+      requestBody,
+      {
+        headers: {
+          'X-GREEN-EYE-SECRET': greenEyeApiKey,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+      console.log("클로바 그린아이 API 응답:", response.data.images[0].result);
+      return response.data.images[0].message;
+    } catch (error) {
+      console.error("Error sending request to 클로바 그린아이 API:", error);
+      throw error;
+    }
+  };  
+  
+
   // storage 이미지 다운로드 파트
   const storage = getStorage(App);
   const [downloadImageUrls, setDownloadImageUrls] = useState([]);
@@ -76,11 +114,24 @@ const ReviewForm = ({ route }) => {
 
     getImagesInDirectory();
     console.log("다운로드 된 이미지 갯수: " + downloadImageUrls.length)
+    downloadImageUrls.map((url, index) => {
+      filteringImage(url).then((result) => {
+        if (result === "SUCCESS") {
+          console.log("정상 이미지입니다.");
+          const newDownloadImageUrls = downloadImageUrls[index];
+          setDownloadImageUrls(newDownloadImageUrls);
+        } else {
+          console.log("유해 이미지입니다.");
+          console.log("index: ", index);
+          console.log("url: ", url);
+        }
+      });
+    });
   }, [storage, refresh]);
 
   { /* 003. firestore 이미지 url 저장 */}
   const db = getFirestore(App);
-  
+
   const updateImageUrl = async () => {
     try {
       const pubDocRef = doc(db, collectionPath, documentId);
@@ -96,7 +147,7 @@ const ReviewForm = ({ route }) => {
           reviewImg: updatedImages,
         };
 
-        // pubImages 필드를 업데이트합니다.
+        // pubImages 필드를 업데이트합니다. 
         await updateDoc(pubDocRef, updateData);
         console.log("업데이트 완료");
       } else {

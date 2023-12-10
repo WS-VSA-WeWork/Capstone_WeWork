@@ -1,11 +1,12 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 
 import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
 import { colors } from "../config/globalStyles";
 
-const ReservationCardforOwner = ({ item }) => {
+const ReservationCardforUser = ({ item }) => {
+  const navigation = useNavigation();
   console.log(item);
-
   const startTime = item.reserveTime
     ? item.reserveTime.split(" - ")[0]
     : "17:00";
@@ -35,10 +36,15 @@ const ReservationCardforOwner = ({ item }) => {
   };
 
   return (
-    <TouchableOpacity style={styles.reservationContainer}>
-      <View style={styles.info}>
+    <TouchableOpacity
+      style={styles.reservationContainer}
+      onPress={() => {
+        navigation.navigate("리뷰작성", {});
+      }}
+    >
+      <View style={styles.TitleContainer}>
         <Text style={styles.semiTitle}>
-          {item.userName} /{" "}
+          {item.pubName} /{" "}
           <Text style={styles.warning}>{item.numberOfPeople}</Text>명
         </Text>
         <Text style={styles.warning}>{getTimeDifference(startTime)}</Text>
@@ -48,18 +54,23 @@ const ReservationCardforOwner = ({ item }) => {
         <Text style={styles.semiTitle}>{item.reserveTime}</Text>
       </View>
       <View style={styles.info}>
-        <Text style={styles.infoLabel}>예약금</Text>
-        <Text style={styles.infoData}>{item.deposit}</Text>
-      </View>
-      <View style={styles.info}>
         <Text style={styles.infoLabel}>연락처</Text>
         <Text style={styles.infoData}>{item.userPhonenum}</Text>
+      </View>
+      <View style={styles.info}>
+        <Text style={styles.infoLabel}>예약금</Text>
+        <Text style={styles.infoData}>{item.deposit}원</Text>
       </View>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
+  TitleContainer:{
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 15,
+  },
   title: {
     fontSize: 24,
     fontWeight: "bold",
@@ -97,4 +108,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ReservationCardforOwner;
+export default ReservationCardforUser;

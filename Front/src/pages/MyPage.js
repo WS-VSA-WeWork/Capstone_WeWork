@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
   //첫번째 섹터
   header: {
     backgroundColor: "#FFFFFF",
-    height: "25%",
+    height: "30%",
   },
   userLeft: {
     flexDirection: "row",

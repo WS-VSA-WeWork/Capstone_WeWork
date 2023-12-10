@@ -10,10 +10,11 @@ import {
 } from "react-native";
 import { LocaleConfig, Calendar, Agenda } from "react-native-calendars";
 import { AntDesign } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
-import ReservationCard from "../components/ReservationCardforOwner";
 import CustomDayComponent from "../components/CustomDayComponent";
 import Reviews from "../components/Reviews";
+import Reservations from "../components/Reservations";
 
 const BarOwnerMain = ({ route }) => {
   const [reservation, setReservation] = useState(true);
@@ -21,44 +22,44 @@ const BarOwnerMain = ({ route }) => {
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedDay, setSelectedDay] = useState("");
 
-  const reservations = {
-    "2023-11-20": [{ name: "예약 1" }, { name: "예약 2" }],
-    "2023-11-21": [{ name: "예약 3" }],
-    // 다른 날짜의 예약들...
-  };
+  const navigation = useNavigation();
 
-  const reviewData = [
-    {
-      pubName: "백수씨 심야식당",
-      customerNickname: "김영희",
-      reviewRating: 4.5,
-      uploadDate: "2023-03-01T12:00:00",
-      reviewContent:
-        "음식이 정말 맛있었어요. 분위기도 좋고, 서비스도 훌륭합니다!",
-      reviewImg: "https://example.com/review-photo1.jpg",
-    },
-    {
-      pubName: "백수씨 심야식당",
-      customerNickname: "이철수",
-      reviewRating: 5.0,
-      uploadDate: "2023-03-02T15:30:00",
-      reviewContent:
-        "재료가 신선하고, 요리가 일품이었습니다. 다음에 꼭 다시 방문할게요!",
-      reviewImg:
-        "https://firebasestorage.googleapis.com/v0/b/wework-back.appspot.com/o/%EB%B0%B1%EC%88%98%EC%94%A8%EC%8B%AC%EC%95%BC%EC%8B%9D%EB%8B%B9%2F%EC%8B%AC%EC%95%BC%EC%8B%9D%EB%8B%B9-%EA%B0%84%ED%8C%9001.jpeg?alt=media&token=7cd18370-abdf-4463-b0bf-467410ef7bd1",
-    },
-    {
-      pubName: "백수씨 심야식당",
-      customerNickname: "박지영",
-      reviewRating: 4.0,
-      uploadDate: "2023-03-03T19:00:00",
-      reviewContent:
-        "쾌적한 환경에서 맛있는 식사를 할 수 있어서 좋았어요. 다만, 대기 시간이 조금 길었네요.",
-      reviewImg: "https://example.com/review-photo3.jpg",
-    },
-  ];
+  const myPubData = route.params.myPub;
+  const reviews = route.params.reviews;
+  const reservations = route.params.reservations;
+  const [todaysReservations, setTodaysReservations] = useState([]);
+  const [reservationCount, setReservationCount] = useState({});
 
-  const bar = route.params.bar;
+  // const reviewData = [
+  //   {
+  //     pubName: "백수씨 심야식당",
+  //     customerNickname: "김영희",
+  //     reviewRating: 4.5,
+  //     uploadDate: "2023-03-01T12:00:00",
+  //     reviewContent:
+  //       "음식이 정말 맛있었어요. 분위기도 좋고, 서비스도 훌륭합니다!",
+  //     reviewImg: "https://example.com/review-photo1.jpg",
+  //   },
+  //   {
+  //     pubName: "백수씨 심야식당",
+  //     customerNickname: "이철수",
+  //     reviewRating: 5.0,
+  //     uploadDate: "2023-03-02T15:30:00",
+  //     reviewContent:
+  //       "재료가 신선하고, 요리가 일품이었습니다. 다음에 꼭 다시 방문할게요!",
+  //     reviewImg:
+  //       "https://firebasestorage.googleapis.com/v0/b/wework-back.appspot.com/o/%EB%B0%B1%EC%88%98%EC%94%A8%EC%8B%AC%EC%95%BC%EC%8B%9D%EB%8B%B9%2F%EC%8B%AC%EC%95%BC%EC%8B%9D%EB%8B%B9-%EA%B0%84%ED%8C%9001.jpeg?alt=media&token=7cd18370-abdf-4463-b0bf-467410ef7bd1",
+  //   },
+  //   {
+  //     pubName: "백수씨 심야식당",
+  //     customerNickname: "박지영",
+  //     reviewRating: 4.0,
+  //     uploadDate: "2023-03-03T19:00:00",
+  //     reviewContent:
+  //       "쾌적한 환경에서 맛있는 식사를 할 수 있어서 좋았어요. 다만, 대기 시간이 조금 길었네요.",
+  //     reviewImg: "https://example.com/review-photo3.jpg",
+  //   },
+  // ];
 
   LocaleConfig.locales["kr"] = {
     monthNames: [
@@ -146,7 +147,10 @@ const BarOwnerMain = ({ route }) => {
 
   const onDayPress = (day) => {
     setSelectedDate(day.dateString);
-    // console.log(day);
+
+    // 선택한 날짜의 예약들만 필터링
+    const data = reservations.filter((r) => r.reservDate === day.dateString);
+    setTodaysReservations(data);
   };
 
   //한글 요일 반환
@@ -157,20 +161,45 @@ const BarOwnerMain = ({ route }) => {
     return `(${daysOfWeek[dateIdx]})`;
   };
 
+  // 날짜별 예약건수 계산
+  const countReservations = (reservations) => {
+    const count = reservations.reduce((acc, cur) => {
+      // 해당 날짜의 예약 건수가 undefined면 0으로 초기화 후 1을 더함
+      acc[cur.reservDate] = (acc[cur.reservDate] || 0) + 1;
+      return acc;
+    }, {});
+    console.log("count", count);
+    setReservationCount(count);
+  };
+
+  useEffect(() => {
+    countReservations(reservations);
+  }, [reservations]);
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.topContainer}>
-        <Text style={styles.title}>내 술집</Text>
+        <View style={styles.TopMenu}>
+          <Text style={styles.title}>내 술집</Text>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("사장님 마이페이지", { myPubData });
+            }}
+          >
+            <Text style={styles.tag}>술집 정보 수정하기{` >`}</Text>
+          </TouchableOpacity>
+        </View>
+
         <View style={styles.myBarContainer}>
           <Image
-            source={bar.image}
+            source={{ uri: myPubData.pubImages[1] }}
             style={styles.barImage}
             resizeMode="contain"
           />
           <View style={styles.BarInfo}>
-            <Text style={styles.semiTitle}>{bar.name}</Text>
+            <Text style={styles.semiTitle}>{myPubData.pubName}</Text>
             <View style={styles.tags}>
-              {bar.tags.map((tag, index) => (
+              {myPubData.hashTags.map((tag, index) => (
                 <Text key={index} style={styles.tag}>
                   {tag}{" "}
                 </Text>
@@ -178,7 +207,8 @@ const BarOwnerMain = ({ route }) => {
             </View>
 
             <Text>
-              <AntDesign name="star" size={20} color="#1AB277" /> {bar.rating}
+              <AntDesign name="star" size={20} color="#1AB277" />{" "}
+              {myPubData.rating}
             </Text>
           </View>
         </View>
@@ -245,8 +275,13 @@ const BarOwnerMain = ({ route }) => {
               //   ...updateMarkedDates(),
               //   [selectedDate]: { selected: true, selectedColor: "#1AB277" },
               // }}
-              dayComponent={({date, state}) => (
-                <CustomDayComponent date={date} state={state} onDayPress={onDayPress}/>
+              dayComponent={({ date, state }) => (
+                <CustomDayComponent
+                  data={reservationCount}
+                  date={date}
+                  state={state}
+                  onDayPress={onDayPress}
+                />
               )}
               markingType="custom"
               theme={{
@@ -264,30 +299,13 @@ const BarOwnerMain = ({ route }) => {
                     {selectedDate}
                     {dayOfWeek(selectedDate)}
                   </Text>
-                  <Text style={styles.semiTitle}>2건</Text>
+                  <Text style={styles.semiTitle}>
+                    {todaysReservations.length !== 0
+                      ? todaysReservations.length + "건"
+                      : "예약 없음"}
+                  </Text>
                 </View>
-
-                <ReservationCard />
-                <TouchableOpacity style={styles.reservationContainer}>
-                  <View style={styles.info}>
-                    <Text style={styles.semiTitle}>20:00 ~ 21:30</Text>
-                    <Text style={styles.warning}>21시간 전</Text>
-                  </View>
-                  <View style={styles.info}>
-                    <Text style={styles.infoLabel}>인원수</Text>
-                    <Text sytle={styles.infoData}>
-                      <Text style={styles.warning}>25</Text>명
-                    </Text>
-                  </View>
-                  <View style={styles.info}>
-                    <Text style={styles.infoLabel}>예약자명</Text>
-                    <Text sytle={styles.infoData}>김철수</Text>
-                  </View>
-                  <View style={styles.info}>
-                    <Text style={styles.infoLabel}>연락처</Text>
-                    <Text sytle={styles.infoData}>010-5432-9876</Text>
-                  </View>
-                </TouchableOpacity>
+                <Reservations data={todaysReservations} isOwner />
               </>
             )}
           </View>
@@ -296,7 +314,7 @@ const BarOwnerMain = ({ route }) => {
         {/* 리뷰 탭 */}
         {review && (
           <View style={styles.reviewContainer}>
-            <Reviews reviews={reviewData} isOwner={true}/>
+            <Reviews reviews={reviews} isOwner={true} />
           </View>
         )}
       </View>
@@ -312,6 +330,10 @@ const styles = StyleSheet.create({
   topContainer: {
     backgroundColor: "#F1F2F6",
     padding: 20,
+  },
+  TopMenu:{
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   title: {
     fontSize: 24,
@@ -363,6 +385,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 10,
+    marginTop: 20,
   },
   reservationContainer: {
     backgroundColor: "#E0F7ED",
