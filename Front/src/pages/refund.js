@@ -70,7 +70,9 @@ const Refund = () => {
           onPress={() => navigation.goBack()}
           style={styles.wantButton}
         >
-          <Text style={{ color: "#ffffff", fontWeight: "700" }}>환불 요청 </Text>
+          <Text style={{ color: "#ffffff", fontWeight: "700" }}>
+            환불 요청{" "}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -81,10 +83,10 @@ const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
     alignItems: "center",
-    backgroundColor: "#ffffff",
+    backgroundColor: "white",
   },
   modalContent: {
-    backgroundColor: "#F1F2F6",
+    backgroundColor: "white",
     padding: 22,
     justifyContent: "center",
     alignItems: "center",
@@ -155,8 +157,9 @@ const styles = StyleSheet.create({
     margin: 12,
     width: 340,
     borderWidth: 1,
-    backgroundColor: "#F9FAFC",
+    backgroundColor: "#F1F2F6",
     borderColor: colors.borderGrey,
+    borderRadius: 10,
   },
   wantButton: {
     color: "white",
