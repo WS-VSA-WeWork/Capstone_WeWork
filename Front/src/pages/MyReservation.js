@@ -75,7 +75,7 @@ const MyReservation = ({ route }) => {
           {/* 이용전 예약건 */}
           <TouchableOpacity onPress={() => navigation.navigate("환불")}>
             <View style={styles.reservationListContainer}>
-              <ReservationCardforUser item={reservationData[0]} />
+              <ReservationCardforUser item={reservationData[0]} notFinished={true}/>
               {/* <View style={styles.reservationList1}>
                 <Text style={styles.reservationListTitle}>
                   {reservationData[0].pubName}{" "}

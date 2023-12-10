@@ -13,7 +13,7 @@ const Reservations = ({ data, isOwner }) => {
         if (isOwner) {
           return <ReservationCardforOwner item={item} />;
         } else {
-          return <ReservationCardforUser item={item} />;
+          return <ReservationCardforUser item={item} notFinished={false}/>;
         }
       }}
     />
