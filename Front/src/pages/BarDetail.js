@@ -35,6 +35,7 @@ const BarDetail = ({ route }) => {
   const bar = route.params.bar;
   const selectedDate = route.params.selectedDate;
   const numberOfPeople = route.params.numberOfPeople;
+  const user = route.params.userInfo;
   const reviews = useSelector((state) => state.review.data);
   const timetable = useSelector((state) => state.timetable.data);
 
@@ -45,6 +46,7 @@ const BarDetail = ({ route }) => {
 
   const [menu, setMenu] = useState(true);
   const [review, setReviews] = useState(false);
+  const [userInfo, setUserInfo] = useState({});
 
   const reviewData = [
     {
@@ -93,9 +95,9 @@ const BarDetail = ({ route }) => {
   };
 
   useEffect(() => {
-    const date = "2023-12-04"; // 임시코드 selectedDate로 바꿔야함
     dispatch(fetchReviewsByPub(bar.pubName));
-    dispatch(fetchTimetable({ pubName: bar.pubName, date: date }));
+    dispatch(fetchTimetable({ pubName: bar.pubName, date: selectedDate }));
+    setUserInfo(user);
   }, []);
 
   useEffect(() => {
@@ -168,7 +170,7 @@ const BarDetail = ({ route }) => {
       ],
     };
     console.log("bardetailnavigate", reservationDetails);
-    navigation.navigate("결제하기", reservationDetails);
+    navigation.navigate("결제하기", { reservationDetails, userInfo });
   };
 
   console.log(bar.pubImages);

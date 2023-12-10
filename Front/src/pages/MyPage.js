@@ -5,18 +5,23 @@ import { Feather } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const MyPage = () => {
+const MyPage = ({ route }) => {
   const navigation = useNavigation();
+
+  const userInfo = route.params;
+
   const handleLogout = () => {
     AsyncStorage.removeItem("userData");
     navigation.navigate("로그인화면");
   };
+
   return (
     <View style={styles.myPageContainer}>
       <View style={styles.header}>
         <Pressable
-          onPress={() => navigation.navigate("프로필관리")}
+          onPress={() => navigation.navigate("프로필관리", userInfo)}
           style={({ pressed }) => [
             {
               backgroundColor: pressed ? "#F2F2F2" : "#FFFFFF",
@@ -29,7 +34,7 @@ const MyPage = () => {
                 source={require("../../assets/dongwan.jpg")}
                 style={styles.avatar}
               ></Image>
-              <Text style={styles.userName}>동완</Text>
+              <Text style={styles.userName}>{userInfo.name}</Text>
             </View>
             <MaterialIcons
               name="keyboard-arrow-right"
@@ -50,7 +55,7 @@ const MyPage = () => {
       <ScrollView>
         <View style={styles.bodyContainer}>
           <Pressable
-            onPress={() => navigation.navigate("내예약관리")}
+            onPress={() => navigation.navigate("내예약관리", userInfo)}
             style={({ pressed }) => [
               {
                 backgroundColor: pressed ? "#F2F2F2" : "#FFFFFF",

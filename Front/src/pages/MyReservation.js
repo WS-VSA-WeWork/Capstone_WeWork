@@ -21,7 +21,7 @@ import Reservations from "../components/Reservations";
 import { fetchReservationDataByUserId } from "../reducers/reservationReducer";
 import ReservationCardforUser from "../components/ReservationCardforUser";
 
-const MyReservation = () => {
+const MyReservation = ({ route }) => {
   const [haveReservation, setHaveReservation] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [typing, setTyping] = useState(false);
@@ -30,15 +30,18 @@ const MyReservation = () => {
   const navigation = useNavigation();
 
   const dispatch = useDispatch();
+  const uid = route.params.uid;
+  const type = route.params.type;
   const reservationData = useSelector((state) => state.reservation.data);
   const status = useSelector((state) => state.reservation.status);
   const error = useSelector((state) => state.reservation.error);
   const [value, onChangeText] = useState("환불 사유를 입력해주세요");
+  const [user, setUser] = useState({});
 
   useEffect(() => {
-    const userid = "1234567890"; // 임시로 넣어놓은 uid
-    dispatch(fetchReservationDataByUserId({ userId: userid }));
-  }, []);
+    dispatch(fetchReservationDataByUserId({ userId: uid }));
+    setUser({ uid: uid, type: type });
+  }, [uid]);
 
   useEffect(() => {
     if (reservationData.length > 0) {
@@ -114,7 +117,7 @@ const MyReservation = () => {
           </View>
 
           <Pressable
-            onPress={() => navigation.navigate("예약메인")}
+            onPress={() => navigation.navigate("예약메인", { user })}
             style={{
               alignItems: "center",
               justifyContent: "center",

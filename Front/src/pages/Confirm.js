@@ -15,7 +15,7 @@ const Confirm = ({ route }) => {
   const navigation = useNavigation();
 
   const handleonPress = () => {
-    navigation.navigate("내예약관리");
+    navigation.navigate("내예약관리", { uid: resv.userId, type: resv.type });
   };
 
   return (
@@ -205,12 +205,12 @@ const styles = StyleSheet.create({
     textAlignVertical: "center",
     color: "#ffffff",
   },
-  cancleInfo:{
+  cancleInfo: {
     width: "70%",
     paddingVertical: 10,
     flexDirection: "row",
     justifyContent: "space-between",
-  }
+  },
 });
 
 export default Confirm;
