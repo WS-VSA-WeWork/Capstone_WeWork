@@ -5,9 +5,16 @@ import { Feather } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const CEOMyPage = () => {
   const navigation = useNavigation();
+
+  const handleLogout = () => {
+    alert("로그아웃 되었습니다.");
+    AsyncStorage.removeItem("userData");
+    navigation.navigate("로그인화면");
+  };
 
   return (
     <View style={styles.myPageContainer}>
@@ -133,6 +140,26 @@ const CEOMyPage = () => {
                 <Text style={styles.reservationManageTitle}>
                   규정 사항 보기
                 </Text>
+              </View>
+              <MaterialIcons
+                name="keyboard-arrow-right"
+                size={26}
+                color="black"
+              />
+            </View>
+          </Pressable>
+          <Pressable
+            onPress={handleLogout}
+            style={({ pressed }) => [
+              {
+                backgroundColor: pressed ? "#F2F2F2" : "#FFFFFF",
+              },
+            ]}
+          >
+            <View style={styles.reservationManage}>
+              <View style={styles.reservationManageLeft}>
+                <Octicons name="stop" size={24} color="black" />
+                <Text style={styles.reservationManageTitle}>로그아웃</Text>
               </View>
               <MaterialIcons
                 name="keyboard-arrow-right"

@@ -3,6 +3,7 @@ import { Text, View, Button, StyleSheet, StatusBar } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 import simya from "../../assets/심야식당.jpeg";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Main = () => {
   const navigation = useNavigation();
@@ -47,6 +48,37 @@ const Main = () => {
       ],
     },
   };
+
+  const retrieveUserData = async () => {
+    try {
+      const storage = await AsyncStorage.getItem("userData");
+      if (storage) {
+        // storage에 userData가 존재하면 로그인 처리
+        const userData = await AsyncStorage.getItem("userData");
+        const userInfo = JSON.parse(userData);
+        const user = {
+          uid: userInfo.uid,
+          type: userInfo.type,
+        };
+
+        if (userInfo.type === "사장님") {
+          navigation.navigate("대시보드", { user });
+        } else {
+          navigation.navigate("예약메인", { user });
+        }
+
+        // 이후 필요한 로그인 처리를 여기에 추가
+      } else {
+        // userData가 존재하지 않으면 로그인이 필요한 상태
+        console.log("No stored user data. User needs to log in.");
+        navigation.navigate("로그인화면");
+      }
+    } catch (error) {
+      console.error("Error retrieving user data:", error);
+    }
+  };
+
+  retrieveUserData();
 
   return (
     <View style={styles.container}>
