@@ -29,6 +29,7 @@ import { Octicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Reservations from "../components/Reservations";
 import { fetchReservationDataByUserId } from "../reducers/reservationReducer";
+import { colors } from "../config/globalStyles";
 
 const Refund = () => {
   const [value, onChangeText] = useState("환불 사유를 입력해주세요");
@@ -69,7 +70,7 @@ const Refund = () => {
           onPress={() => navigation.goBack()}
           style={styles.wantButton}
         >
-          <Text style={{ color: "black", fontWeight: "700" }}>환불 요청 </Text>
+          <Text style={{ color: "#ffffff", fontWeight: "700" }}>환불 요청 </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -80,6 +81,7 @@ const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
     alignItems: "center",
+    backgroundColor: "#ffffff",
   },
   modalContent: {
     backgroundColor: "#F1F2F6",
@@ -154,7 +156,7 @@ const styles = StyleSheet.create({
     width: 340,
     borderWidth: 1,
     backgroundColor: "#F9FAFC",
-    borderColor: "#F9FAFC",
+    borderColor: colors.borderGrey,
   },
   wantButton: {
     color: "white",
