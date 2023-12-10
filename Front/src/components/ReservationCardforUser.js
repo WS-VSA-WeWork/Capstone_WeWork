@@ -6,7 +6,6 @@ import { colors } from "../config/globalStyles";
 
 const ReservationCardforUser = ({ item }) => {
   const navigation = useNavigation();
-  console.log(item);
   const startTime = item.reserveTime
     ? item.reserveTime.split(" - ")[0]
     : "17:00";

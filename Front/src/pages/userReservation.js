@@ -30,10 +30,12 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Reservations from "../components/Reservations";
 import { fetchReservationDataByUserId } from "../reducers/reservationReducer";
 import ReservationCardforUser from "../components/ReservationCardforUser";
+import { getUserInfo } from "../reducers/userReducer";
 
-export default function UserReservation() {
+export default function UserReservation({ route }) {
   const dispatch = useDispatch();
 
+  const user = route.params.user;
   const pubData = useSelector((state) => state.pub.data);
   const status = useSelector((state) => state.pub.status);
   const error = useSelector((state) => state.pub.error);
@@ -242,6 +244,7 @@ export default function UserReservation() {
       "-" +
       String(date.getDate()).padStart(2, "0")
   );
+  const [userInfo, setUserInfo] = useState({});
 
   const igakayaCategory = () => {
     const filtered = pubData.filter((pub) => pub.type === "이자카야");
@@ -324,7 +327,13 @@ export default function UserReservation() {
 
   const handleItemPress = (bar) => {
     const selectedDate = stringDate.toString();
-    navigation.navigate("식당 상세", { bar, selectedDate, numberOfPeople });
+
+    navigation.navigate("식당 상세", {
+      bar,
+      selectedDate,
+      numberOfPeople,
+      userInfo,
+    });
   };
 
   const [numberOfPeople, setNumberOfPeople] = useState(0);
@@ -363,32 +372,6 @@ export default function UserReservation() {
 
   const [keyboardHeight, setKeyboardHeight] = useState(0);
 
-  useEffect(() => {
-    dispatch(fetchPubsData());
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      (event) => {
-        setKeyboardHeight(event.endCoordinates.height);
-      }
-    );
-
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => {
-        setKeyboardHeight(0);
-      }
-    );
-
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
-
-  if (status === "failed") {
-    return <Text>Error loading data: {error}</Text>;
-  }
-
   // 검색 버튼이 클릭되었을 때 실행되는 함수
   //  newDate에 시간과 인원수를 json형태로 저장
   const onSearch = () => {
@@ -410,15 +393,50 @@ export default function UserReservation() {
   const reservationData = useSelector((state) => state.reservation.data);
 
   useEffect(() => {
-    const userid = "1234567890"; // 임시로 넣어놓은 uid
-    dispatch(fetchReservationDataByUserId({ userId: userid }));
-  }, []);
+    dispatch(fetchReservationDataByUserId({ userId: user.uid })).then(
+      (action) => {
+        const reservation = action.payload;
+
+        if (reservation.length > 0) {
+          setHaveReservation(true);
+        }
+      }
+    );
+  }, [reservationData]);
 
   useEffect(() => {
-    if (reservationData.length > 0) {
-      setHaveReservation(true);
-    }
-  }, [reservationData]);
+    dispatch(getUserInfo({ uid: user.uid, type: user.type })).then((action) => {
+      setUserInfo({
+        uid: user.uid,
+        type: user.type,
+        name: action.payload.name,
+        phoneNum: action.payload.phoneNum,
+        email: action.payload.email,
+      });
+    });
+  }, [user]);
+
+  useEffect(() => {
+    dispatch(fetchPubsData());
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      (event) => {
+        setKeyboardHeight(event.endCoordinates.height);
+      }
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setKeyboardHeight(0);
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, [pubData]);
 
   //데이터 로딩 실패 시
   if (status === "failed") {
@@ -428,7 +446,6 @@ export default function UserReservation() {
   const renderItem = ({ item }) => {
     <Reservations data={item} />;
   };
-
   // 화면 상태창//
   return (
     <View style={styles.container}>
@@ -456,7 +473,7 @@ export default function UserReservation() {
           </TouchableOpacity>
           <Pressable
             onPress={() => {
-              navigation.navigate("마이페이지");
+              navigation.navigate("마이페이지", userInfo);
             }}
           >
             <MaterialIcons
@@ -606,7 +623,7 @@ export default function UserReservation() {
             placeholder={"인원수 입력"}
             inputMode="numeric"
             keyboardType="numeric"
-            value={numberOfPeople}
+            value={numberOfPeople.toString()}
             clearTextOnFocus={true}
           ></TextInput>
         </View>
