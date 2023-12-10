@@ -13,6 +13,7 @@ const MyPage = ({ route }) => {
   const userInfo = route.params;
 
   const handleLogout = () => {
+    alert("로그아웃 되었습니다.");
     AsyncStorage.removeItem("userData");
     navigation.navigate("로그인화면");
   };
