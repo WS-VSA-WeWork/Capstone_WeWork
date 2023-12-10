@@ -28,6 +28,7 @@ import { fetchReviewsByPub } from "../reducers/reviewReducer";
 import { fetchTimetable } from "../reducers/timetableReducer";
 import Carousel from "../components/Carousel";
 import Accordion from "../components/Accordion";
+import { FlatList } from "react-native";
 
 const BarDetail = ({ route }) => {
   const dispatch = useDispatch();
@@ -329,8 +330,13 @@ const BarDetail = ({ route }) => {
             {/* 대표메뉴 */}
             {menu && (
               <View style={styles.cardsContainer}>
-                <Menu menu={bar.pubMenus[0]} />
-                <Menu menu={bar.pubMenus[1]} />
+                <FlatList
+                  data={bar.pubMenus}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={({ item }) => {
+                    return(<Menu menu={item} />)
+                  }}
+                />
               </View>
             )}
             {/* 리뷰 */}
