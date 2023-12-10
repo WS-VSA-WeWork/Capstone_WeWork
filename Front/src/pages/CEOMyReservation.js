@@ -23,7 +23,7 @@ const CEOMyReservation = () => {
     // 컴포넌트가 마운트 될 때 예약 데이터를 불러옴
     const pubName = "백수씨심야식당";
     dispatch(fetchReservationDataByPubName({ pubName: pubName }));
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (reservationData.length > 0) {
