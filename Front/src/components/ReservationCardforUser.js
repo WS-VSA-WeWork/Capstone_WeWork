@@ -4,7 +4,7 @@ import React from "react";
 import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
 import { colors } from "../config/globalStyles";
 
-const ReservationCardforUser = ({ item }) => {
+const ReservationCardforUser = ({ item, notFinished }) => {
   const navigation = useNavigation();
   const startTime = item.reserveTime
     ? item.reserveTime.split(" - ")[0]
@@ -16,7 +16,7 @@ const ReservationCardforUser = ({ item }) => {
   const getTimeDifference = (time) => {
     const now = new Date();
     const dateTime = new Date(`${reservationDate}T${startTime}:00`);
-    const difference = now - dateTime; // 밀리초 단위 차이
+    const difference = Math.abs(now - dateTime); // 밀리초 단위 차이
 
     const minutes = Math.floor(difference / 60000);
     const hours = Math.floor(minutes / 60);
@@ -38,7 +38,11 @@ const ReservationCardforUser = ({ item }) => {
     <TouchableOpacity
       style={styles.reservationContainer}
       onPress={() => {
-        navigation.navigate("리뷰작성", {});
+        if (notFinished) {
+          navigation.navigate("환불");
+        } else {
+          navigation.navigate("리뷰작성", {});
+        }
       }}
     >
       <View style={styles.TitleContainer}>
@@ -65,7 +69,7 @@ const ReservationCardforUser = ({ item }) => {
 };
 
 const styles = StyleSheet.create({
-  TitleContainer:{
+  TitleContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 15,

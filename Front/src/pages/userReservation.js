@@ -796,7 +796,7 @@ export default function UserReservation({ route }) {
                   </Text>
                   <TouchableOpacity onPress={() => navigation.navigate("환불")}>
                     <View style={styles.reservationListContainer}>
-                      <ReservationCardforUser item={reservationData[0]} />
+                      <ReservationCardforUser item={reservationData[0]} notFinished={true}/>
                       {/* <View style={styles.reservationContainer}>
                         <View style={styles.reservationList1}>
                           <Text style={styles.reservationListTitle}>
@@ -827,7 +827,9 @@ export default function UserReservation({ route }) {
                     >
                       나의 대관 내역
                     </Text>
-                    <Text style={styles.reservationPastNum}>5</Text>
+                    <Text style={styles.reservationPastNum}>
+                      {reservationData.length}
+                    </Text>
                   </View>
 
                   <View style={styles.reservationListContainer}>
@@ -1014,9 +1016,13 @@ const styles = StyleSheet.create({
   },
   myreservationButton: {
     backgroundColor: "#D9D9D9",
+
     borderRadius: 10,
     paddingHorizontal: 15,
-    paddingVertical: 0,
+    paddingVertical: 5,
+  },
+  buttonText:{
+    color: "#ffffff"
   },
   reservationListContainer: {
     marginHorizontal: 30,
