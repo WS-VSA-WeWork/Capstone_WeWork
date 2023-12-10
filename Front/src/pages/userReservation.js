@@ -863,12 +863,12 @@ export default function UserReservation({ route }) {
                         예약을 진행해주세요 !
                       </Text>
                     </View>
-                    <View style={styles.myreservationButton}>
-                      <Button
-                        title="지금 예약하러가기"
+                    <TouchableOpacity
+                      style={styles.myreservationButton}
                         onPress={() => setHaveReservation(true)}
-                      />
-                    </View>
+                      >
+                        <Text style={styles.buttonText}>지금 예약하러가기</Text>
+                      </TouchableOpacity>
                   </View>
                 </View>
               )}
@@ -1024,9 +1024,13 @@ const styles = StyleSheet.create({
   },
   myreservationButton: {
     backgroundColor: "#D9D9D9",
+
     borderRadius: 10,
     paddingHorizontal: 15,
-    paddingVertical: 0,
+    paddingVertical: 5,
+  },
+  buttonText:{
+    color: "#ffffff"
   },
   reservationListContainer: {
     marginHorizontal: 30,

@@ -16,7 +16,7 @@ const ReservationCardforUser = ({ item }) => {
   const getTimeDifference = (time) => {
     const now = new Date();
     const dateTime = new Date(`${reservationDate}T${startTime}:00`);
-    const difference = now - dateTime; // 밀리초 단위 차이
+    const difference = Math.abs(now - dateTime); // 밀리초 단위 차이
 
     const minutes = Math.floor(difference / 60000);
     const hours = Math.floor(minutes / 60);

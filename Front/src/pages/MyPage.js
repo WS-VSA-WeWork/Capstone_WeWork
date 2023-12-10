@@ -44,13 +44,13 @@ const MyPage = ({ route }) => {
             />
           </View>
         </Pressable>
-        <View style={styles.userBook}>
+        {/* <View style={styles.userBook}>
           <Text style={styles.userBookTitle}>예정된 대관 일정</Text>
           <View style={styles.userBookContent}>
             <Text style={styles.userBookContentTop}>2023-11-14</Text>
             <Text>15:30 ~ 17:30 / 35명</Text>
           </View>
-        </View>
+        </View> */}
       </View>
 
       <ScrollView>
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
   //첫번째 섹터
   header: {
     backgroundColor: "#FFFFFF",
-    height: "30%",
+    height: "15%",
   },
   userLeft: {
     flexDirection: "row",
