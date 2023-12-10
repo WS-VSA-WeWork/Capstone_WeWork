@@ -14,7 +14,6 @@ import * as ImagePicker from "expo-image-picker";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-
 const RestaurantMenuPost = () => {
   const [menuList, setMenuList] = useState([]); // 메뉴 리스트
   const [modalVisible, setModalVisible] = useState(false); // 모달창 보이기/숨기기
@@ -235,7 +234,15 @@ const RestaurantMenuPost = () => {
                   },
                 ]}
               >
-                <View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: 10,
+                  }}
+                >
+                  <Feather name="plus-square" size={24} color="black" />
                   <Text>메뉴 추가하기</Text>
                 </View>
               </Pressable>
@@ -287,7 +294,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     elevation: 5,
-    height: "40%",
+    height: 350,
     width: 300,
   },
   input: {

@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
+import { Feather } from "@expo/vector-icons";
 
 //CLOVA greeneye import 파트
 import axios from "axios";
@@ -218,7 +219,17 @@ const ReviewImagePick = ({ documentId, reviewNum }) => {
             style={styles.syncIcon}
             onPressIn={uploadImageToFirebase}
           >
-            <Ionicons name="sync-circle" size={36} color="grey" />
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: 9,
+              }}
+            >
+              <Feather name="upload-cloud" size={24} color="black" />
+              <Text>리뷰 사진 업로드 하기</Text>
+            </View>
           </TouchableOpacity>
         </View>
       ) : (

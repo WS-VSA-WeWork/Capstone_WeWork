@@ -501,11 +501,7 @@ export default function UserReservation({ route }) {
       </View>
 
       <View style={styles.category}>
-        <ScrollView
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-        >
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {/* <View
             style={{
               ...styles.categorybtn,
@@ -865,12 +861,6 @@ export default function UserReservation({ route }) {
                         예약을 진행해주세요 !
                       </Text>
                     </View>
-                    <TouchableOpacity
-                      style={styles.myreservationButton}
-                        onPress={() => setHaveReservation(true)}
-                      >
-                        <Text style={styles.buttonText}>지금 예약하러가기</Text>
-                      </TouchableOpacity>
                   </View>
                 </View>
               )}

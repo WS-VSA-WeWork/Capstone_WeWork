@@ -200,7 +200,17 @@ const ImagePick = (documentId) => {
                 style={styles.syncIcon}
                 onPressIn={uploadImageToFirebase}
               >
-                <Ionicons name="sync-circle" size={36} color="grey" />
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: 9,
+                  }}
+                >
+                  <Feather name="upload-cloud" size={24} color="black" />
+                  <Text>대표사진 업로드 하기</Text>
+                </View>
               </TouchableOpacity>
             </View>
           ) : (
@@ -234,7 +244,7 @@ const styles = StyleSheet.create({
   phoneTitle: {
     fontSize: 18,
     fontWeight: "600",
-    marginBottom: 10,
+    marginBottom: 0,
   },
   blockTitleContainer: {
     paddingHorizontal: 15,
@@ -242,6 +252,9 @@ const styles = StyleSheet.create({
     borderTopColor: "#E5E5E5",
     flexDirection: "row",
     justifyContent: "space-between",
+    width: "100%",
+    borderTopColor: "#E5E5E5",
+    borderTopWidth: 1,
   },
   container: {
     flex: 1,
@@ -268,8 +281,6 @@ const styles = StyleSheet.create({
   },
   phoneContentContainer: {
     gap: 10,
-    borderTopColor: "#E5E5E5",
-    borderTopWidth: 1,
     paddingHorizontal: 15,
     paddingVertical: 10,
   },
