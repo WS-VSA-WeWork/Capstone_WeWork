@@ -25,9 +25,14 @@ import {
   getDownloadURL,
   uploadBytesResumable,
 } from "firebase/storage";
+import { useDispatch } from "react-redux";
+import { pushPubImages } from "../reducers/pubReducer.js";
 
 const ImagePick = (documentId) => {
   const [selectedImages, setSelectedImages] = useState([]);
+  const [imageUri, setImageUri] = useState([]);
+
+  const dispatch = useDispatch();
 
   {
     /* 001. 이미지 url 불러와서 화면 표시 */
@@ -135,14 +140,22 @@ const ImagePick = (documentId) => {
         // complete function ....
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           console.log("File available at", downloadURL);
+          console.log("ducumentID1: ", documentId);
+          setImageUri((prevImageUris) => [...prevImageUris, downloadURL]);
         });
       }
     );
   }
 
   const uploadImageToFirebase = async () => {
-    selectedImages.map((uri) => {
-      uploadImage(uri, "image/jpeg");
+    await Promise.all(
+      selectedImages.map((uri) => {
+        uploadImage(uri, "image/jpeg");
+      })
+    ).then(() => {
+      console.log("ducumentID2: ", documentId);
+      console.log(imageUri);
+      dispatch(pushPubImages({ pubName: documentId.documentId, imageUris: imageUri }));
     });
   };
 

@@ -62,20 +62,35 @@ export const fetchAvailablePubsData = createAsyncThunk(
   }
 );
 
+// 이미지 업로드하기
+export const pushPubImages = createAsyncThunk(
+  "pub/pushPubImages",
+  async({pubName, imageUris}) => {
+    await updateDoc(doc(db, "pubs", pubName), {
+      pubImages: imageUris,
+    });
+  }
+)
+
 export const pushAvailablePubsData = createAsyncThunk(
   "pub/pushAvailablePubsData",
-  async (pubName) => {
-    for (let i = 1; i <= 31; i++) {
+  async ({pubName, maxSeats, timeSlots}) => {
+    for (let i = 10; i <= 15; i++) {
       const day = i.toString().padStart(2, "0");
       const date = `2023-12-${day}`;
 
       await setDoc(doc(db, "availablePubs", date, "pubName", pubName), {
-        booked: available,
+        booked: "available",
         maxSeats: maxSeats,
         pubName: pubName,
       });
+      
+    await setDoc(doc(db, "pubs", pubName, "timeTable", date), {
+      date: date,
+      timeslot: timeSlots,
+    });
     }
-    return data;
+    return timeSlots;
   }
 );
 

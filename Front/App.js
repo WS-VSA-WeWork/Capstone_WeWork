@@ -30,7 +30,7 @@ import ImagePick from "./src/components/ImagePick";
 import Join from "./src/pages/Join";
 const Stack = createNativeStackNavigator();
 
-LogBox.ignoreLogs(["VirtualizedLists", "Key", "Failed", "Login", "Possible"]);
+LogBox.ignoreLogs(["VirtualizedLists", "Key", "Failed", "Login", "Possible", "Error"]);
 
 export default function App() {
   return (
