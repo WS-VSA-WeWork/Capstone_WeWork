@@ -11,6 +11,7 @@ import { LineChart } from "react-native-chart-kit";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchReviewsByPub } from "../reducers/reviewReducer";
 import { AntDesign } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome } from "@expo/vector-icons";
 
 import Reviews from "../components/Reviews";
@@ -162,17 +163,20 @@ const CEODashBoard = ({ route }) => {
                 navigation.navigate("가게 등록", { myPub });
               }}
             >
-              <AntDesign name="pluscircleo" size={35} color="#393E47" />
+              <MaterialCommunityIcons name="pencil-outline" size={35} color="#393E47" />
             </TouchableOpacity>
 
-            <Text style={styles.menuText}>가게 등록하기</Text>
+            <Text style={styles.menuText}>가게정보 수정</Text>
           </View>
 
           <View style={styles.buttonContianer}>
             <TouchableOpacity
               style={styles.menuButton}
               onPress={() => {
-                navigation.navigate("사장님 마이페이지", { myPub });
+                navigation.navigate("사장님 마이페이지", { 
+                  myPub,
+                  reviews,
+                  reservations, });
               }}
             >
               <AntDesign name="user" size={35} color="#393E47" />
@@ -199,7 +203,10 @@ const CEODashBoard = ({ route }) => {
 
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("사장님메인", { myPub });
+            navigation.navigate("사장님메인", { 
+              myPub,
+              reviews,
+              reservations, });
           }}
         >
           <View style={styles.center}>
