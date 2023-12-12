@@ -180,7 +180,7 @@ const BarDetail = ({ route }) => {
     <>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.imageContainer}>
-          <Carousel images={bar.pubImages.slice(1)} />
+          <Carousel images={bar.pubImages} />
         </View>
 
         {/* 타이틀 */}
