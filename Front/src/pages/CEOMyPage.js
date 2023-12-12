@@ -2,6 +2,7 @@ import { Pressable, ScrollView, StyleSheet } from "react-native";
 import { Text, View, Image } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
+import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -140,6 +141,26 @@ const CEOMyPage = () => {
                 <Text style={styles.reservationManageTitle}>
                   규정 사항 보기
                 </Text>
+              </View>
+              <MaterialIcons
+                name="keyboard-arrow-right"
+                size={26}
+                color="black"
+              />
+            </View>
+          </Pressable>
+          <Pressable
+            onPress={() => navigation.navigate("가게 등록", {myPub:"new"})}
+            style={({ pressed }) => [
+              {
+                backgroundColor: pressed ? "#F2F2F2" : "#FFFFFF",
+              },
+            ]}
+          >
+            <View style={styles.reservationManage}>
+              <View style={styles.reservationManageLeft}>
+                <AntDesign name="pluscircleo" size={24} color="black" />
+                <Text style={styles.reservationManageTitle}>새 가게 추가하기</Text>
               </View>
               <MaterialIcons
                 name="keyboard-arrow-right"

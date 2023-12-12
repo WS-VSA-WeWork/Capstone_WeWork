@@ -15,7 +15,10 @@ const MyPage = ({ route }) => {
   const handleLogout = () => {
     alert("로그아웃 되었습니다.");
     AsyncStorage.removeItem("userData");
-    navigation.navigate("로그인화면");
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "로그인화면" }],
+    });
   };
 
   return (

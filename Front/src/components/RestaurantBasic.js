@@ -15,7 +15,7 @@ import { SimpleLineIcons } from "@expo/vector-icons";
 import axios from "axios";
 import ImagePick from "./ImagePick";
 import { useDispatch } from "react-redux";
-import { pushPubData } from "../reducers/pubReducer";
+import { pushAvailablePubsData, pushPubData } from "../reducers/pubReducer";
 import { Ionicons } from "@expo/vector-icons";
 //firebase import 파트
 import App from "../../firebaseConfig.js";
@@ -44,7 +44,22 @@ const RestaurantBasic = ({ route }) => {
   const [hashTag, setHashTag] = useState("");
   const [hashTags, setHashTags] = useState([]);
   const [restaurantInfo, setRestaurantInfo] = useState("");
+  const [uploadFin, setUploadFin] = useState(false);
   const categories = ["이자카야", "치킨집", "전집", "막걸리", "기타"];
+
+  const generateTimeSlots = (start, end) => {
+    const slots = [];
+    let current = new Date(`2023-01-01 ${start}`);
+    const endDateTime = new Date(`2023-01-01 ${end}`);
+
+    while (current < endDateTime) {
+      const timeSlot = current.toTimeString().substring(0, 5);
+      slots.push({ available: true, label: timeSlot });
+      current = new Date(current.getTime() + 30 * 60000); // 30분 추가
+    }
+    console.log(slots);
+    return slots;
+  };
 
   const handlePress = () => {
     const data = {
@@ -58,15 +73,36 @@ const RestaurantBasic = ({ route }) => {
       pubDescription: restaurantInfo,
       hashTags: hashTags,
     };
-    dispatch(
-      pushPubData({
-        pubName: "백수씨심야식당",
-        data: data,
-      })
-    );
+
+    if (myPub === "new") {
+      const timeSlots = generateTimeSlots(startTime, endTime);
+      console.log("timeSlots: ", timeSlots);
+      dispatch(
+        pushPubData({
+          pubName: pubName,
+          data: data,
+        })
+      );
+      dispatch(
+        pushAvailablePubsData({
+          pubName: pubName,
+          maxSeats: maxSeats,
+          timeSlots: timeSlots,
+        })
+      );
+      setUploadFin(true);
+    } else {
+      dispatch(
+        pushPubData({
+          pubName: pubName,
+          data: data,
+        })
+      );
+    }
   };
 
   const onChangePubName = (text) => {
+    setUploadFin(false);
     setPubName(text);
   };
 
@@ -169,19 +205,21 @@ const RestaurantBasic = ({ route }) => {
 
     getImagesInDirectory();
     console.log("다운로드 된 이미지 갯수: " + downloadImageUrls.length);
-    downloadImageUrls.map((url, index) => {
-      filteringImage(url).then((result) => {
-        if (result === "SUCCESS") {
-          console.log("정상 이미지입니다.");
-          const newDownloadImageUrls = downloadImageUrls[index];
-          setDownloadImageUrls(newDownloadImageUrls);
-        } else {
-          console.log("유해 이미지입니다.");
-          console.log("index: ", index);
-          console.log("url: ", url);
-        }
+    if (Array.isArray(downloadImageUrls)) {
+      downloadImageUrls.map((url, index) => {
+        filteringImage(url).then((result) => {
+          if (result === "SUCCESS") {
+            console.log("정상 이미지입니다.");
+            const newDownloadImageUrls = downloadImageUrls[index];
+            setDownloadImageUrls(newDownloadImageUrls);
+          } else {
+            console.log("유해 이미지입니다.");
+            console.log("index: ", index);
+            console.log("url: ", url);
+          }
+        });
       });
-    });
+    }
   }, [storage, refresh]);
 
   {
@@ -236,7 +274,19 @@ const RestaurantBasic = ({ route }) => {
   };
 
   useEffect(() => {
-    if (myPub) {
+    if (myPub === "new") {
+      // 빈 값으로 처리; 상태들을 초기 값으로 설정하거나 아무것도 하지 않음
+      setPubName("");
+      setCategory("");
+      setPhoneNum("");
+      setAddress("");
+      setStartTime("");
+      setEndTime("");
+      setOpeningHours("");
+      setMaxSeats("");
+      setHashTags([]);
+      setRestaurantInfo("");
+    } else if (myPub) {
       setPubName(myPub.pubName);
       setCategory(myPub.type);
       setPhoneNum(myPub.pubPhonenum);
@@ -270,7 +320,9 @@ const RestaurantBasic = ({ route }) => {
             >
               <View style={styles.myInfoContentButton}>
                 <SimpleLineIcons name="pencil" size={15} color="blue" />
-                <Text style={{ color: "blue", fontWeight: "bold" }}>수정</Text>
+                <Text style={{ color: "blue", fontWeight: "bold" }}>
+                  {myPub === "new" ? "등록" : "수정"}
+                </Text>
               </View>
             </Pressable>
           </View>
@@ -291,7 +343,7 @@ const RestaurantBasic = ({ route }) => {
                 value={pubName}
                 maxLength={11}
                 style={styles.content}
-                placeholder={"가게 이름"}
+                placeholder={"가게 이름을 입력하세요"}
               ></TextInput>
             </View>
           </View>
@@ -496,7 +548,17 @@ const RestaurantBasic = ({ route }) => {
         </View>
 
         <View style={styles.blockContainer}>
-          <ImagePick documentId={documentId} />
+          {uploadFin ? (
+            <ImagePick documentId={pubName} />
+          ) : (
+            <View style={styles.contentContainer}>
+              <Text style={styles.phoneTitle}>대표 사진 등록하기</Text>
+
+              <Text style={styles.content}>
+                '등록'버튼을 눌러 가게 등록을 먼저 진행해주세요.
+              </Text>
+            </View>
+          )}
         </View>
       </ScrollView>
     </View>
@@ -523,6 +585,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     width: "100%",
+  },
+  phoneTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    marginBottom: 0,
   },
   blockTitle: {
     fontSize: 20,

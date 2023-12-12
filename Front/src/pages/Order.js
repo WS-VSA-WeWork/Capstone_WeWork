@@ -66,6 +66,31 @@ const Order = ({ route }) => {
     navigation.navigate("예약완료", reservationInfo);
   };
 
+  const formatDate = (date) => {
+    let d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+  }
+
+  const getDayOfWeek = (date) => {
+    const days = ['일', '월', '화', '수', '목', '금', '토'];
+    return days[date.getDay()];
+  }
+
+  const calculateDdate = (dateStr) => {
+    let date = new Date(dateStr);
+    date.setDate(date.getDate() - 3);
+    return `${formatDate(date)} (${getDayOfWeek(date)})`;
+  }
+
   return (
     <>
       <ScrollView contentContainerStyle={styles.container}>
@@ -108,7 +133,7 @@ const Order = ({ route }) => {
           <View style={styles.datePriceInfoContainer}>
             <View style={styles.info}>
               <Text style={styles.infoLabel}>취소 기한</Text>
-              <Text style={styles.infoValue}>2023.12.08(금)</Text>
+              <Text style={styles.infoValue}>{calculateDdate(resv.reservDate)}</Text>
               {/*tmp*/}
             </View>
             <Text style={styles.warning}>
