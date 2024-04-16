@@ -58,15 +58,16 @@
 <div>
   <img width="200" alt="image" src="https://github.com/WS-VSA-WeWork/Capstone_WeWork/assets/83868210/8808d879-1c8d-4da5-85e1-12e14adbe3fb">
   <img width="200" alt="image" src="https://github.com/WS-VSA-WeWork/Capstone_WeWork/assets/83868210/955474d3-44ae-4324-912f-3f700f124a5a">
-  <img width="200" alt="image" src="https://github.com/WS-VSA-WeWork/Capstone_WeWork/assets/83868210/e6f943f4-a540-44a4-b50c-682152d32074">
+  <img width="200" alt="image" src="https://github.com/WS-VSA-WeWork/Capstone_WeWork/assets/83868210/e8b6bc0b-62cb-4556-b7f3-77726e7b49f2">
+  <img width="200" alt="image" src="https://github.com/WS-VSA-WeWork/Capstone_WeWork/assets/83868210/0568aaac-6b30-4118-9b19-5431175c7c2d">
 </div>
 <br>
 
-### 주점 예약페이지
+### 예약페이지
 예약금을 결제하면 예약이 확정된다. 여기서 결제 기능은 구현하지 못했기 때문에 결제가 되었다는 가정하에 시나리오를 설계했다. 
 <div>
-  <img width="200" alt="image" src="https://github.com/WS-VSA-WeWork/Capstone_WeWork/assets/83868210/b4fce3a6-ad3a-419d-896d-d9bb80582734">
-  <img width="200" alt="image" src="https://github.com/WS-VSA-WeWork/Capstone_WeWork/assets/83868210/f7cc99c0-53ef-42ed-bece-cd1aea1cd923">
+  <img width="200" alt="image" src="https://github.com/WS-VSA-WeWork/Capstone_WeWork/assets/83868210/3c52ae1c-3a39-4dbc-bc30-0430ceee4dc2">
+  <img width="220" alt="image" src="https://github.com/WS-VSA-WeWork/Capstone_WeWork/assets/83868210/f7cc99c0-53ef-42ed-bece-cd1aea1cd923">
 </div>
 <br>
 
@@ -75,11 +76,18 @@
 <div>
   <img width="200" alt="image" src="https://github.com/WS-VSA-WeWork/Capstone_WeWork/assets/83868210/bd61fb44-8f3b-4b4b-afda-14be627ef4d5">
   <img width="200" alt="image" src="https://github.com/WS-VSA-WeWork/Capstone_WeWork/assets/83868210/931e10ed-8bb1-455a-89d3-01d7f44875b0">
-  <img width="200 alt="image" src="https://github.com/WS-VSA-WeWork/Capstone_WeWork/assets/83868210/04c37c87-3e4b-4c84-ab08-e7b9b5021d94">
+  <img width="200" alt="image" src="https://github.com/WS-VSA-WeWork/Capstone_WeWork/assets/83868210/0a83ba84-6310-4668-ad5d-60e7f5388eda">
 </div>
 
 <br>
-<br>
+
+### 사장님 대시보드
+<div>
+  <img width="200" alt="image" src="https://github.com/WS-VSA-WeWork/Capstone_WeWork/assets/83868210/bd1d5617-e7e3-496e-baac-492b8a9e1c41">
+  <img width="200" alt="image" src="https://github.com/WS-VSA-WeWork/Capstone_WeWork/assets/83868210/5fbcd25a-c23c-4913-86f7-d7cc9af310c1">
+  <img width="200" alt="image" src="https://github.com/WS-VSA-WeWork/Capstone_WeWork/assets/83868210/6bf0a25c-9040-404a-9043-4ff8c4646121">
+  <img width="200" alt="image" src="https://github.com/WS-VSA-WeWork/Capstone_WeWork/assets/83868210/27ae1b6e-1b12-453e-846a-8b6fe6fcdbef">
+</div>
 
 
 ## 실행방법
