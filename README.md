@@ -86,8 +86,9 @@
 <br>
 
 ### 🍺 그 외 페이지 
-- 이용자의 마이페이지에서 예약 일정 목록을 확인할 수 있으며 지난 예약 내역에 대한 리뷰을 작성할 수 있다.
+- 사용자에 따라 마이페이지에서의 예약 관리, 식당 관리를 구분했다.
 <div>
+  <img width="200" alt="image" src="https://github.com/WS-VSA-WeWork/Capstone_WeWork/assets/83868210/e2139c44-63e7-46ce-9bd4-8b064ca2d5d8">
   <img width="200" alt="image" src="https://github.com/WS-VSA-WeWork/Capstone_WeWork/assets/83868210/bd61fb44-8f3b-4b4b-afda-14be627ef4d5">
   <img width="200" alt="image" src="https://github.com/WS-VSA-WeWork/Capstone_WeWork/assets/83868210/931e10ed-8bb1-455a-89d3-01d7f44875b0">
   <img width="200" alt="image" src="https://github.com/WS-VSA-WeWork/Capstone_WeWork/assets/83868210/0a83ba84-6310-4668-ad5d-60e7f5388eda">
